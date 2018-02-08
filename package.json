@@ -1,0 +1,14 @@
+{
+  "name": "cy",
+  "version": "1.0.0",
+  "description": "Cy bot for MNG stats",
+  "main": "bot.js",
+  "author": "victorchego",
+  "dependencies": {
+    "discord.io": "^2.5.3",
+    "discord.js": "^11.3.0",
+    "google-auth-library": "^0.12.0",
+    "googleapis": "^23.0.2",
+    "winston": "^2.4.0"
+  }
+}
