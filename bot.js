@@ -4,7 +4,7 @@ const auth = require('./auth.json');
 var fs = require('fs');
 
 var Quickstart = require('./quickstart.js');
-var CALL_REQUEST = Quickstart.callRequestHeroku; // .callRequestHeroku for Heroku, .callRequest for client
+var CALL_REQUEST = Quickstart.callRequestHeroku; //function (callback,args,msg) {Quickstart.callRequestHeroku(callback,args,msg);}; // .callRequestHeroku for Heroku, .callRequest for client
 var Func = require('./functions.js');
 
 var cooldownList = [];

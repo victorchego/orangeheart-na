@@ -133,4 +133,4 @@ function storeToken(token) {
  
 
 
-module.exports = {callRequest}
+module.exports = {callRequest, callRequestHeroku}
