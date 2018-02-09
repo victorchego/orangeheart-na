@@ -1,14 +1,9 @@
 var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
-var googleAuth = require('google-auth-library');
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
-var SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
-var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-    process.env.USERPROFILE) + '/.credentials/';
-var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
 var SPREADSHEET_ID = '19HMhClbxcCvSDSa_rSArND2KWOPli8fEsRcoIUEPOQY';
 
 var ROUTE_ERR = "No data found. Please make sure you use one of the following formats:\n" +

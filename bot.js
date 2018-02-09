@@ -4,6 +4,7 @@ const auth = require('./auth.json');
 var fs = require('fs');
 
 var Quickstart = require('./quickstart.js');
+var CALL_REQUEST = Quickstart.callRequestHeroku; // .callRequestHeroku for Heroku, .callRequest for client
 var Func = require('./functions.js');
 
 var cooldownList = [];
@@ -169,7 +170,7 @@ client.on('message', (msg) => {
 			break;
 			case 'route':
 				if (args.length >= 2) {
-					Quickstart.callRequest(Func.routeAnswer, args, msg);
+					CALL_REQUEST(Func.routeAnswer, args, msg);
 					msg.channel.send("Details have been sent "+msg.author);
 				}
 				else msg.channel.send('You must specify the season number and the girl name (eg. 9 Nanao, 3.5 Yamabuki)');
@@ -180,20 +181,20 @@ client.on('message', (msg) => {
 			break;
 			case 'season':
 			case 'seasons':
-				if (args[0] == 'days') Quickstart.callRequest(Func.seasonDays, args.slice(1), msg);
+				if (args[0] == 'days') CALL_REQUEST(Func.seasonDays, args.slice(1), msg);
 				else {
-					Quickstart.callRequest(Func.seasonTotal, args, msg);
+					CALL_REQUEST(Func.seasonTotal, args, msg);
 				}
 			break;
 			case 'checkpoint':
 			case 'checkpoints':
-				Quickstart.callRequest(Func.checkpointList, args, msg);
+				CALL_REQUEST(Func.checkpointList, args, msg);
 			break;
 			case 'finishontime':
-				Quickstart.callRequest(Func.finishOnTime, args, msg);
+				CALL_REQUEST(Func.finishOnTime, args, msg);
 			break;
 			case 'cc':
-				Quickstart.callRequest(Func.cookieGoal, args, msg);
+				CALL_REQUEST(Func.cookieGoal, args, msg);
 			break;
 			case 'dailyreset':
 				var current_time = new Date();
@@ -214,10 +215,10 @@ client.on('message', (msg) => {
 				msg.channel.send("Time till the next weekly ninja fight reset is "+hours+" hours and "+minutes+" minutes");
 			break;
 			case 'timer':
-				Quickstart.callRequest(Func.timer, args, msg);
+				CALL_REQUEST(Func.timer, args, msg);
 			break;
 			case 'soul':
-				Quickstart.callRequest(Func.calculateSoul, args, msg);
+				CALL_REQUEST(Func.calculateSoul, args, msg);
 			break;
 			case 'docs':
 				msg.channel.send('https://docs.google.com/document/d/17iMvW_UiVOfd22sau-EsbcFZ96XSxbFVJtRT2Z-NooE/');

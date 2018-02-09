@@ -1,9 +1,9 @@
-
-
+require('dotenv').config();
 var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
+var gAuth = require('/auth.js');
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
@@ -43,6 +43,13 @@ function callRequest(callback, args, msg) {
 	});
 }
 
+function callRequestHeroku(callback, args, msg) {
+	gAuth.authorize().then((auth) => {callback(auth,args,msg);}
+	)
+    .catch((err) => {
+        console.log('auth error', err);
+    });
+}
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -50,7 +57,8 @@ function callRequest(callback, args, msg) {
  *
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
- */
+ */	
+ 
 function authorize(credentials, callback, args, msg) {
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;

@@ -1,0 +1,11 @@
+
+// retrieve
+heroku git:clone -a APP-NAME
+
+// push
+git add .
+git commit -am "text"
+git push heroku master
+
+// login
+heroku login
