@@ -17,5 +17,5 @@ function authorize() {
 }
 
 module.exports = {
-    authorize,
+    authorize
 }
