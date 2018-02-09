@@ -78,7 +78,7 @@ client.on('ready', () => {
 	client.user.setGame('!Cy commands');
 	clearAllTimeouts(BOOST_TIMEOUT, STEAL_TIMEOUT, DONATE_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT);
 	clearLists(cooldownList,cooldownMessageList,stealCooldownList);
-	startUp();
+	if (COOKIE_STATUS) startUp();
 	//client.channels.find(val => val.id === CY_CHANNEL_ID).send('I AM ALIVEEEEE!');
 });
 
