@@ -2,8 +2,6 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const auth = require('./auth.json');
 var fs = require('fs');
-var $jq = require('jQuery');
-var request = require('request');
 
 var Quickstart = require('./quickstart.js');
 var CALL_REQUEST = Quickstart.callRequestHeroku; //function (callback,args,msg) {Quickstart.callRequestHeroku(callback,args,msg);}; // .callRequestHeroku for Heroku, .callRequest for client
@@ -22,8 +20,6 @@ var BOT_CHANNEL_ID = '348324130258419715';
 var CY_CHANNEL_ID = '401660510816436224';
 
 var FILE_NAME = 'points3.json';
-var URL_JSON = 'https://api.myjson.com/bins/663th';
-var JSON_OBJ = [{"a":"b", "c":"d"}];
 
 var COOKIE_STATUS = false;
 
@@ -263,7 +259,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				request(URL_JSON, function (err, response, data) {
+				fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 					if (err) {
 						console.log('Error reading points file: '+err);
 						msg.channel.send('An unexpected error has occurred');
@@ -291,7 +287,7 @@ client.on('message', (msg) => {
 						obj.push(elem);
 						msg.channel.send(msg.author+' has entered the cookie competition! Total: '+elem["cookies"]);
 					}
-					objToWeb(obj,msg);
+					objToFile(obj);
 				});
 			break;
 			case 'leaderboards':
@@ -300,7 +296,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				request(URL_JSON, function (err, response, data) {
+				fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 					if (err) {
 						console.log('Error reading points file: '+err);
 						msg.channel.send('An unexpected error has occurred');
@@ -478,7 +474,7 @@ client.on('message', (msg) => {
 					return;
 				}
 				if (msg.author.id==OWNER_ID && msg.channel.id==CY_CHANNEL_ID) {
-					request(URL_JSON, function (err, response, data) {
+					fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 						if (err) {
 							console.log('Error reading points file: '+err);
 							msg.channel.send('An unexpected error has occurred');
@@ -486,7 +482,7 @@ client.on('message', (msg) => {
 						}	
 						var obj = JSON.parse(data);
 						addNPC(obj, args);
-						objToWeb(obj,msg);
+						objToFile(obj);
 						msg.channel.send('NPC has been added');
 					});
 				}
@@ -587,7 +583,7 @@ function startUp() {
 }
 
 function boost(client, msg) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			if (msg!=null) msg.channel.send('An unexpected error has occurred');
@@ -600,7 +596,7 @@ function boost(client, msg) {
 				obj[x]["cookies"] += BOOST_AMOUNT;
 			}
 		}
-		objToWeb(obj,msg);
+		objToFile(obj);
 	});
 }
 
@@ -617,7 +613,7 @@ function hourlyPoints(client, msg) {
 }
 
 function stealCookies(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			msg.channel.send('An unexpected error has occurred');
@@ -661,7 +657,7 @@ function stealCookies(client, msg, args) {
 						msg.author.send('Your steal cooldown has expired').catch(function(){console.log('Cannot send to '+msg.author.username);});
 					},steal_cooldown*60000);
 					msg.channel.send(msg.author+', Zina has intercepted your attack (cooldown: '+steal_cooldown+' minutes)');
-					objToWeb(obj,msg);
+					objToFile(obj);
 					COUNTER--;
 					return;
 				}
@@ -710,13 +706,13 @@ function stealCookies(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to steal');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToFile(obj);
 		COUNTER--;
 	});
 }
 
 function donateCookies(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			msg.channel.send('An unexpected error has occurred');
@@ -780,7 +776,7 @@ function donateCookies(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to donate');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToFile(obj);
 		COUNTER--;
 	});
 }
@@ -790,7 +786,7 @@ function claimWaifu(client, msg, waifu) {
 		msg.channel.send(msg.author+', you cannot claim a non MNG waifu');
 		return;
 	}
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			msg.channel.send('An unexpected error has occurred');
@@ -827,13 +823,13 @@ function claimWaifu(client, msg, waifu) {
 			msg.channel.send(msg.author+', you must have cookies to claim a waifu');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToFile(obj);
 		COUNTER--;
 	});
 }
 
 function hireZina(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			msg.channel.send('An unexpected error has occurred');
@@ -857,12 +853,12 @@ function hireZina(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to hire');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToFile(obj);
 	});
 }
 
 function hireTycoon(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			msg.channel.send('An unexpected error has occurred');
@@ -901,12 +897,12 @@ function hireTycoon(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to hire');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToFile(obj);
 	});
 }
 
 function hireFather(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			msg.channel.send('An unexpected error has occurred');
@@ -943,12 +939,12 @@ function hireFather(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to hire');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToFile(obj);
 	});
 }
 
 function hireMari(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			msg.channel.send('An unexpected error has occurred');
@@ -984,7 +980,7 @@ function hireMari(client, msg, args) {
 			elem["mari"] = 1;
 			if (MARI_TIMEOUT!=null) clearTimeout(MARI_TIMEOUT);
 			MARI_TIMEOUT = setTimeout(function(){
-				request(URL_JSON, function (err_2, response, data_2) {
+				fs.readFile(FILE_NAME, 'utf8', function (err_2, data_2) {
 					if (err_2) {
 					console.log('Error reading points file: '+err_2);
 					msg.channel.send('An unexpected error has occurred');
@@ -994,11 +990,11 @@ function hireMari(client, msg, args) {
 				var elem_2 = obj_2.find(function(item){return item["id"]==msg.author.id;});
 				elem_2["mari"] = 0;
 				msg.channel.send('Mari is free to hire');
-				objToWeb(obj_2,msg);
+				objToFile(obj_2);
 				});
 			},MARI_DURATION);
 			msg.channel.send(msg.author+', you have hired Mari for '+pay+' cookies. Duration: '+time+' minutes');
-			objToWeb(obj,msg);
+			objToFile(obj);
 		}
 		else {
 			msg.channel.send(msg.author+', you must have cookies to hire');
@@ -1011,7 +1007,7 @@ function setLottery(client, msg, args) {
 	var time = LOTTERY_DURATION;
 	var total = 0;
 	if (args.length != 0 && !isNaN(args[0])) time = args[0] * 60000;
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			msg.channel.send('An unexpected error has occurred');
@@ -1025,7 +1021,7 @@ function setLottery(client, msg, args) {
 		msg.channel.send('Lottery will commence in '+parseFloat(time)/60000+' minutes. Prize: '+prize);
 		if (LOTTERY_TIMEOUT!=null) clearTimeout(LOTTERY_TIMEOUT);
 		LOTTERY_TIMEOUT = setTimeout(function(){
-			request(URL_JSON, function (err_2, response, data_2) {
+			fs.readFile(FILE_NAME, 'utf8', function (err_2, data_2) {
 				if (err_2) {
 				console.log('Error reading points file: '+err_2);
 				msg.channel.send('An unexpected error has occurred');
@@ -1039,7 +1035,7 @@ function setLottery(client, msg, args) {
 					user = client.users.find(val => val.id === random_elem["id"]);
 				}
 				random_elem["cookies"]+=prize;
-				objToWeb(obj_2,msg);
+				objToFile(obj_2);
 				msg.channel.send('<@'+random_elem["id"]+'> has won '+prize+' cookies from the lottery!');
 			});
 		}, time);
@@ -1052,7 +1048,7 @@ function setTax(client) {
 	var channel = client.channels.find(val => val.id === CY_CHANNEL_ID);	
 	if (TAX_TIMEOUT!=null) clearTimeout(TAX_TIMEOUT);
 	TAX_TIMEOUT = setInterval(function(){
-		request(URL_JSON, function (err, response, data) {
+		fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 			if (err) {
 			console.log('Error reading points file: '+err);
 			channel.send('An unexpected error has occurred');
@@ -1074,7 +1070,7 @@ function setTax(client) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});
 				king["cookies"]+=total;
 			}
-			objToWeb(obj,msg);
+			objToFile(obj);
 			channel.send("It's tax time! Pay your taxes to the tax king(s)");
 		});
 	}, time);
@@ -1086,7 +1082,7 @@ function setTycoon(client, msg, args) {
 	var highest = 0;
 	if (args.length != 0 && !isNaN(args[0])) time = args[0] * 60000;
 	//if (parseFloat(time)/60000<5) time = 300000;
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			msg.channel.send('An unexpected error has occurred');
@@ -1103,7 +1099,7 @@ function setTycoon(client, msg, args) {
 		msg.channel.send('Tycoon will target in '+parseFloat(time)/60000+' minutes at a '+ratio+' rate');
 		if (TYCOON_TIMEOUT!=null) clearTimeout(TYCOON_TIMEOUT);
 		TYCOON_TIMEOUT = setTimeout(function(){
-			request(URL_JSON, function (err_2, response, data_2) {
+			fs.readFile(FILE_NAME, 'utf8', function (err_2, data_2) {
 				if (err_2) {
 				console.log('Error reading points file: '+err_2);
 				msg.channel.send('An unexpected error has occurred');
@@ -1121,7 +1117,7 @@ function setTycoon(client, msg, args) {
 				if (random_elem["zina"]>0) {
 					random_elem["zina"]--;
 					msg.channel.send('Zina has protected '+name+' from the Tycoon');
-					objToWeb(obj_2,msg);
+					objToFile(obj_2);
 					return;
 				}
 				var damage = Math.ceil(random_elem["cookies"]*ratio);
@@ -1134,7 +1130,7 @@ function setTycoon(client, msg, args) {
 				if (random_elem["cookies"]<0) random_elem["cookies"]=0;
 				if (random_elem["waifu"]!="") tycoon["waifu"] = random_elem["waifu"];
 				random_elem["waifu"]="";
-				objToWeb(obj_2,msg);
+				objToFile(obj_2);
 				msg.channel.send("Tycoon has attacked "+name+" and stolen "+damage+" (bonus damage: "+bonus+") cookies (captured: "+tycoon["waifu"]+")");
 			});
 		}, time);
@@ -1142,7 +1138,7 @@ function setTycoon(client, msg, args) {
 }
 
 function rollDice(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			if (msg!=null) msg.channel.send('An unexpected error has occurred');
@@ -1173,18 +1169,26 @@ function rollDice(client, msg, args) {
 			elem["cookies"]-=bet;
 			msg.channel.send(msg.author+', you guessed incorrectly! The number was '+num+'. You lose '+bet+' cookies!');
 		}
-		objToWeb(obj,msg);
+		objToFile(obj);
 	});
 }
 
 function resetCookies(client, msg, args) {
-	var obj = [];
-	addNPC(obj,["Tycoon"]);
-	addNPC(obj,["Zina"]);
-	addNPC(obj,["Owner"]);
-	addNPC(obj,["Mari"]);
-	objToWeb(obj,msg);
-	msg.channel.send('Cookies have been reset!');
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
+		if (err) {
+			console.log('Error reading points file: '+err);
+			if (msg!=null) msg.channel.send('An unexpected error has occurred');
+			return;
+		}	
+		var obj = JSON.parse(data);
+		obj = [];
+		addNPC(obj,["Tycoon"]);
+		addNPC(obj,["Zina"]);
+		addNPC(obj,["Owner"]);
+		addNPC(obj,["Mari"]);
+		objToFile(obj);
+		msg.channel.send('Cookies have been reset!');
+	});
 }
 
 function talkCy(client, msg, args) {
@@ -1211,12 +1215,6 @@ function objToFile(obj) {
 		}
 	});
 }
-
-function objToWeb(obj,msg) {
-	request({url: URL_JSON, method: 'PUT', json: obj}, function (error, response, body) {
-		if (error) console.log("Error has occurred: "+error);
-	});     
-}	
 
 function isMNGWaifu(waifu) {
 	return inList(waifu,MNG_WAIFUS);
@@ -1259,7 +1257,7 @@ function purgeDelete(client, msg, args) {
 }
 
 function optOut(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			if (msg!=null) msg.channel.send('An unexpected error has occurred');
@@ -1272,13 +1270,13 @@ function optOut(client, msg, args) {
 			return;
 		}
 		removeFromList(elem,obj);
-		objToWeb(obj,msg);
+		objToFile(obj);
 		msg.channel.send(msg.author+' has opted out of the cookie competition');
 	});
 }
 
 function removeCookies(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			if (msg!=null) msg.channel.send('An unexpected error has occurred');
@@ -1291,13 +1289,13 @@ function removeCookies(client, msg, args) {
 				removeFromList(elem,obj);
 			}	
 		}
-		objToWeb(obj,msg);
+		objToFile(obj);
 		msg.channel.send('Member(s) have been removed');
 	});
 }
 
 function addPropertyString(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			if (msg!=null) msg.channel.send('An unexpected error has occurred');
@@ -1308,7 +1306,7 @@ function addPropertyString(client, msg, args) {
 			for (user in obj) {
 				obj[user][args[0]] = "";	
 			}
-			objToWeb(obj,msg);
+			objToFile(obj);
 			msg.channel.send('Property added');
 		}
 		catch (err){
@@ -1319,7 +1317,7 @@ function addPropertyString(client, msg, args) {
 }
 
 function addPropertyNumber(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			if (msg!=null) msg.channel.send('An unexpected error has occurred');
@@ -1330,7 +1328,7 @@ function addPropertyNumber(client, msg, args) {
 			for (user in obj) {
 				obj[user][args[0]] = 0;	
 			}
-			objToWeb(obj,msg);
+			objToFile(obj);
 			msg.channel.send('Property added');
 		}
 		catch (err){
@@ -1341,7 +1339,7 @@ function addPropertyNumber(client, msg, args) {
 }
 
 function removeProperty(client, msg, args) {
-	request(URL_JSON, function (err, response, data) {
+	fs.readFile(FILE_NAME, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			if (msg!=null) msg.channel.send('An unexpected error has occurred');
@@ -1352,7 +1350,7 @@ function removeProperty(client, msg, args) {
 			for (user in obj) {
 				delete obj[user][args[0]];	
 			}
-			objToWeb(obj,msg);
+			objToFile(obj);
 			msg.channel.send('Property removed');
 		}
 		catch (err){
