@@ -23,7 +23,7 @@ var CY_CHANNEL_ID = '401660510816436224';
 var FILE_NAME = 'points3.json';
 var URL_JSON = 'https://api.myjson.com/bins/663th';
 
-var COOKIE_STATUS = false;
+var COOKIE_STATUS = true;
 
 var COUNTER = 7;
 
