@@ -2,7 +2,6 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const auth = require('./auth.json');
 var fs = require('fs');
-var $jq = require('jQuery');
 var request = require('request');
 
 var Quickstart = require('./quickstart.js');
@@ -23,7 +22,6 @@ var CY_CHANNEL_ID = '401660510816436224';
 
 var FILE_NAME = 'points3.json';
 var URL_JSON = 'https://api.myjson.com/bins/663th';
-var JSON_OBJ = [{"a":"b", "c":"d"}];
 
 var COOKIE_STATUS = false;
 
