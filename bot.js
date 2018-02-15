@@ -99,12 +99,12 @@ client.on('reconnecting', () => {
 client.on('guildMemberAdd', () => {
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id === MOD_CHANNEL_ID).send(user.id+' has joined the server at '+time.format('LLL'));
-}
+});
 
 client.on('guildMemberRemove', () => {
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id === MOD_CHANNEL_ID).send(user.id+' has left the server at '+time.format('LLL'));
-}
+});
 
 client.on('message', (msg) => {
     // Our client needs to know if it will execute a command
