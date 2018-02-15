@@ -18,11 +18,12 @@ var HIRE_LIST = ["zina", "dad", "kikuko", "sakurako"];
 
 var TARGET_CHANNEL_ID = '382741253353242626';  // channel ID specific client
 var OWNER_ID = '235263356397813762';
-var BOT_CHANNEL_ID = '348324130258419715';
+var BOT_CHANNEL_ID = '401702876398878722';
 var CY_CHANNEL_ID = '401660510816436224';
 var MOD_CHANNEL_ID = '342821185169522688';
 var GENERAL_ID = '264145505452425227';
 var WELCOME_ID = '342822506060709912';
+var BOT_LOG_ID = '404613773832224768';
 
 var FILE_NAME = 'points3.json';
 var URL_JSON = 'https://api.myjson.com/bins/663th';
@@ -107,16 +108,16 @@ client.on('guildMemberAdd', (guildmember) => {
 	var server = client.guilds.find(val => val.id == GENERAL_ID);
 	if (server == null || server.id != '264145505452425227') return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
-	client.channels.find(val => val.id == MOD_CHANNEL_ID).send(guildmember.user+' has joined the server at '+time.format('LLL')+' Pacific');
-	//client.channels.find(val => val.id == WELCOME_ID).send(guildmember.user+' has joined the server at '+time.format('LLL')+' Pacific');
+	//client.channels.find(val => val.id == MOD_CHANNEL_ID).send(guildmember.user+' has joined the server at '+time.format('LLL')+' Pacific');
+	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' has joined the server at '+time.format('LLL')+' Pacific');
 });
 
 client.on('guildMemberRemove', (guildmember) => {
 	var server = client.guilds.find(val => val.id == GENERAL_ID);
 	if (server == null || server.id != '264145505452425227') return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
-	client.channels.find(val => val.id == MOD_CHANNEL_ID).send(guildmember.user+' has left the server at '+time.format('LLL')+' Pacific');
-	client.channels.find(val => val.id == WELCOME_ID).send(guildmember.user+' has left the server at '+time.format('LLL')+' Pacific');
+	//client.channels.find(val => val.id == MOD_CHANNEL_ID).send(guildmember.user+' has left the server at '+time.format('LLL')+' Pacific');
+	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' has left the server at '+time.format('LLL')+' Pacific');
 });
 
 client.on('message', (msg) => {
