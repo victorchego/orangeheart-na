@@ -3,6 +3,7 @@ const client = new Discord.Client();
 const auth = require('./auth.json');
 var fs = require('fs');
 var request = require('request');
+var moment = require('moment');
 
 var Quickstart = require('./quickstart.js');
 var CALL_REQUEST = Quickstart.callRequestHeroku; //function (callback,args,msg) {Quickstart.callRequestHeroku(callback,args,msg);}; // .callRequestHeroku for Heroku, .callRequest for client
@@ -19,6 +20,7 @@ var TARGET_CHANNEL_ID = '382741253353242626';  // channel ID specific client
 var OWNER_ID = '235263356397813762';
 var BOT_CHANNEL_ID = '348324130258419715';
 var CY_CHANNEL_ID = '401660510816436224';
+var MOD_CHANNEL_ID = '342821185169522688';
 
 var FILE_NAME = 'points3.json';
 var URL_JSON = 'https://api.myjson.com/bins/663th';
@@ -52,7 +54,7 @@ var MARI_DURATION = 1800000;
 
 var BANNED_CHANNELS = ['380045950879793153','348328808975302658','264149019524071424','384028008375123978','264149324831784960',
 						'264149176974049282','324224381054353411','319871113045737472'];
-var ALLOWED_CHANNELS = ['264145505452425227','264149249103495169','401660510816436224','401702876398878722'];
+var TALK_ALLOWED_CHANNELS = ['264145505452425227','264149249103495169','401660510816436224','401702876398878722'];
 /* LIST OF CHANNELS
 401660510816436224 - cy-playground /MNG
 382741253353242626 - general / asdf
@@ -93,6 +95,16 @@ client.on('reconnecting', () => {
 	console.log('Attempting to reconnect at '+time);
 	startUp();
 });
+
+client.on('guildMemberAdd', () => {
+	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
+	client.channels.find(val => val.id === MOD_CHANNEL_ID).send(user.id+' has joined the server at '+time.format('LLL'));
+}
+
+client.on('guildMemberRemove', () => {
+	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
+	client.channels.find(val => val.id === MOD_CHANNEL_ID).send(user.id+' has left the server at '+time.format('LLL'));
+}
 
 client.on('message', (msg) => {
     // Our client needs to know if it will execute a command
@@ -679,7 +691,7 @@ function stealCookies(client, msg, args) {
 				var total_percent = Math.ceil(self_percent/total);
 				var steal_bonus = Math.ceil(higher*target_percent);
 				var steal_amount = total_percent+self_percent;
-				var steal_cooldown = 10+90*((0.8-cookie_ratio)/0.7);
+				var steal_cooldown = 10+40*((0.8-cookie_ratio)/0.7);
 				if (target["mari"]>0) {
 					elem["cookies"]+=Math.ceil((steal_bonus+steal_amount)/2);
 					target["cookies"]-=Math.ceil(steal_amount/2);
@@ -1187,7 +1199,7 @@ function resetCookies(client, msg, args) {
 
 function talkCy(client, msg, args) {
 	if (msg.author.id!=OWNER_ID) throw 'Not owner';
-	if (args[0]!=null && inList(args[0],ALLOWED_CHANNELS)) {
+	if (args[0]!=null && inList(args[0],TALK_ALLOWED_CHANNELS)) {
 		var channel = client.channels.find(val => val.id === args[0]);
 		var str = '';
 		for (var i = 1; i < args.length; i++) {
@@ -1496,6 +1508,16 @@ function filterMessage(msg) {
 		msg.delete().catch(console.error);
 		msg.channel.send('A poor lost soul has been ~~censored~~ guided to heaven');
 	}
+}
+
+function userJoin(user,client) {
+	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
+	client.channels.find(val => val.id === MOD_CHANNEL_ID).send(user.id+' has joined the server '+time.format('LLL'));
+}
+
+funciton userLeave(user,client) {
+	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
+	client.channels.find(val => val.id === MOD_CHANNEL_ID).send(user.id+' has left the server at '+time.format('LLL'));
 }
 
 function toTitleCase(str)
