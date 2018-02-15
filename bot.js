@@ -1510,16 +1510,6 @@ function filterMessage(msg) {
 	}
 }
 
-function userJoin(user,client) {
-	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
-	client.channels.find(val => val.id === MOD_CHANNEL_ID).send(user.id+' has joined the server '+time.format('LLL'));
-}
-
-funciton userLeave(user,client) {
-	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
-	client.channels.find(val => val.id === MOD_CHANNEL_ID).send(user.id+' has left the server at '+time.format('LLL'));
-}
-
 function toTitleCase(str)
 {
 	if (str != null) return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
