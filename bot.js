@@ -101,7 +101,7 @@ client.on('error', (err) => {
 client.on('reconnecting', () => {
 	var time = new Date();
 	console.log('Attempting to reconnect at '+time);
-	startUp();
+	if (COOKIE_STATUS) startUp();
 });
 
 client.on('guildMemberAdd', (guildmember) => {
@@ -109,7 +109,7 @@ client.on('guildMemberAdd', (guildmember) => {
 	if (server == null || server.id != '264145505452425227') return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	//client.channels.find(val => val.id == MOD_CHANNEL_ID).send(guildmember.user+' has joined the server at '+time.format('LLL')+' Pacific');
-	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' has joined the server at '+time.format('LLL')+' Pacific');
+	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.username+') has joined the server at '+time.format('LLL')+' Pacific');
 });
 
 client.on('guildMemberRemove', (guildmember) => {
@@ -117,7 +117,7 @@ client.on('guildMemberRemove', (guildmember) => {
 	if (server == null || server.id != '264145505452425227') return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	//client.channels.find(val => val.id == MOD_CHANNEL_ID).send(guildmember.user+' has left the server at '+time.format('LLL')+' Pacific');
-	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' has left the server at '+time.format('LLL')+' Pacific');
+	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.username+') has left the server at '+time.format('LLL')+' Pacific');
 });
 
 client.on('message', (msg) => {
