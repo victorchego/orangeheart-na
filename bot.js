@@ -14,7 +14,7 @@ var cooldownMessageList = [];
 var stealCooldownList = [];
 var donateCooldownList = [];
 var MNG_WAIFUS = ["akari", "enju", "myu", "ricka", "tengge", "yamabuki", "lily", "nanao"];
-var HIRE_LIST = ["zina", "dad", "kikuko", "sakurako"];
+var HIRE_LIST = ["zina", "father", "kikuko", "sakurako", "tycoon", "mari", "owner"];
 
 var TARGET_CHANNEL_ID = '382741253353242626';  // channel ID specific client
 var OWNER_ID = '235263356397813762';
@@ -25,8 +25,8 @@ var GENERAL_ID = '264145505452425227';
 var WELCOME_ID = '342822506060709912';
 var BOT_LOG_ID = '404613773832224768';
 
-var FILE_NAME = 'points3.json';
 var URL_JSON = 'https://api.myjson.com/bins/663th';
+var TIMER_JSON = 'https://api.myjson.com/bins/z65jl'; // [{"id":"X", "time":"X", "type":"steal/donate/mari"}]
 
 var COOKIE_STATUS = true;
 
@@ -315,7 +315,7 @@ client.on('message', (msg) => {
 						obj.push(elem);
 						msg.channel.send(msg.author+' has entered the cookie competition! Total: '+elem["cookies"]);
 					}
-					objToWeb(obj,msg);
+					objToWeb(obj,msg,URL_JSON);
 				});
 			break;
 			case 'leaderboards':
@@ -510,7 +510,7 @@ client.on('message', (msg) => {
 						}	
 						var obj = JSON.parse(data);
 						addNPC(obj, args);
-						objToWeb(obj,msg);
+						objToWeb(obj,msg,URL_JSON);
 						msg.channel.send('NPC has been added');
 					});
 				}
@@ -624,7 +624,7 @@ function boost(client, msg) {
 				obj[x]["cookies"] += BOOST_AMOUNT;
 			}
 		}
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 	});
 }
 
@@ -685,7 +685,7 @@ function stealCookies(client, msg, args) {
 						msg.author.send('Your steal cooldown has expired').catch(function(){console.log('Cannot send to '+msg.author.username);});
 					},steal_cooldown*60000);
 					msg.channel.send(msg.author+', Zina has intercepted your attack (cooldown: '+steal_cooldown+' minutes)');
-					objToWeb(obj,msg);
+					objToWeb(obj,msg,URL_JSON);
 					COUNTER--;
 					return;
 				}
@@ -734,7 +734,7 @@ function stealCookies(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to steal');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 		COUNTER--;
 	});
 }
@@ -804,7 +804,7 @@ function donateCookies(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to donate');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 		COUNTER--;
 	});
 }
@@ -851,7 +851,7 @@ function claimWaifu(client, msg, waifu) {
 			msg.channel.send(msg.author+', you must have cookies to claim a waifu');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 		COUNTER--;
 	});
 }
@@ -881,7 +881,7 @@ function hireZina(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to hire');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 	});
 }
 
@@ -925,7 +925,7 @@ function hireTycoon(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to hire');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 	});
 }
 
@@ -967,7 +967,7 @@ function hireFather(client, msg, args) {
 			msg.channel.send(msg.author+', you must have cookies to hire');
 			return;
 		}
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 	});
 }
 
@@ -1018,11 +1018,11 @@ function hireMari(client, msg, args) {
 				var elem_2 = obj_2.find(function(item){return item["id"]==msg.author.id;});
 				elem_2["mari"] = 0;
 				msg.channel.send('Mari is free to hire');
-				objToWeb(obj_2,msg);
+				objToWeb(obj_2,msg,URL_JSON);
 				});
 			},MARI_DURATION);
 			msg.channel.send(msg.author+', you have hired Mari for '+pay+' cookies. Duration: '+time+' minutes');
-			objToWeb(obj,msg);
+			objToWeb(obj,msg,URL_JSON);
 		}
 		else {
 			msg.channel.send(msg.author+', you must have cookies to hire');
@@ -1063,7 +1063,7 @@ function setLottery(client, msg, args) {
 					user = client.users.find(val => val.id === random_elem["id"]);
 				}
 				random_elem["cookies"]+=prize;
-				objToWeb(obj_2,msg);
+				objToWeb(obj_2,msg,URL_JSON);
 				msg.channel.send('<@'+random_elem["id"]+'> has won '+prize+' cookies from the lottery!');
 			});
 		}, time);
@@ -1098,7 +1098,7 @@ function setTax(client) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});
 				king["cookies"]+=total;
 			}
-			objToWeb(obj,msg);
+			objToWeb(obj,msg,URL_JSON);
 			channel.send("It's tax time! Pay your taxes to the tax king(s)");
 		});
 	}, time);
@@ -1145,7 +1145,7 @@ function setTycoon(client, msg, args) {
 				if (random_elem["zina"]>0) {
 					random_elem["zina"]--;
 					msg.channel.send('Zina has protected '+name+' from the Tycoon');
-					objToWeb(obj_2,msg);
+					objToWeb(obj_2,msg,URL_JSON);
 					return;
 				}
 				var damage = Math.ceil(random_elem["cookies"]*ratio);
@@ -1158,7 +1158,7 @@ function setTycoon(client, msg, args) {
 				if (random_elem["cookies"]<0) random_elem["cookies"]=0;
 				if (random_elem["waifu"]!="") tycoon["waifu"] = random_elem["waifu"];
 				random_elem["waifu"]="";
-				objToWeb(obj_2,msg);
+				objToWeb(obj_2,msg,URL_JSON);
 				msg.channel.send("Tycoon has attacked "+name+" and stolen "+damage+" (bonus damage: "+bonus+") cookies (captured: "+tycoon["waifu"]+")");
 			});
 		}, time);
@@ -1197,7 +1197,7 @@ function rollDice(client, msg, args) {
 			elem["cookies"]-=bet;
 			msg.channel.send(msg.author+', you guessed incorrectly! The number was '+num+'. You lose '+bet+' cookies!');
 		}
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 	});
 }
 
@@ -1207,7 +1207,7 @@ function resetCookies(client, msg, args) {
 	addNPC(obj,["Zina"]);
 	addNPC(obj,["Owner"]);
 	addNPC(obj,["Mari"]);
-	objToWeb(obj,msg);
+	objToWeb(obj,msg,URL_JSON);
 	msg.channel.send('Cookies have been reset!');
 }
 
@@ -1226,18 +1226,8 @@ function talkCy(client, msg, args) {
 	else throw 'Undefined argument';
 }
 
-function objToFile(obj) {
-	var new_data = JSON.stringify(obj);
-	fs.writeFile(FILE_NAME, new_data, function (err) {
-		if (err) {
-			console.log('Error writing points file: '+err);
-			return;
-		}
-	});
-}
-
-function objToWeb(obj,msg) {
-	request({url: URL_JSON, method: 'PUT', json: obj}, function (error, response, body) {
+function objToWeb(obj,msg,url) {
+	request({url: url, method: 'PUT', json: obj}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
 	});     
 }	
@@ -1296,7 +1286,7 @@ function optOut(client, msg, args) {
 			return;
 		}
 		removeFromList(elem,obj);
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 		msg.channel.send(msg.author+' has opted out of the cookie competition');
 	});
 }
@@ -1315,7 +1305,7 @@ function removeCookies(client, msg, args) {
 				removeFromList(elem,obj);
 			}	
 		}
-		objToWeb(obj,msg);
+		objToWeb(obj,msg,URL_JSON);
 		msg.channel.send('Member(s) have been removed');
 	});
 }
@@ -1332,7 +1322,7 @@ function addPropertyString(client, msg, args) {
 			for (user in obj) {
 				obj[user][args[0]] = "";	
 			}
-			objToWeb(obj,msg);
+			objToWeb(obj,msg,URL_JSON);
 			msg.channel.send('Property added');
 		}
 		catch (err){
@@ -1354,7 +1344,7 @@ function addPropertyNumber(client, msg, args) {
 			for (user in obj) {
 				obj[user][args[0]] = 0;	
 			}
-			objToWeb(obj,msg);
+			objToWeb(obj,msg,URL_JSON);
 			msg.channel.send('Property added');
 		}
 		catch (err){
@@ -1376,7 +1366,7 @@ function removeProperty(client, msg, args) {
 			for (user in obj) {
 				delete obj[user][args[0]];	
 			}
-			objToWeb(obj,msg);
+			objToWeb(obj,msg,URL_JSON);
 			msg.channel.send('Property removed');
 		}
 		catch (err){
