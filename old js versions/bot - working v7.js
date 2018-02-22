@@ -6,11 +6,13 @@ var request = require('request');
 var moment = require('moment');
 
 var Quickstart = require('./quickstart.js');
-var CALL_REQUEST = Quickstart.callRequestFromServer; //function (callback,args,msg) {Quickstart.callRequestFromServer(callback,args,msg);}; // .callRequestFromServer or .callRequestFromClient
+var CALL_REQUEST = Quickstart.callRequestFromServer; //function (callback,args,msg) {Quickstart.callRequestFromServer(callback,args,msg);}; // .callRequestFromServer for server, .callRequestFromClient for client
 var Func = require('./functions.js');
 
 var cooldownList = [];
 var cooldownMessageList = [];
+var stealCooldownList = [];
+var donateCooldownList = [];
 var MNG_WAIFUS = ["akari", "enju", "myu", "ricka", "tengge", "yamabuki", "lily", "nanao"];
 var HIRE_LIST = ["zina", "father", "kikuko", "sakurako", "tycoon", "mari", "owner"];
 
@@ -41,6 +43,8 @@ var BOOST_AMOUNT = 100;
 var INIT_POINT = 1000;
 
 var BOOST_TIMEOUT = null;
+var STEAL_TIMEOUT = null;
+var DONATE_TIMEOUT = null;
 var LOTTERY_TIMEOUT = null;
 var HOURLY_TIMEOUT = null;
 var TYCOON_TIMEOUT = null;
@@ -86,7 +90,7 @@ client.on('ready', () => {
     console.log(client.user.username + ' - ' + client.user.id);
 	client.user.setGame('!Cy commands');
 	clearAllTimeouts(BOOST_TIMEOUT, STEAL_TIMEOUT, DONATE_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT);
-	clearLists(cooldownList,cooldownMessageList);
+	clearLists(cooldownList,cooldownMessageList,stealCooldownList,donateCooldownList);
 	clearTimer(client);
 	if (COOKIE_STATUS) startUp(client);
 	//client.channels.find(val => val.id === CY_CHANNEL_ID).send('I AM ALIVEEEEE!');
@@ -357,7 +361,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (!checkTimer(client,msg, "steal")) {
+				if (!inList(msg.author,stealCooldownList)) {
 					stealCookies(client, msg, args);
 				}
 				else {
@@ -369,7 +373,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (!checkTimer(client,msg, "donate")) {
+				if (!inList(msg.author,donateCooldownList)) {
 					donateCookies(client, msg, args);
 				}
 				else {
@@ -673,8 +677,12 @@ function stealCookies(client, msg, args) {
 				if (target["zina"]>0) {
 					target["zina"]--;
 					var steal_cooldown = 5;
+					stealCooldownList.push(msg.author);
 					msg.author.send('Your steal cooldown will expire in '+Math.ceil(steal_cooldown)+' minutes').catch(function(){console.log('Cannot send to '+msg.author.username);});
-					addToTimer(msg,steal_cooldown,"steal");
+					STEAL_TIMEOUT = setTimeout(function(){
+						removeFromList(msg.author, stealCooldownList);
+						msg.author.send('Your steal cooldown has expired').catch(function(){console.log('Cannot send to '+msg.author.username);});
+					},steal_cooldown*60000);
 					msg.channel.send(msg.author+', Zina has intercepted your attack (cooldown: '+steal_cooldown+' minutes)');
 					objToWeb(obj,URL_JSON);
 					COUNTER--;
@@ -709,8 +717,12 @@ function stealCookies(client, msg, args) {
 				var user = client.users.find(val => val.id === target["id"]);
 				var name = user != null ? user.username : "[NPC] "+target["id"];
 				msg.channel.send(msg.author+' has stolen '+steal_amount+' (bonus: '+steal_bonus+') cookies from '+name+' (cooldown '+Math.ceil(steal_cooldown)+' minutes)');
-				addToTimer(msg,steal_cooldown,"steal");
+				stealCooldownList.push(msg.author);
 				msg.author.send('Your steal cooldown will expire in '+Math.ceil(steal_cooldown)+' minutes').catch(function(){console.log('Cannot send to '+msg.author.username);});
+				STEAL_TIMEOUT = setTimeout(function(){
+					removeFromList(msg.author, stealCooldownList);
+					msg.author.send('Your steal cooldown has expired').catch(function(){console.log('Cannot send to '+msg.author.username);});
+				},steal_cooldown*60000);
 			}
 			else {
 				msg.channel.send(msg.author+', target must have cookies');
@@ -775,8 +787,12 @@ function donateCookies(client, msg, args) {
 				var user = client.users.find(val => val.id === target["id"]);
 				var name = user != null ? user.username : "[BOT] "+target["id"];
 				msg.channel.send(msg.author+' has donated '+donate_amount+' (bonus: '+donate_bonus+') cookies to '+name+' (cooldown '+Math.ceil(donate_cooldown)+' minutes)');
-				addToTimer(obj,msg,donate_cooldown,"donate");
+				donateCooldownList.push(msg.author);
 				msg.author.send('Your donate cooldown will expire in '+Math.ceil(donate_cooldown)+' minutes').catch(function(){console.log('Cannot send to '+msg.author.username);});
+				DONATE_TIMEOUT = setTimeout(function(){
+					removeFromList(msg.author, donateCooldownList);
+					msg.author.send('Your donate cooldown has expired').catch(function(){console.log('Cannot send to '+msg.author.username);});
+				},donate_cooldown*60000);
 			}
 			else {
 				msg.channel.send(msg.author+', target must have cookies');
@@ -1456,7 +1472,7 @@ function cookieOn(client) {
 
 function cookieOff() {
 	COOKIE_STATUS = false;
-	clearAllTimeouts(BOOST_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT);
+	clearAllTimeouts(BOOST_TIMEOUT, STEAL_TIMEOUT, DONATE_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT);
 }
 
 function filterMessage(msg) {
@@ -1525,19 +1541,6 @@ function removeFromTimer(client) {
 
 function updateTimer(client) {
 	if (TIMER_TIMEOUT==null) TIMER_TIMEOUT = setInterval(function(){removeFromTimer(client);console.log('test');},60000);
-}
-
-function checkTimer(client, msg, type_str) {
-	request(TIMER_JSON, function (err, response, data) {
-		if (err) {
-			console.log('Error reading points file: '+err);
-			//msg.channel.send('An unexpected error has occurred');
-			return;
-		}	
-		var obj = JSON.parse(data);
-		var elem = obj.find(val => val["author"] == msg.author.id && val["type"] == type_str);
-		return elem != null;
-	});
 }
 
 function clearTimer(client) {
