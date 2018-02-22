@@ -1456,7 +1456,7 @@ function cookieOn(client) {
 
 function cookieOff() {
 	COOKIE_STATUS = false;
-	clearAllTimeouts(BOOST_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT);
+	clearAllTimeouts(BOOST_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT, TIMER_TIMEOUT);
 }
 
 function filterMessage(msg) {
@@ -1498,6 +1498,7 @@ function addToTimer(msg,num,type_str) {
 	obj.push(elem);
 	objToWeb(obj,TIMER_JSON);
 	});
+	updateTimer(client);
 }
 
 function removeFromTimer(client) {
@@ -1524,7 +1525,20 @@ function removeFromTimer(client) {
 }
 
 function updateTimer(client) {
-	if (TIMER_TIMEOUT==null) TIMER_TIMEOUT = setInterval(function(){removeFromTimer(client);console.log('test');},60000);
+	request(TIMER_JSON, function (err, response, data) {
+		if (err) {
+			console.log('Error reading points file: '+err);
+			//msg.channel.send('An unexpected error has occurred');
+			return;
+		}
+		var obj = JSON.parse(data);
+		if (TIMER_TIMEOUT==null && obj != []) {
+			TIMER_TIMEOUT = setInterval(function(){removeFromTimer(client);console.log('test');},60000);
+		}
+		else if (TIMER_TIMEOUT!=null && obj == []) {
+			clearInterval(TIMER_TIMEOUT);
+		}
+	});
 }
 
 function checkTimer(client, msg, type_str) {
