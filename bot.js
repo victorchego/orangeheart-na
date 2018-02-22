@@ -109,7 +109,7 @@ client.on('guildMemberAdd', (guildmember) => {
 	if (server == null || server.id != '264145505452425227') return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	//client.channels.find(val => val.id == MOD_CHANNEL_ID).send(guildmember.user+' has joined the server at '+time.format('LLL')+' Pacific');
-	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.username+') has joined the server at '+time.format('LLL')+' Pacific');
+	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
 });
 
 client.on('guildMemberRemove', (guildmember) => {
@@ -117,7 +117,7 @@ client.on('guildMemberRemove', (guildmember) => {
 	if (server == null || server.id != '264145505452425227') return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	//client.channels.find(val => val.id == MOD_CHANNEL_ID).send(guildmember.user+' has left the server at '+time.format('LLL')+' Pacific');
-	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.username+') has left the server at '+time.format('LLL')+' Pacific');
+	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has left the server at '+time.format('LLL')+' Pacific');
 });
 
 client.on('message', (msg) => {
@@ -1231,6 +1231,20 @@ function objToWeb(obj,msg,url) {
 		if (error) console.log("Error has occurred: "+error);
 	});     
 }	
+
+function addToTimer(obj,msg,type_str) {
+	var elem = {};
+	elem["id"] = msg.author.id;
+	elem["time"] = msg.createdAt;
+	elem["type"] = type_str;
+	obj.push(elem);
+	objToWeb(obj,msg,TIMER_JSON);
+}
+
+function removeFromTimer(obj,msg,type_str) {
+	//var elem = obj.find(function(item){return item["id"]==msg.author.id;});
+	//delete obj[
+}
 
 function isMNGWaifu(waifu) {
 	return inList(waifu,MNG_WAIFUS);
