@@ -85,7 +85,7 @@ client.on('ready', () => {
     console.log('Logged in as: ');
     console.log(client.user.username + ' - ' + client.user.id);
 	client.user.setGame('!Cy commands');
-	clearAllTimeouts(BOOST_TIMEOUT, STEAL_TIMEOUT, DONATE_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT);
+	clearAllTimeouts(BOOST_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT);
 	clearLists(cooldownList,cooldownMessageList);
 	clearTimer(client);
 	if (COOKIE_STATUS) startUp(client);
