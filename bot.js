@@ -8,6 +8,7 @@ var moment = require('moment');
 var Quickstart = require('./quickstart.js');
 var CALL_REQUEST = Quickstart.callRequestFromServer; //function (callback,args,msg) {Quickstart.callRequestFromServer(callback,args,msg);}; // .callRequestFromServer or .callRequestFromClient
 var Func = require('./functions.js');
+var Game = require('./game.js');
 
 var cooldownList = [];
 var cooldownMessageList = [];
@@ -146,6 +147,9 @@ client.on('message', (msg) => {
         args = args.splice(1);
 		
         switch(cmd.toLowerCase()) {
+			case 'huntfuugame':
+				Game.startFuuTrap(client);
+			break;
 			case 'shoot':
 			case 'shoots':
 				var str = '';
