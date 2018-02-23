@@ -353,28 +353,12 @@ client.on('message', (msg) => {
 				else msg.channel.send('You must specify one valid target with a tag');
 			break;
 			case 'steal':
-				if (!COOKIE_STATUS) {
-					msg.channel.send('Cookie commands are disabled currently');
-					return;
-				}
-				if (!checkTimer(client,msg,"steal")) {
-					stealCookies(client, msg, args);
-				}
-				else {
-					msg.author.send('You must wait until your steal cooldown expires').catch(function(){console.log('Cannot send to '+msg.author.username);});
-				}
-			break;
 			case 'donate':
 				if (!COOKIE_STATUS) {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (!checkTimer(client,msg,"donate")) {
-					donateCookies(client, msg, args);
-				}
-				else {
-					msg.author.send('You must wait until your donate cooldown expires').catch(function(){console.log('Cannot send to '+msg.author.username);});
-				}
+				checkTimer(client,msg,args,cmd.toLowerCase());
 			break;
 			case 'hire':
 				if (!COOKIE_STATUS) {
@@ -1542,7 +1526,7 @@ function updateTimer(client) {
 	});
 }
 
-function checkTimer(client, msg, type_str) {
+function checkTimer(client, msg, args, type_str) {
 	request(TIMER_JSON, function (err, response, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
@@ -1551,7 +1535,21 @@ function checkTimer(client, msg, type_str) {
 		}	
 		var obj = JSON.parse(data);
 		var elem = obj.find(function(item){return item["author"]==msg.author.id && item["type"]==type_str;});
-		return elem != undefined;
+		if (elem != null) {
+			msg.author.send('You must wait until your '+type_str+' cooldown expires').catch(function(){console.log('Cannot send to '+msg.author.username);});
+			return;
+		}
+		switch(type_str) {
+			case 'steal':
+				stealCookies(client,msg,args);
+			break;
+			case 'donate':
+				donateCookies(client,msg,args);
+			break;
+			default:
+				msg.channel.send('Refer to `!Cy commands`');
+			break;
+		}
 	});
 }
 
