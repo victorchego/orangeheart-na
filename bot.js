@@ -1534,7 +1534,7 @@ function updateTimer(client) {
 		}
 		var obj = JSON.parse(data);
 		if (TIMER_TIMEOUT==null && obj != []) {
-			TIMER_TIMEOUT = setInterval(function(){removeFromTimer(client);console.log('test');},60000);
+			TIMER_TIMEOUT = setInterval(function(){removeFromTimer(client);},60000);
 		}
 		else if (TIMER_TIMEOUT!=null && obj == []) {
 			clearInterval(TIMER_TIMEOUT);
@@ -1551,7 +1551,7 @@ function checkTimer(client, msg, type_str) {
 		}	
 		var obj = JSON.parse(data);
 		var elem = obj.find(function(item){return item["author"]==msg.author.id && item["type"]==type_str;});
-		return elem != null;
+		return elem != undefined;
 	});
 }
 
