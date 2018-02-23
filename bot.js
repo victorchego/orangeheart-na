@@ -88,7 +88,7 @@ client.on('ready', () => {
 	clearAllTimeouts(BOOST_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT, TIMER_TIMEOUT);
 	clearLists(cooldownList,cooldownMessageList);
 	clearTimer(client);
-	if (COOKIE_STATUS) startUp(client);
+	cookieOn(client);
 	//client.channels.find(val => val.id === CY_CHANNEL_ID).send('I AM ALIVEEEEE!');
 });
 
@@ -99,7 +99,7 @@ client.on('error', (err) => {
 client.on('reconnecting', () => {
 	var time = new Date();
 	console.log('Attempting to reconnect at '+time);
-	if (COOKIE_STATUS) startUp(client);
+	if (COOKIE_STATUS) cookieOn(client);
 });
 
 client.on('guildMemberAdd', (guildmember) => {
