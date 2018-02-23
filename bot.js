@@ -775,7 +775,7 @@ function donateCookies(client, msg, args) {
 				var user = client.users.find(val => val.id === target["id"]);
 				var name = user != null ? user.username : "[BOT] "+target["id"];
 				msg.channel.send(msg.author+' has donated '+donate_amount+' (bonus: '+donate_bonus+') cookies to '+name+' (cooldown '+Math.ceil(donate_cooldown)+' minutes)');
-				addToTimer(obj,msg,donate_cooldown,"donate");
+				addToTimer(msg,donate_cooldown,"donate");
 				msg.author.send('Your donate cooldown will expire in '+Math.ceil(donate_cooldown)+' minutes').catch(function(){console.log('Cannot send to '+msg.author.username);});
 			}
 			else {
