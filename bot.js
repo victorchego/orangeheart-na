@@ -85,7 +85,7 @@ client.on('ready', () => {
     console.log('Logged in as: ');
     console.log(client.user.username + ' - ' + client.user.id);
 	client.user.setGame('!Cy commands');
-	clearAllTimeouts(BOOST_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT);
+	clearAllTimeouts(BOOST_TIMEOUT, LOTTERY_TIMEOUT, HOURLY_TIMEOUT, TYCOON_TIMEOUT, TAX_TIMEOUT, MARI_TIMEOUT, TIMER_TIMEOUT);
 	clearLists(cooldownList,cooldownMessageList);
 	clearTimer(client);
 	if (COOKIE_STATUS) startUp(client);
@@ -357,7 +357,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (!checkTimer(client,msg, "steal")) {
+				if (!checkTimer(client,msg,"steal")) {
 					stealCookies(client, msg, args);
 				}
 				else {
@@ -369,7 +369,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (!checkTimer(client,msg, "donate")) {
+				if (!checkTimer(client,msg,"donate")) {
 					donateCookies(client, msg, args);
 				}
 				else {
@@ -1226,6 +1226,7 @@ function clearLists(args) {
 function clearAllTimeouts(args) {
 	for (x in args) {
 		if (x != null) clearTimeout(x);
+		if (x != null) clearInterval(x);
 	}
 }
 
@@ -1549,7 +1550,7 @@ function checkTimer(client, msg, type_str) {
 			return;
 		}	
 		var obj = JSON.parse(data);
-		var elem = obj.find(val => val["author"] == msg.author.id && val["type"] == type_str);
+		var elem = obj.find(function(item){return item["author"]==msg.author.id && item["type"]==type_str;});
 		return elem != null;
 	});
 }
