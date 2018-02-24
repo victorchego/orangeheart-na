@@ -8,6 +8,7 @@ var first_player = null;
 var second_player = null;
 var third_player = null;
 var fourth_player = null;
+var winner = null;
 /*
    1 2 3 4 5 6 7 8 9 10 
  1 · · · · · · · · · ·
@@ -64,16 +65,18 @@ function moveFuu(msg) {
 				if (!err) {
 					msg.channel.send("Error with Fuu game: "+error); 	
 					clearInterval(interval);
+					interval = null;
 				}
 				err = true;
 				return;
 			});
 	
-		if (turns<=0) {
-			clearInterval(interval);
-			return;
-		}
-	}, 2000);
+			if (turns<=0) {
+				clearInterval(interval);
+				interval = null;
+				return;
+			}
+		}, 2000);
 	}
 	else {
 		msg.delete();
@@ -102,9 +105,9 @@ function stringMap() {
 			else if (map[col][row] == 3) str += " 3";
 			else if (map[col][row] == 4) str += " 4";
 		}
-		str += "\n";
+		str += "\nWINNER: "+(winner ? winner : "none");
 	}
-	str += "```";
+	str += "\n```";
 	return str;
 }
 
