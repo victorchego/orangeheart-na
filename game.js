@@ -5,11 +5,11 @@ var turns = 30;
 var interval = null;
 
 var position_fuu = [5,4]; // [col,row]
-var position_1 = [3,3];
-var position_2 = [6,6];
-var position_3 = [3,7];
-var position_4 = [4,6];
-var position_list = [position_1,position_2,position_3,position_4];
+var position_1 = [[3,3],[0,1],[7,8]];
+var position_2 = [[6,6],[4,3],[7,1]];
+var position_3 = [[3,7],[0,6],[2,3]];
+var position_4 = [[4,6],[5,5],[1,8]];
+//var position_list = [position_1,position_2,position_3,position_4];
 
 var player_1 = 'a';
 var player_2 = 'b';
@@ -134,24 +134,12 @@ function checkFuu() {
 }
 
 function getWinner() {
-	var position = [position_1,position_2,position_3,position_4].find(function(item) {return item == position_fuu;});
-	switch (position) {
-		case position_1:
-			winner = player_1;
-		break;
-		case position_2:
-			winner = player_2;
-		break;
-		case position_3:
-			winner = player_3;
-		break;
-		case position_4:
-			winner = player_4;
-		break;
-		default:
-			winner = null;
-		break;
-	}
+	var position = position_1.concat(position_2,position_3,position_4).find(function(item) {return item == position_fuu;});
+	if (position_1.indexOf(position)>-1) winner = player_1;
+	else if (position_2.indexOf(position)>-1) winner = player_2;
+	else if (position_3.indexOf(position)>-1) winner = player_3;
+	else if (position_4.indexOf(position)>-1) winner = player_4;
+	else winner = null;
 }
 
 function startFuuTrap(client,msg) {
@@ -159,9 +147,9 @@ function startFuuTrap(client,msg) {
 	if (!msg.channel) return;
 	resetMap();
 	randomizeFuu();
-	for (pos in position_list) {
-		position_list[pos] = randomizePosition();
-	}
+	//for (pos in position_list) {
+		//position_list[pos] = randomizePosition();
+	//}
 	if (!interval) msg.channel.send(stringMap()).then(message => moveFuu(message));
 	else msg.channel.send("Cannot have multiple games running at once");
 };
