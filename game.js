@@ -35,6 +35,7 @@ function resetMap() {
 			map[col][row] = 0;
 		}
 	}
+	setTraps();
 }
 
 function randomizeFuu() {
@@ -155,7 +156,6 @@ function startFuuTrap(client,msg) {
 	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!msg.channel) return;
 	resetMap();
-	setTraps();
 	msg.channel.send(stringMap()).then(message => moveFuu(message));
 };
 
