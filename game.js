@@ -100,7 +100,7 @@ function moveFuu(msg) {
 }
 
 function positionFuu() {
-	var num = random();
+	var num = Math.random();
 	if (num < 0.25) {
 		position_fuu[0]+=1;
 	}
