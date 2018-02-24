@@ -4,7 +4,7 @@ var map = [[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,
 var turns = 30;
 var interval = null;
 
-var position_fuu = [0,0]; // [col,row]
+var position_fuu = [5,4]; // [col,row]
 var position_1 = [3,3];
 var position_2 = [6,6];
 var position_3 = [3,7];
@@ -155,8 +155,16 @@ function startFuuTrap(client,msg) {
 	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!msg.channel) return;
 	resetMap();
+	setTraps();
 	msg.channel.send(stringMap()).then(message => moveFuu(message));
 };
+
+function setTraps() {
+	map[position_1[0]][position_1[1]] = 1;
+	map[position_2[0]][position_2[1]] = 2;
+	map[position_3[0]][position_3[1]] = 3;
+	map[position_4[0]][position_4[1]] = 4;
+}
 
 function stringMap() {
 	var str = "```Turns: "+turns+"\n   1 2 3 4 5 6 7 8 9 10\n";
