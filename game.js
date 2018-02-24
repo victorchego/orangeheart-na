@@ -4,6 +4,7 @@ var map = [[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,
 var turns = 30;
 var interval = null;
 
+var player_list = [];
 var position_fuu = [5,4]; // [col,row]
 var position_1 = [[3,3],[0,1],[7,8]];
 var position_2 = [[6,6],[4,3],[7,1]];
@@ -31,6 +32,36 @@ var winner = null;
  9 · · · · · · · · · ·
 10 · · · · · · · · · ·
 */
+
+const message_callback = (msg) => {
+	if (msg.content.startsWith('!fuugame')) {
+		var coords = msg.content.split(' ').splice(1);
+		if (coords == "") {
+			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuugame 1 10 2 9 4 5');
+			return;
+		}
+		if (player_list.indexOf(msg.author.id)>-1) {
+			msg.channel.send('You have already placed your coordinates');
+			return;
+		}
+		if (player_list.length>=4) {
+			msg.channel.send('Current game is full. Please wait till the next round');
+			return;
+		}
+		if (coords.some(outOfBounds)) {
+			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuugame 1 10 2 9 4 5');
+			return;
+		}
+		if (coordTaken(coords.slice(0,2)) || coordTaken(coords.slice(2,4)) || coordTaken(coords.slice(4,6))) {
+			msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
+			return;
+		}
+		nextPlayer(msg);
+		taken_coords.push(coords.slice(0,2));
+		taken_coords.push(coords.slice(2,4));
+		taken_coords.push(coords.slice(4,6));
+	}
+}
 
 function resetMap() {
 	for (col in map) {
@@ -156,26 +187,35 @@ function startFuuTrap(client,msg) {
 		msg.channel.send("Cannot have multiple games running at once");
 		return;
 	}
-	getCoordinates(client);
-	resetMap();
-	position_fuu = randomizePosition();
-	msg.channel.send(stringMap()).then(message => moveFuu(message));
+	clearPlayers();
+	getCoordinates(client,msg);
 };
 
-function getCoordinates(client) {
-	client.on('message', (msg) => {
-		if (msg.content.startsWith('!fuugame') {
-			var coords = msg.content.split(' ').splice(1);
-			if (coords.some(outOfBounds)) {
-				msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuugame 1 10 2 9 4 5');
-				return;
-			}
-			if (coordTaken(coords.slice(0,2)) || coordTaken(coords.slice(2,4)) || coordTaken(coords.slice(4,6))) {
-				msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
-				return;
-			}
-		}
-	});
+function getCoordinates(client,msg) {
+	msg.channel.send('Please opt in within the next 15 seconds by typing: !fuugame col#1 row#1 col#2 row#2 col#3 row#3 (just the numbers)');
+	client.on('message', message_callback);
+	var playTimeout = setTimeout(function() {
+		client.removeListener('message',message_callback);
+		resetMap();
+		position_fuu = randomizePosition();
+		msg.channel.send(stringMap()).then(message => moveFuu(message));
+	},15000);
+}
+
+function nextPlayer(msg) {
+	player_list.push(msg.author.id);
+	if (!player_1) player_1 = msg.author;
+	else if (!player_2) player_2 = msg.author;
+	else if (!player_3) player_3 = msg.author;
+	else player_4 = msg.author;
+}
+
+function clearPlayers() {
+	player_list = [];
+	player_1 = null;
+	player_2 = null;
+	player_3 = null;
+	player_4 = null;
 }
 
 function coordTaken(coord) {
