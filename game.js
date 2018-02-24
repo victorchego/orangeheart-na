@@ -1,6 +1,7 @@
 var CY_CHANNEL_ID = '401660510816436224';
 var map = [[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]];
+
 var first_player = null;
 var second_player = null;
 var third_player = null;
@@ -19,9 +20,40 @@ var fourth_player = null;
 10 · · · · · · · · · ·
 */
 
+function resetMap() {
+	for (col in map) {
+		for (row in map[col]) {
+			map[col][row] = 0;
+		}
+	}
+}
+
+function randomizeFuu() {
+	var num = Math.floor((Math.random() * 4) + 1);
+	switch (num) {
+		case 1:
+			map[4][4] = -1;
+		break;
+		case 2:
+			map[4][5] = -1;
+		break;
+		case 3:
+			map[5][4] = -1;
+		break;
+		case 4:
+			map[5][5] = -1;
+		break;
+		default:
+			return;
+		break;
+	}
+}
+
 function startFuuTrap(client) {
 	var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!channel) return;
+	resetMap();
+	randomizeFuu();
 	var str = stringMap();
 	channel.send(str);
 	channel.send('done');
