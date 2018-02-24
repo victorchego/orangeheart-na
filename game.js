@@ -64,7 +64,7 @@ function startFuuTrap(client) {
 	if (!channel) return;
 	resetMap();
 	randomizeFuu();
-	channel.send(stringMap()).then(message => moveFuu(message)).catch(error => channel.send("Error with Fuu game: "+error));
+	channel.send(stringMap()).then(message => moveFuu(message)).catch(error => {msg.channel.send("Error with Fuu game: "+error); return;});
 };
 
 function stringMap() {
