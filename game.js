@@ -155,10 +155,18 @@ function startFuuTrap(client,msg) {
 };
 
 function setTraps() {
-	map[position_1[0]][position_1[1]] = 1;
-	map[position_2[0]][position_2[1]] = 2;
-	map[position_3[0]][position_3[1]] = 3;
-	map[position_4[0]][position_4[1]] = 4;
+	for (i in position_1) {
+		map[position_1[i][0]][position_1[i][1]] = 1;
+	}
+	for (i in position_2) {
+		map[position_2[i][0]][position_2[i][1]] = 2;
+	}
+	for (i in position_3) {
+		map[position_3[i][0]][position_3[i][1]] = 3;
+	}
+	for (i in position_4) {
+		map[position_4[i][0]][position_4[i][1]] = 4;
+	}
 }
 
 function stringMap() {
