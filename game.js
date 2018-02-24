@@ -64,8 +64,7 @@ function startFuuTrap(client) {
 	resetMap();
 	randomizeFuu();
 	var str = stringMap();
-	var msg = channel.send(str);
-	moveFuu(msg);
+	channel.send(str);
 };
 
 function stringMap() {
