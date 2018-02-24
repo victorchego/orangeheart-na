@@ -9,6 +9,7 @@ var position_1 = [3,3];
 var position_2 = [6,6];
 var position_3 = [3,7];
 var position_4 = [4,6];
+var position_list = [position_1,position_2,position_3,position_4];
 
 var player_1 = 'a';
 var player_2 = 'b';
@@ -36,6 +37,11 @@ function resetMap() {
 		}
 	}
 	setTraps();
+}
+function randomizePosition(coord) {
+	var col = Math.floor(Math.random() * 10);
+	var row = Math.floor(Math.random() * 10);
+	cord = [col,row];
 }
 
 function randomizeFuu() {
@@ -153,6 +159,9 @@ function startFuuTrap(client,msg) {
 	if (!msg.channel) return;
 	resetMap();
 	randomizeFuu();
+	for (pos in position_list) {
+		randomizePosition(position_list[pos]);
+	}
 	if (!interval) msg.channel.send(stringMap()).then(message => moveFuu(message));
 	else msg.channel.send("Cannot have multiple games running at once");
 };
