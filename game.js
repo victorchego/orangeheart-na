@@ -1,7 +1,8 @@
 var CY_CHANNEL_ID = '401660510816436224';
 var map = [[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]];
-var turns = 60;
+var turns = 30;
+var interval = null;
 
 var first_player = null;
 var second_player = null;
@@ -53,7 +54,7 @@ function randomizeFuu() {
 function moveFuu(msg) {
 	turns = 30;
 	var err = false;
-	var interval = setInterval(function() {
+	if (!interval) interval = setInterval(function() {
 		resetMap();
 		randomizeFuu();
 		msg.edit(stringMap()).then(function () {
@@ -64,23 +65,21 @@ function moveFuu(msg) {
 				clearInterval(interval);
 			}
 			err = true;
-			turns = 60;
 			return;
 		});
 	
 	if (turns<=0) {
 		clearInterval(interval);
-		turns = 60;
 		return;
 		}
 	}, 2000);
+	else msg.channel.send("Cannot have two games running at once");
 }
 
 function startFuuTrap(client,msg) {
 	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!msg.channel) return;
 	resetMap();
-	randomizeFuu();
 	msg.channel.send(stringMap()).then(message => moveFuu(message));
 };
 
