@@ -52,8 +52,9 @@ function randomizeFuu() {
 function moveFuu(msg) {
 	var seconds = 0;
 	while (seconds < 60) {
+		resetMap();
 		randomizeFuu();
-		msg.edit(stringMap()).catch(error => msg.channel.send("Error with Fuu game: "+error));
+		msg.edit(stringMap()).catch(error => {msg.channel.send("Error with Fuu game: "+error); return;});
 		seconds++;
 	}
 }
