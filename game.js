@@ -128,8 +128,13 @@ function checkFuu() {
 		map[position_fuu[0]][position_fuu[1]] = -1;
 	}
 	else if (map[position_fuu[0]][position_fuu[1]]>0) {
-		map[position_fuu[0]][position_fuu[1]] = -2;
-		getWinner();
+		if (turns > 20) {
+			map[position_fuu[0]][position_fuu[1]] = -2;
+		}
+		else {
+			map[position_fuu[0]][position_fuu[1]] = -3;
+			getWinner();
+		}
 	}
 }
 
@@ -145,10 +150,7 @@ function startFuuTrap(client,msg) {
 	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!msg.channel) return;
 	resetMap();
-	randomizeFuu();
-	//for (pos in position_list) {
-		//position_list[pos] = randomizePosition();
-	//}
+	position_fuu = randomizePosition;
 	if (!interval) msg.channel.send(stringMap()).then(message => moveFuu(message));
 	else msg.channel.send("Cannot have multiple games running at once");
 };
@@ -169,15 +171,16 @@ function setTraps() {
 }
 
 function stringMap() {
-	var str = "```Turns: "+turns+"\n   1 2 3 4 5 6 7 8 9 10\n";
+	var str = "```Turns (invincible until 20): "+turns+"\n   1 2 3 4 5 6 7 8 9 10\n";
 	for (col in map) {
 		var num = Number(col) + 1;
 		if (col != 9) str += " " + num;
 		else str += num;
 		for (row in map[col]) {
 			if (map[col][row] == 0) str += " ·";
-			else if (map[col][row] == -1) str += " &";
-			else if (map[col][row] == -2) str += " X";
+			else if (map[col][row] == -1) str += " &"; //ready
+			else if (map[col][row] == -2 || turns > 20) str += " O"; //not ready
+			else if (map[col][row] == -3) str += " X"; //caught
 			else if (map[col][row] == 1) str += " 1";
 			else if (map[col][row] == 2) str += " 2";
 			else if (map[col][row] == 3) str += " 3";
