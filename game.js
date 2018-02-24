@@ -134,10 +134,10 @@ function checkFuu() {
 }
 
 function getWinner() {
-	if (position_1.indexOf(position_fuu)>-1) winner = player_1;
-	else if (position_2.indexOf(position_fuu)>-1) winner = player_2;
-	else if (position_3.indexOf(position_fuu)>-1) winner = player_3;
-	else if (position_4.indexOf(position_fuu)>-1) winner = player_4;
+	if (position_1.some(coord => coord[0]==position_fuu[0] && coord[1]==position_fuu[1])) winner = player_1;
+	else if (position_2.some(coord => coord[0]==position_fuu[0] && coord[1]==position_fuu[1])) winner = player_2;
+	else if (position_3.some(coord => coord[0]==position_fuu[0] && coord[1]==position_fuu[1])) winner = player_3;
+	else if (position_4.some(coord => coord[0]==position_fuu[0] && coord[1]==position_fuu[1])) winner = player_4;
 	else winner = null;
 }
 
