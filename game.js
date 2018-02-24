@@ -72,7 +72,7 @@ function moveFuu(msg) {
 			msg.edit(stringMap()).then(function () {
 				turns-=1;
 			}).catch(error => {
-				if(error == 'Winner') {
+				if (error == 'Winner') {
 					msg.channel.send(winner+' has trapped Fuu and wins!');
 					clearInterval(interval);
 					interval = null;
@@ -116,7 +116,7 @@ function positionFuu() {
 	checkFuu();
 }
 
-fuction checkFuu() {
+function checkFuu() {
 	if (map[position_fuu[0]][position_fuu[1]]==0) {
 		map[position_fuu[0]][position_fuu[1]] = -1;
 	}
@@ -126,8 +126,8 @@ fuction checkFuu() {
 }
 
 function getWinner() {
-	var position = [position_1,position_2,position_3,position_4].find(function(item) {item = position_fuu});
-	switch(position) {
+	var position = [position_1,position_2,position_3,position_4].find(function(item) {return item = position_fuu;});
+	switch (position) {
 		case position_1:
 			winner = player_1;
 		break;
