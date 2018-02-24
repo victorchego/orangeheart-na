@@ -1,7 +1,7 @@
 var CY_CHANNEL_ID = '401660510816436224';
 var map = [[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]];
-var seconds = 60;
+var turns = 60;
 
 var first_player = null;
 var second_player = null;
@@ -51,29 +51,29 @@ function randomizeFuu() {
 }
 
 function moveFuu(msg) {
-	seconds = 60;
+	turns = 30;
 	var err = false;
 	var interval = setInterval(function() {
 		resetMap();
 		randomizeFuu();
 		msg.edit(stringMap()).then(function () {
-			seconds-=5;
+			turns-=1;
 		}).catch(error => {
 			if (!err) {
 				msg.channel.send("Error with Fuu game: "+error); 	
 				clearInterval(interval);
 			}
 			err = true;
-			seconds = 60;
+			turns = 60;
 			return;
 		});
 	
-	if (seconds<=0) {
+	if (turns<=0) {
 		clearInterval(interval);
-		seconds = 60;
+		turns = 60;
 		return;
 		}
-	}, 5000);
+	}, 2000);
 }
 
 function startFuuTrap(client,msg) {
@@ -85,7 +85,7 @@ function startFuuTrap(client,msg) {
 };
 
 function stringMap() {
-	var str = "```Seconds (not live): "+seconds+"\n   1 2 3 4 5 6 7 8 9 10\n";
+	var str = "```Turns: "+turns+"\n   1 2 3 4 5 6 7 8 9 10\n";
 	for (col in map) {
 		var num = Number(col) + 1;
 		if (col != 9) str += " " + num;
