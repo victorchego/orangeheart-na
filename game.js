@@ -133,13 +133,13 @@ function getWinner() {
 			winner = player_1;
 		break;
 		case position_2:
-			winner = player_1;
+			winner = player_2;
 		break;
 		case position_3:
-			winner = player_1;
+			winner = player_3;
 		break;
 		case position_4:
-			winner = player_1;
+			winner = player_4;
 		break;
 		default:
 			winner = null;
@@ -150,6 +150,7 @@ function getWinner() {
 function startFuuTrap(client,msg) {
 	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!msg.channel) return;
+	randomizeFuu();
 	resetMap();
 	if (!interval) msg.channel.send(stringMap()).then(message => moveFuu(message));
 	else msg.channel.send("Cannot have multiple games running at once");
