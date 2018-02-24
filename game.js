@@ -134,11 +134,10 @@ function checkFuu() {
 }
 
 function getWinner() {
-	var position = position_1.concat(position_2,position_3,position_4).find(function(item) {return item == position_fuu;});
-	if (position_1.indexOf(position)>-1) winner = player_1;
-	else if (position_2.indexOf(position)>-1) winner = player_2;
-	else if (position_3.indexOf(position)>-1) winner = player_3;
-	else if (position_4.indexOf(position)>-1) winner = player_4;
+	if (position_1.indexOf(position_fuu)>-1) winner = player_1;
+	else if (position_2.indexOf(position_fuu)>-1) winner = player_2;
+	else if (position_3.indexOf(position_fuu)>-1) winner = player_3;
+	else if (position_4.indexOf(position_fuu)>-1) winner = player_4;
 	else winner = null;
 }
 
