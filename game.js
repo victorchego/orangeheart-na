@@ -57,7 +57,7 @@ function moveFuu(msg) {
 		resetMap();
 		randomizeFuu();
 		msg.edit(stringMap()).then(function () {
-			seconds--;
+			seconds-=5;
 		}).catch(error => {
 			if (!err) {
 				msg.channel.send("Error with Fuu game: "+error); 	
@@ -73,7 +73,7 @@ function moveFuu(msg) {
 		seconds = 60;
 		return;
 		}
-	}, 1000);
+	}, 5000);
 }
 
 function startFuuTrap(client,msg) {
@@ -85,7 +85,7 @@ function startFuuTrap(client,msg) {
 };
 
 function stringMap() {
-	var str = "```Seconds: "+seconds+"\n   1 2 3 4 5 6 7 8 9 10\n";
+	var str = "```Seconds (not live): "+seconds+"\n   1 2 3 4 5 6 7 8 9 10\n";
 	for (col in map) {
 		var num = Number(col) + 1;
 		if (col != 9) str += " " + num;
