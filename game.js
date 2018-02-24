@@ -41,7 +41,7 @@ function resetMap() {
 function randomizePosition(coord) {
 	var col = Math.floor(Math.random() * 10);
 	var row = Math.floor(Math.random() * 10);
-	cord = [col,row];
+	coord = [col,row];
 }
 
 function randomizeFuu() {
@@ -134,7 +134,7 @@ function checkFuu() {
 }
 
 function getWinner() {
-	var position = [position_1,position_2,position_3,position_4].find(function(item) {return item = position_fuu;});
+	var position = [position_1,position_2,position_3,position_4].find(function(item) {return item == position_fuu;});
 	switch (position) {
 		case position_1:
 			winner = player_1;
