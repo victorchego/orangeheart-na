@@ -105,9 +105,9 @@ function stringMap() {
 			else if (map[col][row] == 3) str += " 3";
 			else if (map[col][row] == 4) str += " 4";
 		}
-		str += "\nWINNER: "+(winner ? winner : "none");
+		str += "\n";
 	}
-	str += "\n```";
+	str += "WINNER: "+(winner ? winner : "none")+"\n```";
 	return str;
 }
 
