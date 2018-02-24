@@ -38,10 +38,10 @@ function resetMap() {
 	}
 	setTraps();
 }
-function randomizePosition(coord) {
+function randomizePosition() {
 	var col = Math.floor(Math.random() * 10);
 	var row = Math.floor(Math.random() * 10);
-	coord = [col,row];
+	return [col,row];
 }
 
 function randomizeFuu() {
@@ -160,7 +160,7 @@ function startFuuTrap(client,msg) {
 	resetMap();
 	randomizeFuu();
 	for (pos in position_list) {
-		randomizePosition(position_list[pos]);
+		position_list[pos] = randomizePosition();
 	}
 	if (!interval) msg.channel.send(stringMap()).then(message => moveFuu(message));
 	else msg.channel.send("Cannot have multiple games running at once");
