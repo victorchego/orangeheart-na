@@ -72,7 +72,7 @@ function moveFuu(msg) {
 		msg.edit(stringMap()).then(function () {
 			turns-=1;
 		}).catch(error => {
-			if (error == 'Winner') {
+			if (error.message == 'Winner') {
 				msg.channel.send(winner+' has trapped Fuu and wins!');
 				clearInterval(interval);
 				interval = null;
