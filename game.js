@@ -52,27 +52,29 @@ function randomizeFuu() {
 }
 
 function moveFuu(msg) {
-	turns = 30;
 	var err = false;
-	if (!interval) interval = setInterval(function() {
-		resetMap();
-		randomizeFuu();
-		msg.edit(stringMap()).then(function () {
-			turns-=1;
-		}).catch(error => {
-			if (!err) {
-				msg.channel.send("Error with Fuu game: "+error); 	
-				clearInterval(interval);
-			}
-			err = true;
-			return;
-		});
+	if (!interval) {
+		turns = 30;
+		interval = setInterval(function() {
+			resetMap();
+			randomizeFuu();
+			msg.edit(stringMap()).then(function () {
+				turns-=1;
+			}).catch(error => {
+				if (!err) {
+					msg.channel.send("Error with Fuu game: "+error); 	
+					clearInterval(interval);
+				}
+				err = true;
+				return;
+			});
 	
-	if (turns<=0) {
-		clearInterval(interval);
-		return;
+		if (turns<=0) {
+			clearInterval(interval);
+			return;
 		}
 	}, 2000);
+	}
 	else {
 		msg.delete();
 		msg.channel.send("Cannot have multiple games running at once");
