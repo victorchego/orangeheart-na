@@ -74,6 +74,7 @@ function moveFuu(msg) {
 				msg.channel.send(winner+' has trapped Fuu and wins!');
 				clearInterval(interval);
 				interval = null;
+				winner = null;
 				return;
 			}
 			turns-=1;
