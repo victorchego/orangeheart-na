@@ -73,7 +73,10 @@ function moveFuu(msg) {
 		return;
 		}
 	}, 2000);
-	else msg.channel.send("Cannot have two games running at once");
+	else {
+		msg.delete();
+		msg.channel.send("Cannot have multiple games running at once");
+	}
 }
 
 function startFuuTrap(client,msg) {
