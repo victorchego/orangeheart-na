@@ -26,8 +26,9 @@ function startFuuTrap(client) {
 function stringMap() {
 	var str = "```\n   1 2 3 4 5 6 7 8 9 10\n";
 	for (col in map) {
-		if (col != 9) str += " " ++ parseInt(col+1);
-		else str += "10";
+		var num = col + 1;
+		if (col != 9) str += " " + num;
+		else str += num;
 		for (row in map[col]) {
 			str += " ·";
 		}
