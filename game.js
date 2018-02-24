@@ -65,39 +65,33 @@ function randomizeFuu() {
 
 function moveFuu(msg) {
 	var err = false;
-	if (!interval) {
-		turns = 30;
-		interval = setInterval(function() {
-			resetMap();
-			positionFuu();
-			msg.edit(stringMap()).then(function () {
-				turns-=1;
-			}).catch(error => {
-				if (error == 'Winner') {
-					msg.channel.send(winner+' has trapped Fuu and wins!');
-					clearInterval(interval);
-					interval = null;
-				}
-				if (!err) {
-					msg.channel.send("Error with Fuu game: "+error); 	
-					clearInterval(interval);
-					interval = null;
-				}
-				err = true;
-				return;
-			});
-	
-			if (turns<=0) {
+	turns = 30;
+	interval = setInterval(function() {
+		resetMap();
+		positionFuu();
+		msg.edit(stringMap()).then(function () {
+			turns-=1;
+		}).catch(error => {
+			if (error == 'Winner') {
+				msg.channel.send(winner+' has trapped Fuu and wins!');
 				clearInterval(interval);
 				interval = null;
-				return;
 			}
-		}, 2000);
-	}
-	else {
-		msg.delete();
-		msg.channel.send("Cannot have multiple games running at once");
-	}
+			if (!err) {
+				msg.channel.send("Error with Fuu game: "+error); 	
+				clearInterval(interval);
+				interval = null;
+			}
+			err = true;
+			return;
+		});
+
+		if (turns<=0) {
+			clearInterval(interval);
+			interval = null;
+			return;
+		}
+	}, 2000);
 }
 
 function positionFuu() {
@@ -126,6 +120,7 @@ function checkFuu() {
 		map[position_fuu[0]][position_fuu[1]] = -1;
 	}
 	else if (map[position_fuu[0]][position_fuu[1]]>0) {
+		map[position_fuu[0]][position_fuu[1]] = -2;
 		getWinner();
 	}
 }
@@ -156,7 +151,8 @@ function startFuuTrap(client,msg) {
 	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!msg.channel) return;
 	resetMap();
-	msg.channel.send(stringMap()).then(message => moveFuu(message));
+	if (!interval) msg.channel.send(stringMap()).then(message => moveFuu(message));
+	else msg.channel.send("Cannot have multiple games running at once");
 };
 
 function setTraps() {
@@ -175,6 +171,7 @@ function stringMap() {
 		for (row in map[col]) {
 			if (map[col][row] == 0) str += " ·";
 			else if (map[col][row] == -1) str += " &";
+			else if (map[col][row] == -2) str += " X";
 			else if (map[col][row] == 1) str += " 1";
 			else if (map[col][row] == 2) str += " 2";
 			else if (map[col][row] == 3) str += " 3";
@@ -182,7 +179,7 @@ function stringMap() {
 		}
 		str += "\n";
 	}
-	str += "WINNER: "+(winner ? winner : "none")+"\n```";
+	str += "Winner: "+(winner ? winner : "none")+"\n```";
 	return str;
 }
 
