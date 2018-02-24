@@ -51,12 +51,16 @@ function randomizeFuu() {
 
 function moveFuu(msg) {
 	var seconds = 0;
+	var err = false;
 	var interval = setInterval(function() {
 		resetMap();
 		randomizeFuu();
 		msg.edit(stringMap()).catch(error => {
-			msg.channel.send("Error with Fuu game: "+error); 	
-			clearInterval(interval);
+			if (!err) {
+				msg.channel.send("Error with Fuu game: "+error); 	
+				clearInterval(interval);
+			}
+			err = true;
 			return;
 		});
 	
