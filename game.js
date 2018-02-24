@@ -116,6 +116,10 @@ function positionFuu() {
 	checkFuu();
 }
 
+function checkBounds() {
+	
+}
+
 function checkFuu() {
 	if (map[position_fuu[0]][position_fuu[1]]==0) {
 		map[position_fuu[0]][position_fuu[1]] = -1;
