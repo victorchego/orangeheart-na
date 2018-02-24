@@ -179,7 +179,7 @@ function stringMap() {
 		for (row in map[col]) {
 			if (map[col][row] == 0) str += " ·";
 			else if (map[col][row] == -1) str += " &"; //ready
-			else if (map[col][row] == -2 || turns > 20) str += " O"; //not ready
+			else if (map[col][row] == -2) str += " O"; //not ready
 			else if (map[col][row] == -3) str += " X"; //caught
 			else if (map[col][row] == 1) str += " 1";
 			else if (map[col][row] == 2) str += " 2";
