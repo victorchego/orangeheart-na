@@ -20,6 +20,7 @@ function startFuuTrap(client) {
 	if (!channel) return;
 	var str = stringMap();
 	channel.send(str);
+	channel.send('done');
 };
 
 function stringMap() {
