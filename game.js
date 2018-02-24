@@ -106,13 +106,13 @@ function positionFuu() {
 	}
 	else if (num < 0.5) {
 		position_fuu[0]-=1;
-	};
+	}
 	else if (num < 0.75) {
 		position_fuu[1]+=1;
-	};
+	}
 	else {
 		position_fuu[1]-=1;
-	};
+	}
 	checkFuu();
 }
 
