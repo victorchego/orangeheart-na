@@ -151,8 +151,8 @@ function getWinner() {
 function startFuuTrap(client,msg) {
 	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!msg.channel) return;
-	randomizeFuu();
 	resetMap();
+	randomizeFuu();
 	if (!interval) msg.channel.send(stringMap()).then(message => moveFuu(message));
 	else msg.channel.send("Cannot have multiple games running at once");
 };
