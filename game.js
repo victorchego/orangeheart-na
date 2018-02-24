@@ -70,13 +70,14 @@ function moveFuu(msg) {
 		resetMap();
 		positionFuu();
 		msg.edit(stringMap()).then(function () {
-			turns-=1;
-		}).catch(error => {
-			if (error.name == 'Winner') {
+			if (winner) {
 				msg.channel.send(winner+' has trapped Fuu and wins!');
 				clearInterval(interval);
 				interval = null;
+				return;
 			}
+			turns-=1;
+		}).catch(error => {
 			if (!err) {
 				msg.channel.send("Error with Fuu game: "+error); 	
 				clearInterval(interval);
@@ -144,7 +145,6 @@ function getWinner() {
 			winner = null;
 		break;
 	}
-	throw 'Winner';
 }
 
 function startFuuTrap(client,msg) {
