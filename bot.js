@@ -148,7 +148,10 @@ client.on('message', (msg) => {
 		
         switch(cmd.toLowerCase()) {
 			case 'huntfuugame':
-				Game.startFuuTrap(client);
+				if (msg.channel.id == CY_CHANNEL_ID) {
+					Game.startFuuTrap(client,msg);
+				}
+				else msg.channel.send('Cannot use command here');		
 			break;
 			case 'shoot':
 			case 'shoots':

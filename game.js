@@ -71,12 +71,12 @@ function moveFuu(msg) {
 	}, 1000);
 }
 
-function startFuuTrap(client) {
-	var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
-	if (!channel) return;
+function startFuuTrap(client,msg) {
+	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
+	if (!msg.channel) return;
 	resetMap();
 	randomizeFuu();
-	channel.send(stringMap()).then(message => moveFuu(message));
+	msg.channel.send(stringMap()).then(message => moveFuu(message));
 };
 
 function stringMap() {
