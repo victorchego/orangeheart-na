@@ -95,6 +95,7 @@ function moveFuu(msg) {
 		});
 
 		if (turns<=0) {
+			msg.channel.send('Fuu has successfully avoided all traps');
 			clearInterval(interval);
 			interval = null;
 			return;
@@ -150,7 +151,7 @@ function startFuuTrap(client,msg) {
 	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!msg.channel) return;
 	resetMap();
-	position_fuu = randomizePosition;
+	position_fuu = randomizePosition();
 	if (!interval) msg.channel.send(stringMap()).then(message => moveFuu(message));
 	else msg.channel.send("Cannot have multiple games running at once");
 };
