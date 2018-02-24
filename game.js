@@ -9,6 +9,8 @@ var position_1 = [[3,3],[0,1],[7,8]];
 var position_2 = [[6,6],[4,3],[7,1]];
 var position_3 = [[3,7],[0,6],[2,3]];
 var position_4 = [[4,6],[5,5],[1,8]];
+
+var taken_coords = [];
 //var position_list = [position_1,position_2,position_3,position_4];
 
 var player_1 = 'a';
@@ -150,11 +152,39 @@ function getWinner() {
 function startFuuTrap(client,msg) {
 	//var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!msg.channel) return;
+	if (interval) {
+		msg.channel.send("Cannot have multiple games running at once");
+		return;
+	}
+	getCoordinates(client);
 	resetMap();
 	position_fuu = randomizePosition();
-	if (!interval) msg.channel.send(stringMap()).then(message => moveFuu(message));
-	else msg.channel.send("Cannot have multiple games running at once");
+	msg.channel.send(stringMap()).then(message => moveFuu(message));
 };
+
+function getCoordinates(client) {
+	client.on('message', (msg) => {
+		if (msg.content.startsWith('!fuugame') {
+			var coords = msg.content.split(' ').splice(1);
+			if (coords.some(outOfBounds)) {
+				msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuugame 1 10 2 9 4 5');
+				return;
+			}
+			if (coordTaken(coords.slice(0,2)) || coordTaken(coords.slice(2,4)) || coordTaken(coords.slice(4,6))) {
+				msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
+				return;
+			}
+		}
+	});
+}
+
+function coordTaken(coord) {
+	return taken_coords.some(function (item) {return item[0]==coord[0] && item[1]==coord[1];});
+}
+
+function outOfBounds(num) {
+	return isNaN(num) || num < 1 || num > 10;
+}
 
 function setTraps() {
 	for (i in position_1) {
