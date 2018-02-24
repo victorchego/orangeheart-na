@@ -102,22 +102,22 @@ function moveFuu(msg) {
 function positionFuu() {
 	var num = Math.random();
 	if (num < 0.25) {
-		position_fuu[0]+=1;
+		if (position_fuu[0]<9) position_fuu[0]+=1;
+		else position_fuu[0] = 0;
 	}
 	else if (num < 0.5) {
-		position_fuu[0]-=1;
+		if (position_fuu[0]>0) position_fuu[0]-=1;
+		else position_fuu[0] = 9;
 	}
 	else if (num < 0.75) {
-		position_fuu[1]+=1;
+		if (position_fuu[1]<9) position_fuu[1]+=1;		
+		else position_fuu[1] = 0;
 	}
 	else {
-		position_fuu[1]-=1;
+		if (position_fuu[1]>0) position_fuu[1]-=1;
+		else position_fuu[1] = 9;
 	}
 	checkFuu();
-}
-
-function checkBounds() {
-	
 }
 
 function checkFuu() {
