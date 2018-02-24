@@ -1,6 +1,10 @@
 var CY_CHANNEL_ID = '401660510816436224';
 var map = [[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]];
+var first_player = null;
+var second_player = null;
+var third_player = null;
+var fourth_player = null;
 /*
    1 2 3 4 5 6 7 8 9 10 
  1 · · · · · · · · · ·
@@ -30,7 +34,12 @@ function stringMap() {
 		if (col != 9) str += " " + num;
 		else str += num;
 		for (row in map[col]) {
-			str += " ·";
+			if (map[col][row] == 0) str += " ·";
+			else if (map[col][row] == -1) str += " &";
+			else if (map[col][row] == 1) str += " 1";
+			else if (map[col][row] == 2) str += " 2";
+			else if (map[col][row] == 3) str += " 3";
+			else if (map[col][row] == 4) str += " 4";
 		}
 		str += "\n";
 	}
