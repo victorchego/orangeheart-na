@@ -49,14 +49,23 @@ function randomizeFuu() {
 	}
 }
 
+function moveFuu(msg) {
+	var seconds = 0;
+	while (seconds < 60) {
+		randomizeFuu();
+		msg.edit(stringMap()).catch(channel.send("Error with Fuu game: "+error);
+		seconds++;
+	}
+}
+
 function startFuuTrap(client) {
 	var channel = client.channels.find(val => val.id = CY_CHANNEL_ID);
 	if (!channel) return;
 	resetMap();
 	randomizeFuu();
 	var str = stringMap();
-	channel.send(str);
-	channel.send('done');
+	var msg = channel.send(str);
+	moveFuu(msg);
 };
 
 function stringMap() {
