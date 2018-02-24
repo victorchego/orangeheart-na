@@ -50,11 +50,21 @@ function randomizeFuu() {
 }
 
 function moveFuu(msg) {
-	for (var seconds = 0; seconds < 60; seconds++) {
+	var seconds = 0;
+	var interval = setInterval(function() {
 		resetMap();
 		randomizeFuu();
-		msg.edit(stringMap()).catch(error => {msg.channel.send("Error with Fuu game: "+error); return;});
-	}
+		msg.edit(stringMap()).catch(error => {
+			msg.channel.send("Error with Fuu game: "+error); 	
+			clearInterval(interval);
+			return;
+		});
+	
+	if (seconds>=60) {
+		clearInterval(interval);
+		return;
+		}
+	}, 1000);
 }
 
 function startFuuTrap(client) {
@@ -62,8 +72,7 @@ function startFuuTrap(client) {
 	if (!channel) return;
 	resetMap();
 	randomizeFuu();
-	console.log(channel);
-	//channel.send(stringMap()).then(message => moveFuu(message)).catch();
+	channel.send(stringMap()).then(message => moveFuu(message));
 };
 
 function stringMap() {
