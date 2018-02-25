@@ -5,7 +5,7 @@ var turns = 30;
 var interval = null;
 
 var player_list = [];
-var position_fuu = [5,4]; // [col,row]
+var position_fuu = [5,4]; // [row,col]
 var position_1 = [[3,3],[0,1],[7,8]];
 var position_2 = [[6,6],[4,3],[7,1]];
 var position_3 = [[3,7],[0,6],[2,3]];
@@ -56,6 +56,7 @@ const message_callback = (msg) => {
 			msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
 			return;
 		}
+		coords = coords.map(function (num) {num-=1;});
 		nextPlayer(msg,coords);
 		taken_coords.push(coords.slice(0,2));
 		taken_coords.push(coords.slice(2,4));
@@ -65,9 +66,9 @@ const message_callback = (msg) => {
 }
 
 function resetMap() {
-	for (col in map) {
-		for (row in map[col]) {
-			map[col][row] = 0;
+	for (row in map) {
+		for (col in map[row]) {
+			map[row][col] = 0;
 		}
 	}
 	setTraps();
@@ -75,7 +76,7 @@ function resetMap() {
 function randomizePosition() {
 	var col = Math.floor(Math.random() * 10);
 	var row = Math.floor(Math.random() * 10);
-	return [col,row];
+	return [row,col];
 }
 
 function randomizeFuu() {
@@ -270,20 +271,20 @@ function setTraps() {
 
 function stringMap() {
 	var str = "Turns (invincible until 20): ```"+turns+"\n   1 2 3 4 5 6 7 8 9 10\n";
-	for (col in map) {
+	for (row in map) {
 		var num = Number(col) + 1;
-		if (col != 9) str += " " + num;
+		if (row != 9) str += " " + num;
 		else str += num;
-		for (row in map[col]) {
-			if (map[col][row] == 0) str += " ·";
-			else if (map[col][row] == -1 && turns <= 20) str += " &"; //ready
-			else if (map[col][row] == -1 && turns > 20) str += " O"; //ready
-			else if (map[col][row] == -2) str += " O"; //not ready
-			else if (map[col][row] == -3) str += " X"; //caught
-			else if (map[col][row] == 1) str += " 1";
-			else if (map[col][row] == 2) str += " 2";
-			else if (map[col][row] == 3) str += " 3";
-			else if (map[col][row] == 4) str += " 4";
+		for (col in map[row]) {
+			if (map[row][col] == 0) str += " ·";
+			else if (map[row][col] == -1 && turns <= 20) str += " &"; //ready
+			else if (map[row][col] == -1 && turns > 20) str += " O"; //ready
+			else if (map[row][col] == -2) str += " O"; //not ready
+			else if (map[row][col] == -3) str += " X"; //caught
+			else if (map[row][col] == 1) str += " 1";
+			else if (map[row][col] == 2) str += " 2";
+			else if (map[row][col] == 3) str += " 3";
+			else if (map[row][col] == 4) str += " 4";
 		}
 		str += "\n";
 	}
