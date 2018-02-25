@@ -35,7 +35,7 @@ var winner = null;
 */
 
 const message_callback = (msg) => {
-	if (msg.content.startsWith('!fuu')) {
+	if (msg.content.toLowerCase().startsWith('!fuu')) {
 		var coords = msg.content.split(' ').splice(1);
 		if (coords == "") {
 			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
@@ -199,7 +199,7 @@ function getCoordinates(client,msg) {
 		msg.channel.send('Opt in the current game now!');
 		return;
 	}
-	msg.channel.send('Please opt in within the next 30 seconds by typing: !fuu col#1 row#1 col#2 row#2 col#3 row#3 (just the numbers)');
+	msg.channel.send('Please opt in within the next 30 seconds by typing: !fuu row#1 col#1 row#2 col#2 row#3 col#3 (just the numbers)');
 	client.on('message', message_callback);
 	playTimeout = setTimeout(function() {
 		client.removeListener('message',message_callback);
