@@ -269,7 +269,7 @@ function setTraps() {
 }
 
 function stringMap() {
-	var str = "```Turns (invincible until 20): "+turns+"\n   1 2 3 4 5 6 7 8 9 10\n";
+	var str = "Turns (invincible until 20): ```"+turns+"\n   1 2 3 4 5 6 7 8 9 10\n";
 	for (col in map) {
 		var num = Number(col) + 1;
 		if (col != 9) str += " " + num;
@@ -287,7 +287,7 @@ function stringMap() {
 		}
 		str += "\n";
 	}
-	str += "Winner: "+(winner ? winner : "none")+"\n```";
+	str += "```Winner: "+(winner ? winner : "none");
 	return str;
 }
 
