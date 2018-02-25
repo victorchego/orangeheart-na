@@ -56,7 +56,7 @@ const message_callback = (msg) => {
 			msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
 			return;
 		}
-		nextPlayer(msg);
+		nextPlayer(msg,coords);
 		taken_coords.push(coords.slice(0,2));
 		taken_coords.push(coords.slice(2,4));
 		taken_coords.push(coords.slice(4,6));
@@ -202,16 +202,40 @@ function getCoordinates(client,msg) {
 	},15000);
 }
 
-function nextPlayer(msg) {
+function nextPlayer(msg,coords) {
 	player_list.push(msg.author.id);
-	if (!player_1) player_1 = msg.author;
-	else if (!player_2) player_2 = msg.author;
-	else if (!player_3) player_3 = msg.author;
-	else player_4 = msg.author;
+	if (!player_1) {
+		player_1 = msg.author;
+		position_1.push(coords.slice(0,2));
+		position_1.push(coords.slice(2,4));
+		position_1.push(coords.slice(4,6));
+	}
+	else if (!player_2) {
+		player_2 = msg.author;
+		position_2.push(coords.slice(0,2));
+		position_2.push(coords.slice(2,4));
+		position_2.push(coords.slice(4,6));
+	}
+	else if (!player_3) {
+		player_3 = msg.author;
+		position_3.push(coords.slice(0,2));
+		position_3.push(coords.slice(2,4));
+		position_3.push(coords.slice(4,6));
+	}
+	else {
+		player_4 = msg.author;
+		position_4.push(coords.slice(0,2));
+		position_4.push(coords.slice(2,4));
+		position_4.push(coords.slice(4,6));
+	}
 }
 
 function clearPlayers() {
 	player_list = [];
+	position_1 = [];
+	position_2 = [];
+	position_3 = [];
+	position_4 = [];
 	player_1 = null;
 	player_2 = null;
 	player_3 = null;
