@@ -36,7 +36,8 @@ var winner = null;
 
 const message_callback = (msg) => {
 	if (msg.content.toLowerCase().startsWith('!fuu')) {
-		var coords = msg.content.split(' ').splice(1).map(function (num) {return num-1;});
+		var coords = msg.content.split(' ').splice(1);
+		coords = coords.map(function (num) {return num-1;});
 		if (coords == "") {
 			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
 			return;
@@ -257,7 +258,7 @@ function coordTaken(coord) {
 }
 
 function outOfBounds(num) {
-	return isNaN(num) || num < 1 || num > 10;
+	return isNaN(num) || num < 0 || num > 9;
 }
 
 function setTraps() {
