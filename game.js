@@ -60,6 +60,7 @@ const message_callback = (msg) => {
 		taken_coords.push(coords.slice(0,2));
 		taken_coords.push(coords.slice(2,4));
 		taken_coords.push(coords.slice(4,6));
+		msg.channel.send(msg.author+' has opted in as player '+player_list.length);
 	}
 }
 
