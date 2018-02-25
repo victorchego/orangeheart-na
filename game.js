@@ -121,9 +121,9 @@ function moveFuu(msg) {
 		}).catch(error => {
 			if (!err) {
 				msg.channel.send("Error with Fuu game: "+error); 	
-				clearInterval(interval);
-				interval = null;
 			}
+			clearInterval(interval);
+			interval = null;
 			err = true;
 			return;
 		});
