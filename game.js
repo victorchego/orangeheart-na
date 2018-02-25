@@ -199,7 +199,8 @@ function getCoordinates(client,msg) {
 		client.removeListener('message',message_callback);
 		resetMap();
 		position_fuu = randomizePosition();
-		msg.channel.send(stringMap()).then(message => moveFuu(message));
+		if (player_list.length) msg.channel.send(stringMap()).then(message => moveFuu(message));
+		else msg.channel.send('Game has disbanded due to no players');
 	},15000);
 }
 
