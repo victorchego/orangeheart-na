@@ -14,10 +14,10 @@ var position_4 = [[4,6],[5,5],[1,8]];
 var taken_coords = [];
 //var position_list = [position_1,position_2,position_3,position_4];
 
-var player_1 = 'a';
-var player_2 = 'b';
-var player_3 = 'c';
-var player_4 = 'd';
+var player_1 = null;
+var player_2 = null;
+var player_3 = null;
+var player_4 = null;
 var winner = null;
 /*
    1 2 3 4 5 6 7 8 9 10 
@@ -233,6 +233,7 @@ function nextPlayer(msg,coords) {
 
 function clearPlayers() {
 	player_list = [];
+	taken_coords = [];
 	position_1 = [];
 	position_2 = [];
 	position_3 = [];
