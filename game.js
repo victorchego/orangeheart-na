@@ -36,7 +36,7 @@ var winner = null;
 
 const message_callback = (msg) => {
 	if (msg.content.toLowerCase().startsWith('!fuu')) {
-		var coords = msg.content.split(' ').splice(1);
+		var coords = msg.content.split(' ').splice(1).map(function (num) {return num-1;});
 		if (coords == "") {
 			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
 			return;
@@ -57,7 +57,6 @@ const message_callback = (msg) => {
 			msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
 			return;
 		}
-		coords = coords.map(function (num) {return num-1;});
 		nextPlayer(msg,coords);
 		taken_coords.push(coords.slice(0,2));
 		taken_coords.push(coords.slice(2,4));
