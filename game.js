@@ -3,6 +3,7 @@ var map = [[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,
 			[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]];
 var turns = 30;
 var interval = null;
+var playTimeout = null;
 
 var player_list = [];
 var position_fuu = [5,4]; // [row,col]
@@ -34,10 +35,10 @@ var winner = null;
 */
 
 const message_callback = (msg) => {
-	if (msg.content.startsWith('!fuugame')) {
+	if (msg.content.startsWith('!fuu')) {
 		var coords = msg.content.split(' ').splice(1);
 		if (coords == "") {
-			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuugame 1 10 2 9 4 5');
+			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
 			return;
 		}
 		if (player_list.indexOf(msg.author.id)>-1) {
@@ -49,14 +50,14 @@ const message_callback = (msg) => {
 			return;
 		}
 		if (coords.some(outOfBounds)) {
-			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuugame 1 10 2 9 4 5');
+			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
 			return;
 		}
 		if (coordTaken(coords.slice(0,2)) || coordTaken(coords.slice(2,4)) || coordTaken(coords.slice(4,6))) {
 			msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
 			return;
 		}
-		coords = coords.map(function (num) {num-=1;});
+		coords = coords.map(function (num) {return num-1;});
 		nextPlayer(msg,coords);
 		taken_coords.push(coords.slice(0,2));
 		taken_coords.push(coords.slice(2,4));
@@ -71,7 +72,7 @@ function resetMap() {
 			map[row][col] = 0;
 		}
 	}
-	setTraps();
+	if(player_list.length) setTraps();
 }
 function randomizePosition() {
 	var col = Math.floor(Math.random() * 10);
@@ -194,15 +195,21 @@ function startFuuTrap(client,msg) {
 };
 
 function getCoordinates(client,msg) {
-	msg.channel.send('Please opt in within the next 15 seconds by typing: !fuugame col#1 row#1 col#2 row#2 col#3 row#3 (just the numbers)');
+	if (playTimeout) {
+		msg.channel.send('Opt in the current game now!');
+		return;
+	}
+	msg.channel.send('Please opt in within the next 30 seconds by typing: !fuu col#1 row#1 col#2 row#2 col#3 row#3 (just the numbers)');
 	client.on('message', message_callback);
-	var playTimeout = setTimeout(function() {
+	playTimeout = setTimeout(function() {
 		client.removeListener('message',message_callback);
 		resetMap();
 		position_fuu = randomizePosition();
 		if (player_list.length) msg.channel.send(stringMap()).then(message => moveFuu(message));
 		else msg.channel.send('Game has disbanded due to no players');
-	},15000);
+		clearTimeout(playTimeout);
+		playTimeout = null;
+	},30000);
 }
 
 function nextPlayer(msg,coords) {
@@ -255,6 +262,9 @@ function outOfBounds(num) {
 }
 
 function setTraps() {
+	console.log(position_1);
+	console.log(position_2);
+	console.log(map);
 	for (i in position_1) {
 		map[position_1[i][0]][position_1[i][1]] = 1;
 	}
@@ -270,9 +280,9 @@ function setTraps() {
 }
 
 function stringMap() {
-	var str = "Turns (invincible until 20): ```"+turns+"\n   1 2 3 4 5 6 7 8 9 10\n";
+	var str = "Turns (invincible until 20): "+turns+"```\n   1 2 3 4 5 6 7 8 9 10\n";
 	for (row in map) {
-		var num = Number(col) + 1;
+		var num = Number(row) + 1;
 		if (row != 9) str += " " + num;
 		else str += num;
 		for (col in map[row]) {
