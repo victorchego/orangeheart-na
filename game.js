@@ -42,6 +42,10 @@ const message_callback = (msg) => {
 			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
 			return;
 		}
+		if (coords.length != 6) {
+			msg.channel.send('Please enter 3 pairs of coordinates only. Make sure there are no extra spaces');
+			return;
+		}
 		if (player_list.indexOf(msg.author.id)>-1) {
 			msg.channel.send('You have already placed your coordinates');
 			return;
@@ -78,6 +82,10 @@ function randomizePosition() {
 	var col = Math.floor(Math.random() * 10);
 	var row = Math.floor(Math.random() * 10);
 	return [row,col];
+}
+
+function randomizeValidPosition() {
+	
 }
 
 function randomizeFuu() {
@@ -181,6 +189,10 @@ function getWinner() {
 	else if (position_3.some(coord => coord[0]==position_fuu[0] && coord[1]==position_fuu[1])) winner = player_3;
 	else if (position_4.some(coord => coord[0]==position_fuu[0] && coord[1]==position_fuu[1])) winner = player_4;
 	else winner = null;
+}
+
+function botPlayer() {
+	
 }
 
 function startFuuTrap(client,msg) {
