@@ -286,6 +286,7 @@ function clearPlayers() {
 	player_2 = null;
 	player_3 = null;
 	player_4 = null;
+	status_str = "Waiting for players...";
 }
 
 function coordTaken(coord) {
