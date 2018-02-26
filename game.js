@@ -149,8 +149,6 @@ function moveFuu(msg) {
 		});
 
 		if (turns<=0) {
-			status_str = "Game over";
-			msg.edit(stringMap));
 			msg.channel.send('Fuu has successfully avoided all traps');
 			clearInterval(interval);
 			interval = null;
@@ -184,6 +182,9 @@ function positionFuu() {
 function checkFuu() {
 	if (map[position_fuu[0]][position_fuu[1]]==0) {
 		map[position_fuu[0]][position_fuu[1]] = -1;
+		if (turns<=0) {
+			status_str = "Game over";
+		}
 	}
 	else if (map[position_fuu[0]][position_fuu[1]]>0) {
 		if (turns > 20) {
