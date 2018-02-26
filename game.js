@@ -39,11 +39,11 @@ const message_callback = (msg) => {
 		var coords = msg.content.split(' ').splice(1);
 		coords = coords.map(function (num) {return num-1;});
 		if (coords == "") {
-			msg.channel.send(msg.author+' Please enter 3 pairs of coordinates only. Make sure there are no extra spaces');
+			msg.channel.send(msg.author+' Please enter up to 5 pairs of coordinates only. Make sure there are no extra spaces');
 			return;
 		}
-		if (coords.length != 6) {
-			msg.channel.send(msg.author+' Please enter 3 pairs of coordinates only. Make sure there are no extra spaces');
+		if (coords.length > 10) {
+			msg.channel.send(msg.author+' Please enter up to 5 pairs of coordinates only. Make sure there are no extra spaces');
 			return;
 		}
 		if (coords.length % 2 != 0) {
@@ -213,7 +213,7 @@ function getCoordinates(client,msg) {
 		msg.channel.send('Opt in the current game now!');
 		return;
 	}
-	msg.channel.send('Please opt in within the next 30 seconds by typing: !fuu row#1 col#1 row#2 col#2 row#3 col#3 (just the numbers)');
+	msg.channel.send('Please opt in within the next 30 seconds by typing: !fuu row#1 col#1 row#2 col#2 row#3 col#3 row#4 col#4 row#5 col#5 (just the numbers)');
 	client.on('message', message_callback);
 	playTimeout = setTimeout(function() {
 		client.removeListener('message',message_callback);
