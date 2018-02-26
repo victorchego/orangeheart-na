@@ -54,6 +54,10 @@ const message_callback = (msg) => {
 			msg.channel.send(msg.author+' One of your coordinates is missing. Make sure you have an even set of numbers');
 			return;
 		}
+		if (player_list.indexOf(msg.author.id)>-1) {
+			msg.channel.send(msg.author+' You have already placed your coordinates');
+			return;
+		}
 		if (player_list.length>=4) {
 			msg.channel.send(msg.author+' Current game is full. Please wait till the next round');
 			return;
@@ -64,8 +68,8 @@ const message_callback = (msg) => {
 		}
 		for (var i = 0; i < coords.length/2; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) {
-				msg.channel.send(msg.author+' One or more of your pairs of coordinates has been taken. The other coordinates have been registered');
-				break;
+				msg.channel.send(msg.author+' One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
+				return;
 			}
 		}
 		nextPlayer(msg,coords);
@@ -239,34 +243,30 @@ function getCoordinates(client,msg) {
 function nextPlayer(msg,coords) {
 	player_list.push(msg.author.id);
 	player_tags.push(msg.author);
-	if (msg.author == player_1 || !player_1) {
+	if (!player_1) {
 		player_1 = msg.author;
 		for (var i = 0; i < coords.length/2 && position_1.length < 5; i++) {
-			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_1.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
-	else if (msg.author == player_2 || !player_2) {
+	else if (!player_2) {
 		player_2 = msg.author;
 		for (var i = 0; i < coords.length/2 && position_2.length < 5; i++) {
-			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_2.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
-	else if (msg.author == player_3 || !player_3) {
+	else if (!player_3) {
 		player_3 = msg.author;
 		for (var i = 0; i < coords.length/2 && position_3.length < 5; i++) {
-			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_3.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
-	else if (msg.author == player_4 || !player_4) {
+	else {
 		player_4 = msg.author;
 		for (var i = 0; i < coords.length/2 && position_4.length < 5; i++) {
-			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_4.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
