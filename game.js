@@ -48,6 +48,7 @@ const message_callback = (msg) => {
 		}
 		if (coords.length % 2 != 0) {
 			msg.channel.send(msg.author+' One of your coordinates is missing. Make sure you have an even set of numbers');
+			return;
 		}
 		if (player_list.indexOf(msg.author.id)>-1) {
 			msg.channel.send(msg.author+' You have already placed your coordinates');
@@ -68,6 +69,7 @@ const message_callback = (msg) => {
 			}
 		}
 		nextPlayer(msg,coords);
+		//if (edit) msg_edit.edit(stringMap());
 		msg.channel.send(msg.author+' has opted in as player '+player_list.length);
 	}
 }
@@ -214,16 +216,18 @@ function getCoordinates(client,msg) {
 		return;
 	}
 	msg.channel.send('Please opt in within the next 30 seconds by typing: !fuu row#1 col#1 row#2 col#2 row#3 col#3 row#4 col#4 row#5 col#5 (just the numbers)');
-	client.on('message', message_callback);
-	playTimeout = setTimeout(function() {
-		client.removeListener('message',message_callback);
-		resetMap();
-		position_fuu = randomizePosition();
-		if (player_list.length) msg.channel.send(stringMap()).then(message => moveFuu(message));
-		else msg.channel.send('Game has disbanded due to no players');
-		clearTimeout(playTimeout);
-		playTimeout = null;
-	},30000);
+	msg.channel.send(stringMap()).then(message => {
+		client.on('message', message_callback);
+		playTimeout = setTimeout(function() {
+			client.removeListener('message',message_callback);
+			resetMap();
+			position_fuu = randomizePosition();
+			if (player_list.length) message.edit(stringMap()).then(message => moveFuu(message)).catch(error => {msg.channel.send("Error with Fuu game: "+error);});
+			else msg.channel.send('Game has disbanded due to no players');
+			clearTimeout(playTimeout);
+			playTimeout = null;
+		},30000);
+	});
 }
 
 function nextPlayer(msg,coords) {
@@ -256,6 +260,7 @@ function nextPlayer(msg,coords) {
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
+	resetMap();
 }
 
 function clearPlayers() {
@@ -280,9 +285,6 @@ function outOfBounds(num) {
 }
 
 function setTraps() {
-	console.log(position_1);
-	console.log(position_2);
-	console.log(map);
 	for (i in position_1) {
 		map[position_1[i][0]][position_1[i][1]] = 1;
 	}
