@@ -72,7 +72,6 @@ const message_callback = (msg) => {
 		}
 		nextPlayer(msg,coords);
 		msg.channel.fetchMessage(msg_id).then(message => message.edit(stringMap())).catch(error => {msg.channel.send("Error with Fuu game: "+error);});
-		msg.channel.send(msg.author+' has opted in as player '+player_list.length);
 	}
 }
 
