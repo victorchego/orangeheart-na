@@ -237,28 +237,28 @@ function nextPlayer(msg,coords) {
 	player_list.push(msg.author.id);
 	if (!player_1) {
 		player_1 = msg.author;
-		for (var i = 0; i < coords.length/2; i++) {
+		for (var i = 0; i < coords.length/2 && position_1.length < 5; i++) {
 			position_1.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
 	else if (!player_2) {
 		player_2 = msg.author;
-		for (var i = 0; i < coords.length/2; i++) {
+		for (var i = 0; i < coords.length/2 && position_2.length < 5; i++) {
 			position_2.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
 	else if (!player_3) {
 		player_3 = msg.author;
-		for (var i = 0; i < coords.length/2; i++) {
+		for (var i = 0; i < coords.length/2 && position_3.length < 5; i++) {
 			position_3.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
 	else {
 		player_4 = msg.author;
-		for (var i = 0; i < coords.length/2; i++) {
+		for (var i = 0; i < coords.length/2 && position_4.length < 5; i++) {
 			position_4.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
@@ -303,7 +303,7 @@ function setTraps() {
 }
 
 function stringMap() {
-	var str = "Turns (invincible until 20): "+turns+"```\n   1 2 3 4 5 6 7 8 9 10\n";
+	var str = "Players: "+player_list+"\nTurns (invincible until 20): "+turns+"```\n   1 2 3 4 5 6 7 8 9 10\n";
 	for (row in map) {
 		var num = Number(row) + 1;
 		if (row != 9) str += " " + num;
