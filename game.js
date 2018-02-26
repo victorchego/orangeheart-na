@@ -237,8 +237,8 @@ function getCoordinates(client,msg) {
 }
 
 function nextPlayer(msg,coords) {
-	player_list.push(msg.author.id);
-	player_tags.push(msg.author);
+	if (player_list.indexOf(msg.author.id)==-1) player_list.push(msg.author.id);
+	if (player_tags.indexOf(msg.author)==-1) player_tags.push(msg.author);
 	if (msg.author == player_1 || !player_1) {
 		player_1 = msg.author;
 		for (var i = 0; i < coords.length/2 && position_1.length < 5; i++) {
