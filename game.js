@@ -6,6 +6,7 @@ var map_id = null;
 var interval = null;
 var playTimeout = null;
 
+var player_tags = [];
 var player_list = [];
 var position_fuu = []; // [row,col]
 var position_1 = [];
@@ -235,6 +236,7 @@ function getCoordinates(client,msg) {
 
 function nextPlayer(msg,coords) {
 	player_list.push(msg.author.id);
+	player_tags.push(msg.author);
 	if (!player_1) {
 		player_1 = msg.author;
 		for (var i = 0; i < coords.length/2 && position_1.length < 5; i++) {
@@ -268,6 +270,7 @@ function nextPlayer(msg,coords) {
 
 function clearPlayers() {
 	player_list = [];
+	player_tags = [];
 	taken_coords = [];
 	position_1 = [];
 	position_2 = [];
@@ -303,7 +306,7 @@ function setTraps() {
 }
 
 function stringMap() {
-	var str = "Players: "+player_list+"\nTurns (invincible until 20): "+turns+"```\n   1 2 3 4 5 6 7 8 9 10\n";
+	var str = "Players: "+player_tags+"\nTurns (invincible until 20): "+turns+"```\n   1 2 3 4 5 6 7 8 9 10\n";
 	for (row in map) {
 		var num = Number(row) + 1;
 		if (row != 9) str += " " + num;
