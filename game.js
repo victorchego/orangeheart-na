@@ -6,11 +6,11 @@ var interval = null;
 var playTimeout = null;
 
 var player_list = [];
-var position_fuu = [5,4]; // [row,col]
-var position_1 = [[3,3],[0,1],[7,8]];
-var position_2 = [[6,6],[4,3],[7,1]];
-var position_3 = [[3,7],[0,6],[2,3]];
-var position_4 = [[4,6],[5,5],[1,8]];
+var position_fuu = []; // [row,col]
+var position_1 = [];
+var position_2 = [];
+var position_3 = [];
+var position_4 = [];
 
 var taken_coords = [];
 //var position_list = [position_1,position_2,position_3,position_4];
@@ -39,33 +39,38 @@ const message_callback = (msg) => {
 		var coords = msg.content.split(' ').splice(1);
 		coords = coords.map(function (num) {return num-1;});
 		if (coords == "") {
-			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
+			msg.channel.send(msg.author+' Please enter 3 pairs of coordinates only. Make sure there are no extra spaces');
 			return;
 		}
 		if (coords.length != 6) {
-			msg.channel.send('Please enter 3 pairs of coordinates only. Make sure there are no extra spaces');
+			msg.channel.send(msg.author+' Please enter 3 pairs of coordinates only. Make sure there are no extra spaces');
 			return;
 		}
+		if (coords.length % 2 != 0) {
+			msg.channel.send(msg.author+' One of your coordinates is missing. Make sure you have an even set of numbers');
+		}
 		if (player_list.indexOf(msg.author.id)>-1) {
-			msg.channel.send('You have already placed your coordinates');
+			msg.channel.send(msg.author+' You have already placed your coordinates');
 			return;
 		}
 		if (player_list.length>=4) {
-			msg.channel.send('Current game is full. Please wait till the next round');
+			msg.channel.send(msg.author+' Current game is full. Please wait till the next round');
 			return;
 		}
 		if (coords.some(outOfBounds)) {
-			msg.channel.send('Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
+			msg.channel.send(msg.author+' Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
 			return;
 		}
-		if (coordTaken(coords.slice(0,2)) || coordTaken(coords.slice(2,4)) || coordTaken(coords.slice(4,6))) {
-			msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
-			return;
+		for (i in coords) {
+			if (coordTaken(coords.slice(2*i,2*i+2))) {
+				msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
+				return;
+			}
 		}
 		nextPlayer(msg,coords);
-		taken_coords.push(coords.slice(0,2));
-		taken_coords.push(coords.slice(2,4));
-		taken_coords.push(coords.slice(4,6));
+		for (i in coords) {
+			taken_coords.push(coords.slice(2*i,2*i+2));
+		}
 		msg.channel.send(msg.author+' has opted in as player '+player_list.length);
 	}
 }
