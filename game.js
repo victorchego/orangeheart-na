@@ -61,7 +61,7 @@ const message_callback = (msg) => {
 			msg.channel.send(msg.author+' Invalid coordinates. Please enter your coordinates like: !fuu 1 10 2 9 4 5');
 			return;
 		}
-		for (i in coords.length/2) {
+		for (var i = 0; i < coords.length/2; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) {
 				msg.channel.send('One of your pairs of coordinates has been taken. Please check and make sure every pair of coordinates are free');
 				return;
@@ -230,28 +230,28 @@ function nextPlayer(msg,coords) {
 	player_list.push(msg.author.id);
 	if (!player_1) {
 		player_1 = msg.author;
-		for (i in coords.length/2) {
+		for (var i = 0; i < coords.length/2; i++) {
 			position_1.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
 	else if (!player_2) {
 		player_2 = msg.author;
-		for (i in coords.length/2) {
+		for (var i = 0; i < coords.length/2; i++) {
 			position_2.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
 	else if (!player_3) {
 		player_3 = msg.author;
-		for (i in coords.length/2) {
+		for (var i = 0; i < coords.length/2; i++) {
 			position_3.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 	}
 	else {
 		player_4 = msg.author;
-		for (i in coords.length/2) {
+		for (var i = 0; i < coords.length/2; i++) {
 			position_4.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
