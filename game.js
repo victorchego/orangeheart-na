@@ -68,9 +68,6 @@ const message_callback = (msg) => {
 			}
 		}
 		nextPlayer(msg,coords);
-		for (i in coords) {
-			taken_coords.push(coords.slice(2*i,2*i+2));
-		}
 		msg.channel.send(msg.author+' has opted in as player '+player_list.length);
 	}
 }
@@ -233,27 +230,31 @@ function nextPlayer(msg,coords) {
 	player_list.push(msg.author.id);
 	if (!player_1) {
 		player_1 = msg.author;
-		position_1.push(coords.slice(0,2));
-		position_1.push(coords.slice(2,4));
-		position_1.push(coords.slice(4,6));
+		for (i in coords) {
+			position_1.push(coords.slice(2*i,2*i+2));
+			taken_coords.push(coords.slice(2*i,2*i+2));
+		}
 	}
 	else if (!player_2) {
 		player_2 = msg.author;
-		position_2.push(coords.slice(0,2));
-		position_2.push(coords.slice(2,4));
-		position_2.push(coords.slice(4,6));
+		for (i in coords) {
+			position_2.push(coords.slice(2*i,2*i+2));
+			taken_coords.push(coords.slice(2*i,2*i+2));
+		}
 	}
 	else if (!player_3) {
 		player_3 = msg.author;
-		position_3.push(coords.slice(0,2));
-		position_3.push(coords.slice(2,4));
-		position_3.push(coords.slice(4,6));
+		for (i in coords) {
+			position_3.push(coords.slice(2*i,2*i+2));
+			taken_coords.push(coords.slice(2*i,2*i+2));
+		}
 	}
 	else {
 		player_4 = msg.author;
-		position_4.push(coords.slice(0,2));
-		position_4.push(coords.slice(2,4));
-		position_4.push(coords.slice(4,6));
+		for (i in coords) {
+			position_4.push(coords.slice(2*i,2*i+2));
+			taken_coords.push(coords.slice(2*i,2*i+2));
+		}
 	}
 }
 
