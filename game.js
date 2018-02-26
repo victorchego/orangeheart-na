@@ -22,6 +22,8 @@ var player_2 = null;
 var player_3 = null;
 var player_4 = null;
 var winner = null;
+
+var status_str = null;
 /*
    1 2 3 4 5 6 7 8 9 10 
  1 · · · · · · · · · ·
@@ -120,6 +122,7 @@ function randomizeFuu() {
 
 function moveFuu(msg) {
 	var err = false;
+	status_str = "Game in session";
 	turns = 30;
 	interval = setInterval(function() {
 		resetMap();
@@ -146,6 +149,8 @@ function moveFuu(msg) {
 		});
 
 		if (turns<=0) {
+			status_str = "Game over";
+			msg.edit(stringMap));
 			msg.channel.send('Fuu has successfully avoided all traps');
 			clearInterval(interval);
 			interval = null;
@@ -187,6 +192,7 @@ function checkFuu() {
 		else {
 			map[position_fuu[0]][position_fuu[1]] = -3;
 			getWinner();
+			status_str = "Game over";
 		}
 	}
 }
@@ -305,7 +311,7 @@ function setTraps() {
 }
 
 function stringMap() {
-	var str = "Players: "+player_tags+"\nTurns (invincible until 20): "+turns+"```\n   1 2 3 4 5 6 7 8 9 10\n";
+	var str = "Status: "+status_str+"\nPlayers: "+player_tags+"\nTurns (invincible until 20): "+turns+"```\n   1 2 3 4 5 6 7 8 9 10\n";
 	for (row in map) {
 		var num = Number(row) + 1;
 		if (row != 9) str += " " + num;
