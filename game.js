@@ -2,6 +2,7 @@ var CY_CHANNEL_ID = '401660510816436224';
 var map = [[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]];
 var turns = 30;
+var map_id = null;
 var interval = null;
 var playTimeout = null;
 
@@ -69,7 +70,7 @@ const message_callback = (msg) => {
 			}
 		}
 		nextPlayer(msg,coords);
-		//if (edit) msg_edit.edit(stringMap());
+		msg.channel.fetchMessage(msg_id).then(message => message.edit(stringMap())).catch(error => {msg.channel.send("Error with Fuu game: "+error);});
 		msg.channel.send(msg.author+' has opted in as player '+player_list.length);
 	}
 }
@@ -128,6 +129,7 @@ function moveFuu(msg) {
 				msg.channel.send(winner+' has trapped Fuu and wins!');
 				clearInterval(interval);
 				interval = null;
+				map_id = null;
 				winner = null;
 				return;
 			}
@@ -138,6 +140,7 @@ function moveFuu(msg) {
 			}
 			clearInterval(interval);
 			interval = null;
+			map_id = null;
 			err = true;
 			return;
 		});
@@ -146,6 +149,7 @@ function moveFuu(msg) {
 			msg.channel.send('Fuu has successfully avoided all traps');
 			clearInterval(interval);
 			interval = null;
+			map_id = null;
 			return;
 		}
 	}, 2000);
@@ -216,18 +220,17 @@ function getCoordinates(client,msg) {
 		return;
 	}
 	msg.channel.send('Please opt in within the next 30 seconds by typing: !fuu row#1 col#1 row#2 col#2 row#3 col#3 row#4 col#4 row#5 col#5 (just the numbers)');
-	msg.channel.send(stringMap()).then(message => {
-		client.on('message', message_callback);
-		playTimeout = setTimeout(function() {
-			client.removeListener('message',message_callback);
-			resetMap();
-			position_fuu = randomizePosition();
-			if (player_list.length) message.edit(stringMap()).then(message => moveFuu(message)).catch(error => {msg.channel.send("Error with Fuu game: "+error);});
-			else msg.channel.send('Game has disbanded due to no players');
-			clearTimeout(playTimeout);
-			playTimeout = null;
-		},30000);
-	});
+	msg.channel.send(stringMap()).then(message => {msg_id = message.id;}).catch(error => {msg.channel.send("Error with Fuu game: "+error);});
+	client.on('message', message_callback);
+	playTimeout = setTimeout(function() {
+		client.removeListener('message',message_callback);
+		resetMap();
+		position_fuu = randomizePosition();
+		if (player_list.length) msg.channel.fetchMessage(msg_id).then(message => moveFuu(message)).catch(error => {msg.channel.send("Error with Fuu game: "+error);});
+		else msg.channel.send('Game has disbanded due to no players');
+		clearTimeout(playTimeout);
+		playTimeout = null;
+	},30000);
 }
 
 function nextPlayer(msg,coords) {
