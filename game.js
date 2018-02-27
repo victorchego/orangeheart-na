@@ -119,7 +119,6 @@ function randomizeFuu() {
 function moveFuu(msg) {
 	var err = false;
 	status_str = "Game in session";
-	turns = 30;
 	interval = setInterval(function() {
 		resetMap();
 		positionFuu();
@@ -241,50 +240,51 @@ function nextPlayer(msg,coords) {
 	if (player_tags.indexOf(msg.author)==-1) player_tags.push(msg.author);
 	if (msg.author == player_1 || !player_1) {
 		player_1 = msg.author;
-		if (position_1.length>=5) {
-			msg.channel.send(msg.author+' You already have placed 5 traps');
-			return;
-		}
 		for (var i = 0; i < coords.length/2 && position_1.length < 5; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_1.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
+		if (position_1.length>=5) {
+			msg.channel.send(msg.author+' You already have placed 5 traps. All additional coordinates have been ignored');
+			return;
+		}
 	}
 	else if (msg.author == player_2 || !player_2) {
 		player_2 = msg.author;
-		if (position_2.length>=5) {
-			msg.channel.send(msg.author+' You already have placed 5 traps');
-			return;
-		}
 		for (var i = 0; i < coords.length/2 && position_2.length < 5; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_2.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
+		if (position_2.length>=5) {
+			msg.channel.send(msg.author+' You already have placed 5 traps. All additional coordinates have been ignored');
+			return;
+		}
 	}
 	else if (msg.author == player_3 || !player_3) {
 		player_3 = msg.author;
 		if (position_3.length>=5) {
-			msg.channel.send(msg.author+' You already have placed 5 traps');
-			return;
-		}
 		for (var i = 0; i < coords.length/2 && position_3.length < 5; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_3.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
+		if (position_3.length>=5) {
+			msg.channel.send(msg.author+' You already have placed 5 traps. All additional coordinates have been ignored');
+			return;
+		}
 	}
 	else if (msg.author == player_4 || !player_4) {
 		player_4 = msg.author;
-		if (position_4.length>=5) {
-			msg.channel.send(msg.author+' You already have placed 5 traps');
-			return;
-		}
 		for (var i = 0; i < coords.length/2 && position_4.length < 5; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_4.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
+		}
+		if (position_4.length>=5) {
+			msg.channel.send(msg.author+' You already have placed 5 traps. All additional coordinates have been ignored');
+			return;
 		}
 	}
 	resetMap();
@@ -303,6 +303,7 @@ function clearPlayers() {
 	player_3 = null;
 	player_4 = null;
 	status_str = "Waiting for players...";
+	turns = 30;
 }
 
 function coordTaken(coord) {
