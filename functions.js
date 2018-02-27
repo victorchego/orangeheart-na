@@ -234,7 +234,7 @@ var SOUL_ERR = "No data found. Please make sure you use one of the following for
 	}
   }, function(err_update, response_update) {
     if (err_update) {
-      console.log('The API returned an UPDATE error: ' + err);
+      console.log('The API returned an UPDATE error: ' + err_update);
       return;
     }
 	// here is the get
@@ -245,7 +245,7 @@ var SOUL_ERR = "No data found. Please make sure you use one of the following for
     range: 'Cookie Calculator!A15:J28'
   }, function(err_get, response_get) {
     if (err_get) {
-      console.log('The API returned a GET error: ' + err);
+      console.log('The API returned a GET error: ' + err_get);
       return;
 	}
 	// do something with get
@@ -312,7 +312,7 @@ var SOUL_ERR = "No data found. Please make sure you use one of the following for
 	}
   }, function(err_update, response_update) {
     if (err_update) {
-      console.log('The API returned an UPDATE error: ' + err);
+      console.log('The API returned an UPDATE error: ' + err_update);
       return;
     }
 	// here is the get
@@ -323,7 +323,7 @@ var SOUL_ERR = "No data found. Please make sure you use one of the following for
     range: 'Soul Calculator'
   }, function(err_get, response_get) {
     if (err_get) {
-      console.log('The API returned a GET error: ' + err);
+      console.log('The API returned a GET error: ' + err_get);
       return;
 	}
 	// do something with get
