@@ -252,9 +252,6 @@ function nextPlayer(msg,coords) {
 			position_1.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
-		if (position_1.length>=5) {
-			msg.channel.send(msg.author+' Extra coordinates will be ignored');
-		}
 	}
 	else if (msg.author == player_2 || !player_2) {
 		player_2 = msg.author;
@@ -266,9 +263,6 @@ function nextPlayer(msg,coords) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_2.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
-		}
-		if (position_2.length>=5) {
-			msg.channel.send(msg.author+' Extra coordinates will be ignored');
 		}
 	}
 	else if (msg.author == player_3 || !player_3) {
@@ -282,9 +276,6 @@ function nextPlayer(msg,coords) {
 			position_3.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
-		if (position_3.length>=5) {
-			msg.channel.send(msg.author+' Extra coordinates will be ignored');
-		}
 	}
 	else if (msg.author == player_4 || !player_4) {
 		player_4 = msg.author;
@@ -296,9 +287,6 @@ function nextPlayer(msg,coords) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_4.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
-		}
-		if (position_4.length>=5) {
-			msg.channel.send(msg.author+' Extra coordinates will be ignored');
 		}
 	}
 	resetMap();
@@ -318,6 +306,7 @@ function clearPlayers() {
 	player_4 = null;
 	status_str = "Waiting for players...";
 	turns = 30;
+	resetMap();
 }
 
 function coordTaken(coord) {
