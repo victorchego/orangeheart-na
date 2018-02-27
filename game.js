@@ -264,7 +264,6 @@ function nextPlayer(msg,coords) {
 	}
 	else if (msg.author == player_3 || !player_3) {
 		player_3 = msg.author;
-		if (position_3.length>=5) {
 		for (var i = 0; i < coords.length/2 && position_3.length < 5; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_3.push(coords.slice(2*i,2*i+2));
