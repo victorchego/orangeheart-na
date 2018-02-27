@@ -24,6 +24,8 @@ var player_4 = null;
 var winner = null;
 
 var status_str = null;
+
+var OPT_PERIOD = 45;
 /*
    1 2 3 4 5 6 7 8 9 10 
  1 · · · · · · · · · ·
@@ -119,6 +121,7 @@ function randomizeFuu() {
 function moveFuu(msg) {
 	var err = false;
 	status_str = "Game in session";
+	turns = 30;
 	interval = setInterval(function() {
 		resetMap();
 		positionFuu();
@@ -221,7 +224,7 @@ function getCoordinates(client,msg) {
 		msg.channel.send('Opt in the current game now!');
 		return;
 	}
-	msg.channel.send('Please opt in within the next 30 seconds by typing: !fuu row#1 col#1 row#2 col#2 row#3 col#3 row#4 col#4 row#5 col#5 (just the numbers)');
+	msg.channel.send('Please opt in within the next '+OPT_PERIOD+' seconds by typing: !fuu row#1 col#1 row#2 col#2 row#3 col#3 row#4 col#4 row#5 col#5 (just the numbers)');
 	msg.channel.send(stringMap()).then(message => {msg_id = message.id;}).catch(error => {msg.channel.send("Error with Fuu game: "+error);});
 	client.on('message', message_callback);
 	playTimeout = setTimeout(function() {
@@ -232,7 +235,7 @@ function getCoordinates(client,msg) {
 		else msg.channel.send('Game has disbanded due to no players');
 		clearTimeout(playTimeout);
 		playTimeout = null;
-	},30000);
+	},OPT_PERIOD*1000);
 }
 
 function nextPlayer(msg,coords) {
@@ -240,50 +243,62 @@ function nextPlayer(msg,coords) {
 	if (player_tags.indexOf(msg.author)==-1) player_tags.push(msg.author);
 	if (msg.author == player_1 || !player_1) {
 		player_1 = msg.author;
+		if (position_1.length>=5) {
+			msg.channel.send(msg.author+' You already have placed 5 traps');
+			return;
+		}
 		for (var i = 0; i < coords.length/2 && position_1.length < 5; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_1.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 		if (position_1.length>=5) {
-			msg.channel.send(msg.author+' You already have placed 5 traps. All additional coordinates have been ignored');
-			return;
+			msg.channel.send(msg.author+' Extra coordinates will be ignored');
 		}
 	}
 	else if (msg.author == player_2 || !player_2) {
 		player_2 = msg.author;
+		if (position_2.length>=5) {
+			msg.channel.send(msg.author+' You already have placed 5 traps');
+			return;
+		}
 		for (var i = 0; i < coords.length/2 && position_2.length < 5; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_2.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 		if (position_2.length>=5) {
-			msg.channel.send(msg.author+' You already have placed 5 traps. All additional coordinates have been ignored');
-			return;
+			msg.channel.send(msg.author+' Extra coordinates will be ignored');
 		}
 	}
 	else if (msg.author == player_3 || !player_3) {
 		player_3 = msg.author;
+		if (position_3.length>=5) {
+			msg.channel.send(msg.author+' You already have placed 5 traps');
+			return;
+		}
 		for (var i = 0; i < coords.length/2 && position_3.length < 5; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_3.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 		if (position_3.length>=5) {
-			msg.channel.send(msg.author+' You already have placed 5 traps. All additional coordinates have been ignored');
-			return;
+			msg.channel.send(msg.author+' Extra coordinates will be ignored');
 		}
 	}
 	else if (msg.author == player_4 || !player_4) {
 		player_4 = msg.author;
+		if (position_4.length>=5) {
+			msg.channel.send(msg.author+' You already have placed 5 traps');
+			return;
+		}
 		for (var i = 0; i < coords.length/2 && position_4.length < 5; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) continue;
 			position_4.push(coords.slice(2*i,2*i+2));
 			taken_coords.push(coords.slice(2*i,2*i+2));
 		}
 		if (position_4.length>=5) {
-			msg.channel.send(msg.author+' You already have placed 5 traps. All additional coordinates have been ignored');
-			return;
+			msg.channel.send(msg.author+' Extra coordinates will be ignored');
 		}
 	}
 	resetMap();
