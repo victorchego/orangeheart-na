@@ -53,8 +53,8 @@ const message_callback = (msg) => {
 			return;
 		}
 		if (coords.length % 2 != 0) {
-			msg.channel.send(msg.author+' One of your coordinates is missing. Make sure you have an even set of numbers');
-			return;
+			msg.channel.send(msg.author+' One of your coordinates is missing. Make sure you have an even set of numbers. All other coordinates have been registered');
+			coords = coords.slice(0,-1);
 		}
 		if (player_list.length>=4) {
 			msg.channel.send(msg.author+' Current game is full. Please wait till the next round');
@@ -66,7 +66,7 @@ const message_callback = (msg) => {
 		}
 		for (var i = 0; i < coords.length/2; i++) {
 			if (coordTaken(coords.slice(2*i,2*i+2))) {
-				msg.channel.send(msg.author+' One or more of your pairs of coordinates has been taken. The other coordinates have been registered');
+				msg.channel.send(msg.author+' One or more of your pairs of coordinates has been taken. All other coordinates have been registered');
 				break;
 			}
 		}
