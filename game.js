@@ -49,8 +49,8 @@ const message_callback = (msg) => {
 			return;
 		}
 		if (coords.length > 10) {
-			msg.channel.send(msg.author+' Please enter up to 5 pairs of coordinates only. Make sure there are no extra spaces');
-			return;
+			msg.channel.send(msg.author+' You can only enter up to 5 pairs of coordinates. The first 5 pairs will be registered');
+			coords = coords.slice(0,10);
 		}
 		if (coords.length % 2 != 0) {
 			msg.channel.send(msg.author+' One of your coordinates is missing. Make sure you have an even set of numbers. All other coordinates have been registered');
