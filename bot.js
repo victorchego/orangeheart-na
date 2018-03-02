@@ -429,7 +429,7 @@ client.on('message', (msg) => {
 				}
 			break;
 			case 'purge':
-				if (msg.author.id==OWNER_ID && msg.channel.id==CY_CHANNEL_ID) {
+				if (msg.author.id==OWNER_ID) {
 					purgeDelete(client, msg, args);
 				}
 				else msg.channel.send('Cannot obey command');
