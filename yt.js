@@ -72,7 +72,7 @@ function handleMessage(msg, client) {
 					radio_channel.leave();
 					client.removeListener('voiceStatusUpdate', voiceCallback);
 					return;
-				}
+				});
 			  })
 			  .catch(console.error);
 		}
