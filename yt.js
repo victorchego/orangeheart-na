@@ -1,4 +1,5 @@
 var RADIO_CHANNEL_ID = '348328771797123073';
+var ANIME_CHANNEL_ID = '335150939029766144';
 var CY_CHANNEL_ID = '401660510816436224';
 
 const ytdl = require('ytdl-core');
@@ -38,10 +39,14 @@ function handleMessage(msg, client) {
 		msg.channel.send('Invalid parameters.');
 		return;
 	}
-	if (args[0] == "search") {
+	if (args[0] == "stop") {
 		
 	}
-	else {
+	else if (args[0] == "search") {
+		
+	}
+	else if (args[0] == "play") {
+		msg.channel.send('Play');
 		var radio_channel = client.channels.find(val => val.id == RADIO_CHANNEL_ID);
 		if (!radio_channel) {
 			msg.channel.send('Radio channel not found.');
@@ -52,14 +57,16 @@ function handleMessage(msg, client) {
 			return;
 		}
 		if (!ytdl.validateURL(args[0])) {
-			msg.channel.send('Command format is !yt [youtube_url]');
+			msg.channel.send('Command format is !yt play [youtube_url]');
 			return;
 		}
 		else {
+			msg.channel.send('Request');
 			radio_channel.join()
 			  .then(connection => {
-				stream = ytdl(args[0], { filter : 'audioonly' });
+				stream = ytdl(args[1], { filter : 'audioonly' });
 				dispatcher = connection.playStream(stream, streamOptions);
+				msg.channel.send('Playing in #radio');
 				client.on('voiceStatusUpdate', voiceCallback);
 				dispatcher.once('end', reason => {
 					connection.disconnect();
@@ -74,7 +81,7 @@ function handleMessage(msg, client) {
 					return;
 				});
 			  })
-			  .catch(console.error);
+			  .catch(console.log('fail'));
 		}
 	}
 }
