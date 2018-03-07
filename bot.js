@@ -9,6 +9,8 @@ var Quickstart = require('./quickstart.js');
 var CALL_REQUEST = Quickstart.callRequestFromServer; //function (callback,args,msg) {Quickstart.callRequestFromServer(callback,args,msg);}; // .callRequestFromServer or .callRequestFromClient
 var Func = require('./functions.js');
 var Game = require('./game.js');
+var RPG = require('./rpg.js');
+var YT = require('./yt.js');
 
 var cooldownList = [];
 var cooldownMessageList = [];
@@ -27,6 +29,8 @@ var BOT_LOG_ID = '404613773832224768';
 var URL_JSON = 'https://api.myjson.com/bins/663th';
 var TIMER_JSON = 'https://api.myjson.com/bins/z65jl'; // [{"id":"X", "time":"X", "type":"steal/donate"}]
 var TIMER_TIMEOUT = null;
+
+var RPG_JSON = 'https://api.jsonbin.io/b/5a9fb587c9bf323a2b75e8ce'; //{<id>:{"user":@user,"cookies":0,"atk":0,"def":0,"steal":0,"item":{<item1>:1,<item2>:5,...},"merc":{<merc1>:0,<merc2>:3,...}}}
 
 var COOKIE_STATUS = true;
 
@@ -118,10 +122,13 @@ client.on('guildMemberRemove', (guildmember) => {
 });
 
 client.on('message', (msg) => {
+		
+	if (msg.content.toLowerCase().startsWith('!yt')) {
+		YT.handleMessage(msg, client);
+	}
 	
-	filterMessage(msg);
-	
-    if (msg.content.startsWith('!Cy ') || msg.content.startsWith('!cy ') || msg.content.startsWith('!CY ') || msg.content.startsWith('!cY ')) {
+    else if (msg.content.startsWith('!Cy ') || msg.content.startsWith('!cy ') || msg.content.startsWith('!CY ') || msg.content.startsWith('!cY ')) {
+		filterMessage(msg);
 		// if user warned of cooldown, ignore
 		if (inList(msg.author, cooldownMessageList) && msg.channel.type=='text') {
 			msg.delete().catch(console.error);
