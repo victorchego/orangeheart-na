@@ -12,6 +12,7 @@
     "googleapis": "^23.0.2",
     "jquery": "^3.3.1",
     "moment": "^2.20.1",
+    "opusscript": "0.0.6",
     "winston": "^2.4.0",
     "ytdl-core": "^0.20.2"
   }
