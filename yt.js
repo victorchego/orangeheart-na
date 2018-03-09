@@ -74,6 +74,7 @@ function handleMessage(msg, client) {
 		}
 		else {
 			msg.channel.send('Video stream is empty');
+			return;
 		}
 	}
 	else if (cmd == "play" || cmd == "p") {
