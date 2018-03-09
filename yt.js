@@ -7,8 +7,8 @@ var TARGET_CHANNEL_ID = ANIME_CHANNEL_ID;
 const ytdl = require('ytdl-core');
 const streamOptions = { seek: 0, volume: 1 };
 
-//var stream = null;
-//var dispatcher = null;
+var stream = null;
+var dispatcher = null;
 
 var queue = [];
 
@@ -49,17 +49,34 @@ function handleMessage(msg, client) {
     args = args.splice(1);
 	
 	if (cmd == "disconnect" || cmd == "dc") {
+		if (dispatcher) {
+			dispatcher.end();
+			dispatcher = null;
+		}
 		radio_channel.leave();
 		queue = [];
-	}
-	else if (cmd == "search") {
-		
-	}
-	else if (cmd == "queue") {
-		msg.channel.send('Queued videos: '+queue);
 		return;
 	}
-	else if (cmd == "play") {
+	else if (cmd == "search" || cmd == "s") {
+		
+	}
+	else if (cmd == "queue" || cmd == "q") {
+		msg.channel.send('Queued videos: ```\n'+queue+'```');
+		return;
+	}
+	else if (cmd == "next" || cmd == "n") {
+		if (queue.length == 0) {
+			msg.channel.send('Queue is empty');
+			return;
+		}
+		if (dispatcher) {
+			dispatcher.end();
+		}
+		else {
+			msg.channel.send('Video stream is empty');
+		}
+	}
+	else if (cmd == "play" || cmd == "p") {
 		if (args.length == 0) {
 			msg.channel.send('Invalid parameters.');
 			return;
@@ -68,29 +85,43 @@ function handleMessage(msg, client) {
 			msg.channel.send('Command format is !yt play [youtube_url]');
 			return;
 		}
-		if (radio_channel.members.find(val => val.id == client.user.id) || queue.length != 0) {
+		if (radio_channel.connection) {
 			queue.push(args[0]);
-			msg.channel.send('Added to queue');
-			return;
+			msg.channel.send('Video queued');
 		}
 		else {
-			radio_channel.join()
-			  .then(connection => {
-				var stream = ytdl(args[0], { filter : 'audioonly' });
-				var dispatcher = connection.playStream(stream, streamOptions);
-				msg.channel.send('Playing in the designated voice channel');
-				//client.on('voiceStatusUpdate', voiceCallback);
-				dispatcher.on('end',reason=> {
-					if (queue.length == 0) radio_channel.leave();
-					else {
-						var url = queue.shift();
-						stream = ytdl(url, { filter : 'audioonly' });
-						dispatcher = connection.playStream(stream, streamOptions);
-					}
+			radio_channel.join().then(connection => {
+				stream = ytdl(args[0], { filter : 'audioonly' });
+				dispatcher = connection.playStream(stream, streamOptions);
+				dispatcher.on("end", reason => {
+					playNext(radio_channel);
 				});
-			  })
-			  .catch(console.error);
+			}).catch(err => console.log(err));
 		}
+	}
+}
+
+function playNext(radio_channel) {
+	if (queue.length == 0) {
+		dispatcher = null;
+		radio_channel.leave();
+	}
+	if (queue.length == 1) {
+		var url = queue.shift();
+		stream = ytdl(url, { filter : 'audioonly' });
+		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
+		dispatcher.on("end", reason => {
+			dispatcher = null;
+			radio_channel.leave();
+		});
+	}
+	else {
+		var url = queue.shift();
+		stream = ytdl(url, { filter : 'audioonly' });
+		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
+		dispatcher.on("end", reason => {
+			playNext(radio_channel);
+		});
 	}
 }
 
