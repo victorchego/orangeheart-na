@@ -119,6 +119,12 @@ function handleMessage(msg, client) {
 		}
 		else {
 			radio_channel.join().then(connection => {
+				ytdl.getInfo(args[0],{ filter : 'audioonly' }, function (err, info) {
+				if (err) msg.channel.send('Error getting video info');
+				else {
+					msg.channel.send('Now playing in the <#'+TARGET_CHANNEL_ID+'> voice channel: '+info["title"]);
+					}
+				});
 				client.on('voiceStateUpdate', voiceCallback);
 				stream = ytdl(args[0], { filter : 'audioonly' });
 				dispatcher = connection.playStream(stream, streamOptions);
