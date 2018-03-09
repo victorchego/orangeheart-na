@@ -11,6 +11,7 @@ var stream = null;
 var dispatcher = null;
 
 var queue = [];
+var titles = [];
 
 const voiceCallback = (oldMember, newMember) => {
 	var newUserChannel = newMember.voiceChannel;
@@ -29,6 +30,7 @@ const voiceCallback = (oldMember, newMember) => {
 			dispatcher = null;
 			radio_channel.leave();
 			queue = [];
+			titles = [];
 			cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 			return;
 		}
@@ -56,20 +58,26 @@ function handleMessage(msg, client) {
     var cmd = args[0];
     args = args.splice(1);
 	
-	if (cmd == "disconnect" || cmd == "dc") {
+	if (cmd == "disconnect" || cmd == "dc" || cmd == "stop") {
 		if (dispatcher) {
 			dispatcher.end();
 			dispatcher = null;
 		}
 		radio_channel.leave();
 		queue = [];
+		titles = [];
 		return;
 	}
 	else if (cmd == "search" || cmd == "s") {
 		
 	}
 	else if (cmd == "queue" || cmd == "q") {
-		msg.channel.send('Queued videos: ```\n'+queue+'```');
+		var str = 'Queued videos: ```\n';
+		for (t in titles) {
+			str += titles+'\n';
+		}
+		str += '```';
+		msg.channel.send(str);
 		return;
 	}
 	else if (cmd == "next" || cmd == "n") {
@@ -98,7 +106,10 @@ function handleMessage(msg, client) {
 			queue.push(args[0]);
 			ytdl.getInfo(args[0],{ filter : 'audioonly' }, function (err, info) {
 				if (err) msg.channel.send('Error getting video info');
-				else msg.channel.send('Video queued: '+info["title"]);
+				else {
+					msg.channel.send('Video queued: '+info["title"]);
+					titles.push(info["title"]);
+				}
 			});
 		}
 		else {
@@ -122,6 +133,7 @@ function playNext(radio_channel) {
 		dispatcher = null;
 		radio_channel.leave();
 		queue = [];
+		titles = [];
 		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		return;
 	}
@@ -132,6 +144,7 @@ function playNext(radio_channel) {
 	}
 	if (queue.length == 1) {
 		var url = queue.shift();
+		titles.shift();
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
 		dispatcher.on("end", reason => {
