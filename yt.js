@@ -2,7 +2,7 @@ var RADIO_CHANNEL_ID = '348328771797123073';
 var ANIME_CHANNEL_ID = '335150939029766144';
 var CY_CHANNEL_ID = '401660510816436224';
 
-var TARGET_CHANNEL_ID = ANIME_CHANNEL_ID;
+var TARGET_CHANNEL_ID = RADIO_CHANNEL_ID;
 
 const ytdl = require('ytdl-core');
 const streamOptions = { seek: 0, volume: 1 };
@@ -96,7 +96,10 @@ function handleMessage(msg, client) {
 		}
 		if (radio_channel.connection) {
 			queue.push(args[0]);
-			msg.channel.send('Video queued');
+			ytdl.getInfo(args[0],{ filter : 'audioonly' }, function (err, info) {
+				if (err) msg.channel.send('Error getting video info');
+				else msg.channel.send('Video queued: '+info["title"]);
+			});
 		}
 		else {
 			radio_channel.join().then(connection => {
