@@ -111,20 +111,20 @@ function handleMessage(msg, client) {
 }
 
 function playNext(radio_channel) {
+	var cy_channel = radio_channel.connection.client.channels.find(val => val.id == CY_CHANNEL_ID);
 	if (radio_channel.members.size == 1) {
-		var cy_channel = radio_channel.connection.client.channels.find(val => val.id == CY_CHANNEL_ID);
 		cy_channel.send('Queue terminated due to no listeners');
 		dispatcher.end();
 		dispatcher = null;
 		radio_channel.leave();
 		queue = [];
-		radio_channel.connection.client.removeListener('voiceStateUpdate',voiceCallback);
+		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		return;
 	}
 	if (queue.length == 0) {
 		dispatcher = null;
 		radio_channel.leave();
-		radio_channel.connection.client.removeListener('voiceStateUpdate',voiceCallback);
+		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 	}
 	if (queue.length == 1) {
 		var url = queue.shift();
@@ -133,7 +133,7 @@ function playNext(radio_channel) {
 		dispatcher.on("end", reason => {
 			dispatcher = null;
 			radio_channel.leave();
-			radio_channel.connection.client.removeListener('voiceStateUpdate',voiceCallback);
+			cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		});
 	}
 	else {
