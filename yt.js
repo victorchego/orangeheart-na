@@ -103,6 +103,14 @@ function handleMessage(msg, client) {
 }
 
 function playNext(radio_channel) {
+	if (radio_channel.members.size == 1) {
+		msg.channel.send('Queue terminated due to no listeners');
+		dispatcher.end();
+		dispatcher = null;
+		radio_channel.leave();
+		queue = [];
+		return;
+	}
 	if (queue.length == 0) {
 		dispatcher = null;
 		radio_channel.leave();
