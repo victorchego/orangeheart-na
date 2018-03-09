@@ -68,6 +68,10 @@ function handleMessage(msg, client) {
 		titles = [];
 		return;
 	}
+	else if (cmd == "commands") {
+		msg.channel.send("```!yt commands/queue/q/next/n/disconnect/dc/stop\n!yt play/p youtube_url```");
+		return;
+	}
 	else if (cmd == "search" || cmd == "s") {
 		
 	}
@@ -111,6 +115,7 @@ function handleMessage(msg, client) {
 					titles.push(info["title"]);
 				}
 			});
+			return;
 		}
 		else {
 			radio_channel.join().then(connection => {
