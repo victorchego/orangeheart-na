@@ -142,7 +142,7 @@ client.on('message', (msg) => {
 			return;
 		}
 		
-		if (inList(msg.channel.id,BANNED_CHANNELS) && msg.channel.type=='text') {
+		if (inList(msg.channel.id,BANNED_CHANNELS) && msg.channel.type=='text' && msg.author.id != OWNER_ID) {
 			msg.channel.send('This channel does not support commands');
 			msg.delete().catch(console.error);
 			return;
