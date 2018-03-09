@@ -74,7 +74,7 @@ function handleMessage(msg, client) {
 	else if (cmd == "queue" || cmd == "q") {
 		var str = 'Queued videos: ```\n';
 		for (t in titles) {
-			str += titles+'\n';
+			str += t+'\n';
 		}
 		str += '```';
 		msg.channel.send(str);
