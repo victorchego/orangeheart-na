@@ -15,14 +15,21 @@ var queue = [];
 const voiceCallback = (oldMember, newMember) => {
 	let newUserChannel = newMember.voiceChannel;
 	let oldUserChannel = oldMember.voiceChannel;
+	var radio_channel = client.channels.find(val => val.id == TARGET_CHANNEL_ID);
 	if (oldUserChannel === undefined && newUserChannel !== undefined) {
     // User Joins a voice channel
 		return;
 	} 
 	else if(newUserChannel === undefined){
     // User leaves a voice channel
-		if (radio_channel.members.length == 1) {
+		if (!radio_channel) return;
+		if (radio_channel.members.size == 1) {
+			dispatcher.end();
+			dispatcher = null;
 			radio_channel.leave();
+			queue = [];
+			client.removeListener('voiceStateUpdate',voiceCallback);
+			return;
 		}
 	}
 }
@@ -92,6 +99,7 @@ function handleMessage(msg, client) {
 		}
 		else {
 			radio_channel.join().then(connection => {
+				client.on('voiceStateUpdate', voiceCallback);
 				stream = ytdl(args[0], { filter : 'audioonly' });
 				dispatcher = connection.playStream(stream, streamOptions);
 				dispatcher.on("end", reason => {
@@ -109,11 +117,13 @@ function playNext(radio_channel) {
 		dispatcher = null;
 		radio_channel.leave();
 		queue = [];
+		client.removeListener('voiceStateUpdate',voiceCallback);
 		return;
 	}
 	if (queue.length == 0) {
 		dispatcher = null;
 		radio_channel.leave();
+		client.removeListener('voiceStateUpdate',voiceCallback);
 	}
 	if (queue.length == 1) {
 		var url = queue.shift();
@@ -122,6 +132,7 @@ function playNext(radio_channel) {
 		dispatcher.on("end", reason => {
 			dispatcher = null;
 			radio_channel.leave();
+			client.removeListener('voiceStateUpdate',voiceCallback);
 		});
 	}
 	else {
