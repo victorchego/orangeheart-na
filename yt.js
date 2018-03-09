@@ -13,9 +13,9 @@ var dispatcher = null;
 var queue = [];
 
 const voiceCallback = (oldMember, newMember) => {
-	let newUserChannel = newMember.voiceChannel;
-	let oldUserChannel = oldMember.voiceChannel;
-	var radio_channel = client.channels.find(val => val.id == TARGET_CHANNEL_ID);
+	var newUserChannel = newMember.voiceChannel;
+	var oldUserChannel = oldMember.voiceChannel;
+	var radio_channel = newMember? newMember.client.channels.find(val => val.id == TARGET_CHANNEL_ID) : oldMember.client.channels.find(val => val.id == TARGET_CHANNEL_ID);
 	if (oldUserChannel === undefined && newUserChannel !== undefined) {
     // User Joins a voice channel
 		return;
@@ -28,7 +28,7 @@ const voiceCallback = (oldMember, newMember) => {
 			dispatcher = null;
 			radio_channel.leave();
 			queue = [];
-			client.removeListener('voiceStateUpdate',voiceCallback);
+			radio_channel.connection.client.removeListener('voiceStateUpdate',voiceCallback);
 			return;
 		}
 	}
@@ -117,13 +117,13 @@ function playNext(radio_channel) {
 		dispatcher = null;
 		radio_channel.leave();
 		queue = [];
-		client.removeListener('voiceStateUpdate',voiceCallback);
+		radio_channel.connection.client.removeListener('voiceStateUpdate',voiceCallback);
 		return;
 	}
 	if (queue.length == 0) {
 		dispatcher = null;
 		radio_channel.leave();
-		client.removeListener('voiceStateUpdate',voiceCallback);
+		radio_channel.connection.client.removeListener('voiceStateUpdate',voiceCallback);
 	}
 	if (queue.length == 1) {
 		var url = queue.shift();
@@ -132,7 +132,7 @@ function playNext(radio_channel) {
 		dispatcher.on("end", reason => {
 			dispatcher = null;
 			radio_channel.leave();
-			client.removeListener('voiceStateUpdate',voiceCallback);
+			radio_channel.connection.client.removeListener('voiceStateUpdate',voiceCallback);
 		});
 	}
 	else {
