@@ -90,7 +90,7 @@ function handleMessage(msg, client) {
 			return;
 		}
 		if (dispatcher) {
-			playNext(radio_channel);
+			dispatcher.end();
 		}
 		else {
 			msg.channel.send('Video stream is empty');
@@ -137,6 +137,7 @@ function handleMessage(msg, client) {
 }
 
 function playNext(radio_channel) {
+	console.log('test');
 	var cy_channel = radio_channel.connection.client.channels.find(val => val.id == CY_CHANNEL_ID);
 	if (radio_channel.members.size == 1) {
 		cy_channel.send('Queue terminated due to no listeners');
