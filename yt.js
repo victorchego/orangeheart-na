@@ -91,6 +91,7 @@ function handleMessage(msg, client) {
 		}
 		if (dispatcher) {
 			dispatcher.end();
+			return;
 		}
 		else {
 			msg.channel.send('Video stream is empty');
@@ -161,7 +162,6 @@ function playNext(radio_channel) {
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
 		dispatcher.once("end", reason => {
-			console.log('next2');
 			playNext(radio_channel);
 		});
 	}
