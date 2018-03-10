@@ -90,7 +90,7 @@ function handleMessage(msg, client) {
 			return;
 		}
 		if (dispatcher) {
-			dispatcher.end();
+			playNext(radio_channel);
 		}
 		else {
 			msg.channel.send('Video stream is empty');
