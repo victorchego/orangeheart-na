@@ -78,7 +78,7 @@ function handleMessage(msg, client) {
 	else if (cmd == "queue" || cmd == "q") {
 		var str = 'Queued videos: ```\n';
 		for (t in titles) {
-			str += t+'\n';
+			str += titles[t]+'\n';
 		}
 		str += '```';
 		msg.channel.send(str);
@@ -156,6 +156,12 @@ function playNext(radio_channel) {
 	else {
 		var url = queue.shift();
 		titles.shift();
+		ytdl.getInfo(url,{ filter : 'audioonly' }, function (err, info) {
+			if (err) msg.channel.send('Error getting video info');
+			else {
+				msg.channel.send('Skipping to '+info["title"]);
+				}
+		});
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
 		dispatcher.on("end", reason => {
