@@ -160,6 +160,7 @@ function playNext(radio_channel) {
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
 		dispatcher.on("end", reason => {
+			console.log('next2');
 			playNext(radio_channel);
 		});
 	}
