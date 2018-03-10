@@ -107,11 +107,11 @@ function handleMessage(msg, client) {
 			return;
 		}
 		if (radio_channel.connection) {
-			queue.push(args[0]);
 			ytdl.getInfo(args[0],{ filter : 'audioonly' }, function (err, info) {
 				if (err) msg.channel.send('Error getting video info');
 				else {
 					msg.channel.send('Video queued: '+info["title"]);
+					queue.push(args[0]);
 					titles.push(info["title"]);
 				}
 			});
@@ -150,13 +150,14 @@ function playNext(radio_channel) {
 	}
 	if (queue.length == 0) {
 		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
+		cy_channel.send('Queue has terminated');
 		dispatcher = null;
 		radio_channel.leave();
 	}
 	else {
 		var url = queue.shift();
-		titles.shift();
-		console.log('next');
+		var title = titles.shift();
+		cy_channel.send('Skipping to: '+title);
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
 		dispatcher.once("end", reason => {
