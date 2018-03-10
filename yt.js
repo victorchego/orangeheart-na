@@ -128,7 +128,7 @@ function handleMessage(msg, client) {
 				client.on('voiceStateUpdate', voiceCallback);
 				stream = ytdl(args[0], { filter : 'audioonly' });
 				dispatcher = connection.playStream(stream, streamOptions);
-				dispatcher.on("end", reason => {
+				dispatcher.once("end", reason => {
 					playNext(radio_channel);
 				});
 			}).catch(err => console.log(err));
@@ -159,7 +159,7 @@ function playNext(radio_channel) {
 		console.log('next');
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
-		dispatcher.on("end", reason => {
+		dispatcher.once("end", reason => {
 			console.log('next2');
 			playNext(radio_channel);
 		});
