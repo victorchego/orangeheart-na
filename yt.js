@@ -156,12 +156,7 @@ function playNext(radio_channel) {
 	else {
 		var url = queue.shift();
 		titles.shift();
-		ytdl.getInfo(url,{ filter : 'audioonly' }, function (err, info) {
-			if (err) msg.channel.send('Error getting video info');
-			else {
-				msg.channel.send('Skipping to '+info["title"]);
-				}
-		});
+		console.log('next');
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
 		dispatcher.on("end", reason => {
