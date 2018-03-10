@@ -153,17 +153,6 @@ function playNext(radio_channel) {
 		radio_channel.leave();
 		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 	}
-	else if (queue.length == 1) {
-		var url = queue.shift();
-		titles.shift();
-		stream = ytdl(url, { filter : 'audioonly' });
-		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
-		dispatcher.on("end", reason => {
-			dispatcher = null;
-			radio_channel.leave();
-			cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
-		});
-	}
 	else {
 		var url = queue.shift();
 		titles.shift();
