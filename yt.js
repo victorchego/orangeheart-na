@@ -166,6 +166,7 @@ function playNext(radio_channel) {
 	}
 	else {
 		var url = queue.shift();
+		titles.shift();
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
 		dispatcher.on("end", reason => {
