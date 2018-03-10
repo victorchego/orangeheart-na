@@ -137,7 +137,6 @@ function handleMessage(msg, client) {
 }
 
 function playNext(radio_channel) {
-	console.log('test');
 	var cy_channel = radio_channel.connection.client.channels.find(val => val.id == CY_CHANNEL_ID);
 	if (radio_channel.members.size == 1) {
 		cy_channel.send('Queue terminated due to no listeners');
@@ -153,6 +152,17 @@ function playNext(radio_channel) {
 		dispatcher = null;
 		radio_channel.leave();
 		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
+	}
+	else if (queue.length == 1) {
+		var url = queue.shift();
+		titles.shift();
+		stream = ytdl(url, { filter : 'audioonly' });
+		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
+		dispatcher.on("end", reason => {
+			dispatcher = null;
+			radio_channel.leave();
+			cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
+		});
 	}
 	else {
 		var url = queue.shift();
