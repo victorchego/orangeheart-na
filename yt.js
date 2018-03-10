@@ -90,7 +90,8 @@ function handleMessage(msg, client) {
 			return;
 		}
 		if (dispatcher) {
-			dispatcher.end();
+			dispatcher.removeAllListeners("end");
+			playNext(radio_channel);
 			return;
 		}
 		else {
