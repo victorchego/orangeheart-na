@@ -149,9 +149,9 @@ function playNext(radio_channel) {
 		return;
 	}
 	if (queue.length == 0) {
+		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		dispatcher = null;
 		radio_channel.leave();
-		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 	}
 	else {
 		var url = queue.shift();
