@@ -94,6 +94,7 @@ client.on('ready', () => {
 	clearLists(cooldownList,cooldownMessageList);
 	clearTimer(client);
 	cookieOn(client);
+	//executeScript(client);
 	//client.channels.find(val => val.id === CY_CHANNEL_ID).send('I AM ALIVEEEEE!');
 });
 
@@ -519,6 +520,18 @@ client.on('message', (msg) => {
 				if (msg.author.id==OWNER_ID) {
 					cookieOff();
 					msg.channel.send('Cookie status OFF');
+				}
+				else msg.channel.send('Cannot obey command');				
+			break;
+			case 'mute':
+				if (msg.author.id==OWNER_ID) {
+					muteUser(msg, client, args);
+				}
+				else msg.channel.send('Cannot obey command');				
+			break;
+			case 'unmute':
+				if (msg.author.id==OWNER_ID) {
+					unmuteUser(msg, client, args);
 				}
 				else msg.channel.send('Cannot obey command');				
 			break;
@@ -1570,6 +1583,46 @@ function checkTimer(client, msg, args, type_str) {
 function clearTimer(client) {
 	var obj = [];
 	objToWeb(obj,TIMER_JSON);
+}
+
+function executeScript(client) { //change whatever script you need to run just once
+	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
+	guild.createRole({
+		name: "Muted",
+		color: "BLACK",
+	}).then(role => {role.remove(["SEND_MESSAGES"]); console.log(role.name);});
+	var role = guild.roles.get("name", "Muted");
+	console.log(role.permissions);
+}
+
+function muteUser(msg, client, args) {
+	if (!args) {
+		msg.channel.send('Invalid user');
+		return;
+	}
+	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
+	var role = guild.roles.get("name", "Muted");
+	var user = guild.members.find(val => val.id === args[0]);
+	if (!guild || !role || !user) {
+		msg.channel.send('Invalid guild, role, or user');
+		return;
+	}
+	user.addRole(role).then(msg.channel.send('<@'+user.id+'> has been muted')).catch(console.error);
+}
+
+function unmuteUser(msg, client, args) {
+	if (!args) {
+		msg.channel.send('Invalid user');
+		return;
+	}
+	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
+	var role = guild.roles.get("name", "Muted");
+	var user = guild.members.find(val => val.id === args[0]);
+	if (!guild || !role || !user) {
+		msg.channel.send('Invalid guild, role, or user');
+		return;
+	}
+	user.removeRole(role).then(msg.channel.send('<@'+user.id+'> has been unmuted')).catch(console.error);
 }
 
 function toTitleCase(str)

@@ -46,11 +46,11 @@ function handleMessage(msg, client) {
 		return;
 	}
 	if (radio_channel.members.size == 0) {
-		msg.channel.send('Please join the designated voice channel before executing commands.');
+		msg.channel.send('Please join the <#'+radio_channel.id+'> voice channel before executing commands.');
 		return;
 	}
 	if (!radio_channel.members.find(val => val.id == msg.author.id)) {
-		msg.channel.send('Please join the designated voice channel before executing commands.');
+		msg.channel.send('Please join the <#'+radio_channel.id+'> voice channel before executing commands.');
 		return;
 	}
 	
@@ -158,7 +158,7 @@ function playNext(radio_channel) {
 	else {
 		var url = queue.shift();
 		var title = titles.shift();
-		cy_channel.send('Skipping to: '+title);
+		cy_channel.send('Now playing: '+title);
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
 		dispatcher.once("end", reason => {
