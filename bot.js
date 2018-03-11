@@ -1601,7 +1601,7 @@ function muteUser(msg, client, args) {
 		return;
 	}
 	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
-	var role = guild.roles.get("name", "Muted");
+	var role = guild.roles.find("name", "Muted");
 	var user = guild.members.find(val => val.id === args[0]);
 	if (!guild) {
 		msg.channel.send('Invalid guild');
@@ -1624,7 +1624,7 @@ function unmuteUser(msg, client, args) {
 		return;
 	}
 	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
-	var role = guild.roles.get("name", "Muted");
+	var role = guild.roles.find("name", "Muted");
 	var user = guild.members.find(val => val.id === args[0]);
 	if (!guild) {
 		msg.channel.send('Invalid guild');
