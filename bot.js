@@ -1603,8 +1603,16 @@ function muteUser(msg, client, args) {
 	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
 	var role = guild.roles.get("name", "Muted");
 	var user = guild.members.find(val => val.id === args[0]);
-	if (!guild || !role || !user) {
-		msg.channel.send('Invalid guild, role, or user');
+	if (!guild)) {
+		msg.channel.send('Invalid guild');
+		return;
+	}
+	if (!role)) {
+		msg.channel.send('Invalid role');
+		return;
+	}
+	if (!user)) {
+		msg.channel.send('Invalid user');
 		return;
 	}
 	user.addRole(role).then(msg.channel.send('<@'+user.id+'> has been muted')).catch(console.error);
@@ -1618,8 +1626,16 @@ function unmuteUser(msg, client, args) {
 	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
 	var role = guild.roles.get("name", "Muted");
 	var user = guild.members.find(val => val.id === args[0]);
-	if (!guild || !role || !user) {
-		msg.channel.send('Invalid guild, role, or user');
+	if (!guild)) {
+		msg.channel.send('Invalid guild');
+		return;
+	}
+	if (!role)) {
+		msg.channel.send('Invalid role');
+		return;
+	}
+	if (!user)) {
+		msg.channel.send('Invalid user');
 		return;
 	}
 	user.removeRole(role).then(msg.channel.send('<@'+user.id+'> has been unmuted')).catch(console.error);
