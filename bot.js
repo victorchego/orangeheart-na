@@ -1626,15 +1626,15 @@ function unmuteUser(msg, client, args) {
 	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
 	var role = guild.roles.get("name", "Muted");
 	var user = guild.members.find(val => val.id === args[0]);
-	if (!guild)) {
+	if (!guild) {
 		msg.channel.send('Invalid guild');
 		return;
 	}
-	if (!role)) {
+	if (!role) {
 		msg.channel.send('Invalid role');
 		return;
 	}
-	if (!user)) {
+	if (!user) {
 		msg.channel.send('Invalid user');
 		return;
 	}
