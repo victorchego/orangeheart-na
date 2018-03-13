@@ -15,6 +15,7 @@
     "opusscript": "0.0.6",
     "prism-media": "github:hydrabolt/prism-media",
     "winston": "^2.4.1",
+    "youtube-search": "^1.0.10",
     "ytdl-core": "^0.20.2"
   }
 }

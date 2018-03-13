@@ -4,8 +4,11 @@ var CY_CHANNEL_ID = '401660510816436224';
 
 var TARGET_CHANNEL_ID = RADIO_CHANNEL_ID;
 
+var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+
 const ytdl = require('ytdl-core');
 const streamOptions = { seek: 0, volume: 1 };
+const search = require('youtube-search');
 
 var stream = null;
 var dispatcher = null;
@@ -73,7 +76,7 @@ function handleMessage(msg, client) {
 		return;
 	}
 	else if (cmd == "search" || cmd == "s") {
-		
+		processSearch(msg, args);
 	}
 	else if (cmd == "queue" || cmd == "q") {
 		var str = 'Queued videos: ```\n';
@@ -165,6 +168,17 @@ function playNext(radio_channel) {
 			playNext(radio_channel);
 		});
 	}
+}
+
+function processSearch(msg,args) {
+	var str = args.join(' ');
+	search(str, opts, function(err, results) {
+		if (err) {
+			msg.channel.send('Search encountered error');
+			return console.log(err);
+		}
+		msg.channel.send(results);
+	});
 }
 
 module.exports = {handleMessage};
