@@ -6,6 +6,11 @@ var TARGET_CHANNEL_ID = RADIO_CHANNEL_ID;
 
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
+var opts = {
+	maxResults: 10,
+	key: YOUTUBE_API_KEY
+};
+
 const ytdl = require('ytdl-core');
 const streamOptions = { seek: 0, volume: 1 };
 const search = require('youtube-search');
