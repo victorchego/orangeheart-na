@@ -136,9 +136,11 @@ function handleMessage(msg, client) {
 			return;
 		}
 		if (!ytdl.validateURL(args[0])) {
-			addLink(radio_channel, msg, client, args[0]);
+			firstResult(client,msg,args);
 			return;
 		}
+		addLink(radio_channel, msg, client, args[0]);
+		return;
 	}
 	else {
 		msg.channel.send('Undefined command. Type !yt commands');
