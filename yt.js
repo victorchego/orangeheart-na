@@ -8,6 +8,7 @@ var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
 var opts = {
 	maxResults: 10,
+	type: 'video',
 	key: YOUTUBE_API_KEY
 };
 
@@ -251,7 +252,7 @@ function processSearch(client,msg,args) {
 function firstResult(client,msg,args) {
 	var str = args.join(' ');
 	var radio_channel = client.channels.find(val => val.id == TARGET_CHANNEL_ID);
-	search(str, {maxResults: 1, key: YOUTUBE_API_KEY}, function(err, results) {
+	search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
 		addLink(radio_channel,msg,client,results[0]["link"]);
 	});
 }
