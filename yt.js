@@ -52,7 +52,6 @@ const voiceCallback = (oldMember, newMember) => {
 const messageCallback = (msg) => {
 	if (msg.content.toLowerCase().startsWith('!sel')) {
 		var args = msg.content.split(' ');
-		msg.channel.send(args);
 		if (args.length < 2) {
 			msg.channel.send('You must specify a number (0-9)');
 			return;
@@ -220,7 +219,7 @@ function processSearch(client,msg,args) {
 			msg.channel.send('Search encountered error');
 			return console.log(err);
 		}
-		var titles = "Type the number associated to the video you want to play ex. !sel 4 (10 seconds) \n```";
+		var titles = "Type the number associated to the video you want to play ex. !sel 4 (15 seconds) \n```";
 		for (i in results) {
 			titles += i + ". " + results[i]["title"] + "\n";
 		}
@@ -234,7 +233,7 @@ function processSearch(client,msg,args) {
 			clearTimeout(searchTimeout);
 			searchTimeout = null;
 			result_data = null;
-		},10000);
+		},15000);
 	});
 }
 
