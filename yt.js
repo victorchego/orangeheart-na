@@ -51,12 +51,7 @@ const voiceCallback = (oldMember, newMember) => {
 
 const messageCallback = (msg) => {
 	if (msg.content.toLowerCase().startsWith('!sel')) {
-		var args = msg.content.split(' ');
-		if (args.length < 2) {
-			msg.channel.send('You must specify a number (0-9)');
-			return;
-		}
-		var num = args[1];
+		var num = msg.content.substring(4).trim();
 		if (outOfBounds(num)) {
 			msg.channel.send('You must specify a number (0-9)');
 			return;
