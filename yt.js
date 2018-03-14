@@ -19,6 +19,7 @@ var stream = null;
 var dispatcher = null;
 
 var searchTimeout = null;
+var loop = false;
 
 var queue = [];
 var titles = [];
@@ -101,7 +102,7 @@ function handleMessage(msg, client) {
 		return;
 	}
 	else if (cmd == "commands") {
-		msg.channel.send("```!yt commands/queue/q/next/n/disconnect/dc/stop\n!yt play/p youtube_url```");
+		msg.channel.send("```!yt commands/queue/q/next/n/disconnect/dc/stop/loop/l\n!yt play/p/search/s youtube_url/search_words```");
 		return;
 	}
 	else if (cmd == "search" || cmd == "s") {
@@ -115,6 +116,11 @@ function handleMessage(msg, client) {
 		str += '```';
 		msg.channel.send(str);
 		return;
+	}
+	else if (cmd == "loop" || cmd == "l") {
+		loop = !loop;
+		var str = loop ? "Loop enabled" : "Loop disabled";
+		msg.channel.send(str);
 	}
 	else if (cmd == "next" || cmd == "n") {
 		if (queue.length == 0) {
@@ -162,6 +168,7 @@ function addLink(radio_channel, msg, client, url) {
 	}
 	else {
 		radio_channel.join().then(connection => {
+			loop = false;
 			ytdl.getInfo(url,{ filter : 'audioonly' }, function (err, info) {
 			if (err) msg.channel.send('Error getting video info');
 			else {
@@ -199,6 +206,7 @@ function playNext(radio_channel) {
 	else {
 		var url = queue.shift();
 		var title = titles.shift();
+		if (loop) queue.push(url);
 		cy_channel.send('Now playing: '+title);
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
