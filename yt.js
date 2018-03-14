@@ -136,10 +136,9 @@ function handleMessage(msg, client) {
 			return;
 		}
 		if (!ytdl.validateURL(args[0])) {
-			msg.channel.send('Command format is !yt play [youtube_url]');
+			addLink(radio_channel, msg, client, args[0]);
 			return;
 		}
-		addLink(radio_channel, msg, client, args[0]);
 	}
 	else {
 		msg.channel.send('Undefined command. Type !yt commands');
