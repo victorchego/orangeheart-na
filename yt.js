@@ -206,7 +206,10 @@ function playNext(radio_channel) {
 	else {
 		var url = queue.shift();
 		var title = titles.shift();
-		if (loop) queue.push(url);
+		if (loop) {
+			queue.push(url);
+			titles.push(title);
+		}
 		cy_channel.send('Now playing: '+title);
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
