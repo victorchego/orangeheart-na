@@ -119,7 +119,7 @@ function handleMessage(msg, client) {
 	}
 	else if (cmd == "loop" || cmd == "l") {
 		loop = !loop;
-		var str = loop ? "Loop enabled" : "Loop disabled";
+		var str = loop ? "Loop enabled for queue" : "Loop disabled for queue";
 		msg.channel.send(str);
 	}
 	else if (cmd == "next" || cmd == "n") {
