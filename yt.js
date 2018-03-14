@@ -141,6 +141,10 @@ function handleMessage(msg, client) {
 		}
 		addLink(radio_channel, msg, client, args[0]);
 	}
+	else {
+		msg.channel.send('Undefined command. Type !yt commands');
+		return;
+	}
 }
 
 function addLink(radio_channel, msg, client, url) {
