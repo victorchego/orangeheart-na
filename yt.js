@@ -230,7 +230,7 @@ function processSearch(client,msg,args) {
 			msg.channel.send('Search encountered error');
 			return console.log(err);
 		}
-		var titles = "Type the number associated to the video you want to play ex. !sel 4 (15 seconds) \n```";
+		var titles = msg.author+" Type !sel (0-9) to select your video ex. !sel 4 (15 seconds) \n```";
 		for (i in results) {
 			titles += i + ". " + results[i]["title"] + "\n";
 		}
