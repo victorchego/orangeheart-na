@@ -18,8 +18,12 @@ const search = require('youtube-search');
 var stream = null;
 var dispatcher = null;
 
+var searchTimeout = null;
+
 var queue = [];
 var titles = [];
+
+var result_data = null;
 
 const voiceCallback = (oldMember, newMember) => {
 	var newUserChannel = newMember.voiceChannel;
@@ -43,6 +47,32 @@ const voiceCallback = (oldMember, newMember) => {
 			return;
 		}
 	}
+}
+
+const messageCallback = (msg) => {
+	if (msg.content.toLowerCase().startsWith('!sel')) {
+		var args = msg.content.split(' ');
+		msg.channel.send(args);
+		if (args.length < 2) {
+			msg.channel.send('You must specify a number (0-9)');
+			return;
+		}
+		var num = args[1];
+		if (outOfBounds(num)) {
+			msg.channel.send('You must specify a number (0-9)');
+			return;
+		}
+		var radio_channel = msg.client.channels.find(val => val.id == TARGET_CHANNEL_ID);
+		addLink(radio_channel, msg, msg.client, result_data[num]["link"]);
+		msg.client.removeListener('message', messageCallback);
+		clearTimeout(searchTimeout);
+		searchTimeout = null;
+		result_data = null;
+	}
+}
+
+function outOfBounds(num) {
+	return isNaN(num) || num < 0 || num > 9;
 }
 
 function handleMessage(msg, client) {
@@ -81,7 +111,7 @@ function handleMessage(msg, client) {
 		return;
 	}
 	else if (cmd == "search" || cmd == "s") {
-		processSearch(msg, args);
+		processSearch(client, msg, args);
 	}
 	else if (cmd == "queue" || cmd == "q") {
 		var str = 'Queued videos: ```\n';
@@ -115,33 +145,37 @@ function handleMessage(msg, client) {
 			msg.channel.send('Command format is !yt play [youtube_url]');
 			return;
 		}
-		if (radio_channel.connection) {
-			ytdl.getInfo(args[0],{ filter : 'audioonly' }, function (err, info) {
-				if (err) msg.channel.send('Error getting video info');
-				else {
-					msg.channel.send('Video queued: '+info["title"]);
-					queue.push(args[0]);
-					titles.push(info["title"]);
+		addLink(radio_channel, msg, client, args[0]);
+	}
+}
+
+function addLink(radio_channel, msg, client, url) {
+	if (radio_channel.connection) {
+		ytdl.getInfo(url,{ filter : 'audioonly' }, function (err, info) {
+			if (err) msg.channel.send('Error getting video info');
+			else {
+				msg.channel.send('Video queued: '+info["title"]);
+				queue.push(url);
+				titles.push(info["title"]);
+			}
+		});
+		return;
+	}
+	else {
+		radio_channel.join().then(connection => {
+			ytdl.getInfo(url,{ filter : 'audioonly' }, function (err, info) {
+			if (err) msg.channel.send('Error getting video info');
+			else {
+				msg.channel.send('Now playing in the <#'+TARGET_CHANNEL_ID+'> voice channel: '+info["title"]);
 				}
 			});
-			return;
-		}
-		else {
-			radio_channel.join().then(connection => {
-				ytdl.getInfo(args[0],{ filter : 'audioonly' }, function (err, info) {
-				if (err) msg.channel.send('Error getting video info');
-				else {
-					msg.channel.send('Now playing in the <#'+TARGET_CHANNEL_ID+'> voice channel: '+info["title"]);
-					}
-				});
-				client.on('voiceStateUpdate', voiceCallback);
-				stream = ytdl(args[0], { filter : 'audioonly' });
-				dispatcher = connection.playStream(stream, streamOptions);
-				dispatcher.once("end", reason => {
-					playNext(radio_channel);
-				});
-			}).catch(err => console.log(err));
-		}
+			client.on('voiceStateUpdate', voiceCallback);
+			stream = ytdl(url, { filter : 'audioonly' });
+			dispatcher = connection.playStream(stream, streamOptions);
+			dispatcher.once("end", reason => {
+				playNext(radio_channel);
+			});
+		}).catch(err => console.log(err));
 	}
 }
 
@@ -175,14 +209,32 @@ function playNext(radio_channel) {
 	}
 }
 
-function processSearch(msg,args) {
+function processSearch(client,msg,args) {
+	if (searchTimeout) {
+		msg.channel.send('There is an active search. Please wait until that search is finished');
+		return;
+	}
 	var str = args.join(' ');
 	search(str, opts, function(err, results) {
 		if (err) {
 			msg.channel.send('Search encountered error');
 			return console.log(err);
 		}
-		msg.channel.send(results);
+		var titles = "Type the number associated to the video you want to play ex. !sel 4 (10 seconds) \n```";
+		for (i in results) {
+			titles += i + ". " + results[i]["title"] + "\n";
+		}
+		result_data = results;
+		titles += "```";
+		msg.channel.send(titles);
+		client.on('message', messageCallback);
+		searchTimeout = setTimeout(function() {
+			msg.channel.send('Search timed out. Please try again.');
+			client.removeListener('message', messageCallback);
+			clearTimeout(searchTimeout);
+			searchTimeout = null;
+			result_data = null;
+		},10000);
 	});
 }
 
