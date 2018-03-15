@@ -93,13 +93,13 @@ function handleMessage(msg, client) {
     args = args.splice(1);
 	
 	if (cmd == "disconnect" || cmd == "dc" || cmd == "stop") {
+		queue = [];
+		titles = [];
 		if (dispatcher) {
 			dispatcher.end();
 			dispatcher = null;
 		}
 		radio_channel.leave();
-		queue = [];
-		titles = [];
 		return;
 	}
 	else if (cmd == "commands") {
