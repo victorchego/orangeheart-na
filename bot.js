@@ -129,7 +129,6 @@ client.on('message', (msg) => {
 	}
 	
     else if (msg.content.startsWith('!Cy ') || msg.content.startsWith('!cy ') || msg.content.startsWith('!CY ') || msg.content.startsWith('!cY ')) {
-		filterMessage(msg);
 		// if user warned of cooldown, ignore
 		if (inList(msg.author, cooldownMessageList) && msg.channel.type=='text') {
 			msg.delete().catch(console.error);
@@ -554,6 +553,9 @@ client.on('message', (msg) => {
 			}
 		}
      }
+	else {
+		filterMessage(msg);
+	}
 });
 
 function inList(item, list) {
@@ -1473,7 +1475,9 @@ function cookieOff() {
 
 function filterMessage(msg) {
 	var str = msg.content.toLowerCase().split(" ").join("");
-	if (str.includes('knuckleswey') ||
+	console.log(str);
+	if (str.includes('muddaasshoe')
+	/*str.includes('knuckleswey') ||
 	str.includes('knucklesway') || str.includes('knuckleswei') ||
 	str.includes('knuckleswae') || str.includes('deway') ||
 	str.includes('daway') || str.includes('dewei') ||
@@ -1481,7 +1485,7 @@ function filterMessage(msg) {
 	str.includes('dawae') || str.includes('dewae') ||
 	str.includes('dawey') || str.includes('dewey') ||
 	str.includes('dawhei') || str.includes('dewhei') ||
-	str.includes('dawhey') || str.includes('dewhey')
+	str.includes('dawhey') || str.includes('dewhey')*/
 	) {
 		msg.delete().catch(console.error);
 		msg.channel.send('A poor lost soul has been ~~censored~~ guided to heaven');
