@@ -133,6 +133,10 @@ client.on('message', (msg) => {
 		YT.handleMessage(msg, client);
 	}
 	
+	else if (msg.author.id == OWNER_ID && msg.content.toLowerCase().startsWith('!del')) {
+		msg.channel.fetchMessage(msg.content.substring(5)).then(message => message.delete().catch(console.error)).catch(console.error);
+	}
+	
     else if (msg.content.startsWith('!Cy ') || msg.content.startsWith('!cy ') || msg.content.startsWith('!CY ') || msg.content.startsWith('!cY ')) {
 		// if user warned of cooldown, ignore
 		if (inList(msg.author, cooldownMessageList) && msg.channel.type=='text') {
