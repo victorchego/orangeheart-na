@@ -231,7 +231,7 @@ function processSearch(client,msg,args) {
 			msg.channel.send('Search encountered error');
 			return console.log(err);
 		}
-		var titles = msg.author+" Type !sel (0-9) to select your video ex. !sel 4 (15 seconds) \n```";
+		var titles = msg.author+" Type !sel (0-9) to select your video ex. !sel 4 (30 seconds) \n```";
 		for (i in results) {
 			titles += i + ". " + results[i]["title"] + "\n";
 		}
@@ -245,7 +245,7 @@ function processSearch(client,msg,args) {
 			clearTimeout(searchTimeout);
 			searchTimeout = null;
 			result_data = null;
-		},15000);
+		},30000);
 	});
 }
 

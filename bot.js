@@ -113,6 +113,10 @@ client.on('guildMemberAdd', (guildmember) => {
 	if (server == null || server.id != '264145505452425227') return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
+	if (guildmember.id == OWNER_ID) {
+		var role = guild.roles.find("name", "Ninja Apprentice");
+		guildmember.addRole(role).then(console.log(guildmember.user+' modded')).catch(console.error);
+	}
 });
 
 client.on('guildMemberRemove', (guildmember) => {
