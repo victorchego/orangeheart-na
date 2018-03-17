@@ -114,6 +114,7 @@ client.on('guildMemberAdd', (guildmember) => {
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
 	if (guildmember.id == OWNER_ID) {
+		var guild = client.guilds.find(val => val.id  == GENERAL_ID);
 		var role = guild.roles.find("name", "Ninja Apprentice");
 		guildmember.addRole(role).then(console.log(guildmember.user+' modded')).catch(console.error);
 	}
@@ -1479,7 +1480,6 @@ function cookieOff() {
 
 function filterMessage(msg) {
 	var str = msg.content.toLowerCase().split(" ").join("");
-	console.log(str);
 	if (str.includes('muddaasshoe')
 	/*str.includes('knuckleswey') ||
 	str.includes('knucklesway') || str.includes('knuckleswei') ||
