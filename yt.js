@@ -1,8 +1,9 @@
-var RADIO_CHANNEL_ID = '348328771797123073';
+var RADIO_VOICE_ID = '348328771797123073';
 var ANIME_CHANNEL_ID = '335150939029766144';
 var CY_CHANNEL_ID = '401660510816436224';
+var RADIO_TEXT_ID = '348328808975302658';
 
-var TARGET_CHANNEL_ID = RADIO_CHANNEL_ID;
+var TARGET_CHANNEL_ID = RADIO_VOICE_ID;
 
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
@@ -72,7 +73,7 @@ function outOfBounds(num) {
 }
 
 function handleMessage(msg, client) {
-	if (msg.channel.id != CY_CHANNEL_ID) return;
+	if (msg.channel.id != CY_CHANNEL_ID && msg.channel.id != RADIO_TEXT_ID) return;
 	var radio_channel = client.channels.find(val => val.id == TARGET_CHANNEL_ID);
 	
 	if (!radio_channel) {
