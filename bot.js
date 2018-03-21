@@ -1484,8 +1484,8 @@ function cookieOff() {
 
 function filterMessage(msg) {
 	var str = msg.content.toLowerCase().split(" ").join("");
-	if (str.includes('muddaasshoe')
-	/*str.includes('knuckleswey') ||
+	if (str.includes('muddaasshoe') ||
+	str.includes('knuckleswey') ||
 	str.includes('knucklesway') || str.includes('knuckleswei') ||
 	str.includes('knuckleswae') || str.includes('deway') ||
 	str.includes('daway') || str.includes('dewei') ||
@@ -1493,7 +1493,7 @@ function filterMessage(msg) {
 	str.includes('dawae') || str.includes('dewae') ||
 	str.includes('dawey') || str.includes('dewey') ||
 	str.includes('dawhei') || str.includes('dewhei') ||
-	str.includes('dawhey') || str.includes('dewhey')*/
+	str.includes('dawhey') || str.includes('dewhey')
 	) {
 		msg.delete().catch(console.error);
 		msg.channel.send('A poor lost soul has been ~~censored~~ guided to heaven');
@@ -1613,16 +1613,16 @@ function muteUser(msg, client, args) {
 		return;
 	}
 	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
-	var role = guild.roles.find("name", "Muted");
-	var user = guild.members.find(val => val.id === args[0]);
 	if (!guild) {
 		msg.channel.send('Invalid guild');
 		return;
 	}
+	var role = guild.roles.find("name", "Muted");
 	if (!role) {
 		msg.channel.send('Invalid role');
 		return;
 	}
+	var user = guild.members.find(val => val.id === args[0]);
 	if (!user) {
 		msg.channel.send('Invalid user');
 		return;
@@ -1636,16 +1636,16 @@ function unmuteUser(msg, client, args) {
 		return;
 	}
 	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
-	var role = guild.roles.find("name", "Muted");
-	var user = guild.members.find(val => val.id === args[0]);
 	if (!guild) {
 		msg.channel.send('Invalid guild');
 		return;
 	}
+	var role = guild.roles.find("name", "Muted");
 	if (!role) {
 		msg.channel.send('Invalid role');
 		return;
 	}
+	var user = guild.members.find(val => val.id === args[0]);
 	if (!user) {
 		msg.channel.send('Invalid user');
 		return;
