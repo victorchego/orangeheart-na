@@ -133,6 +133,9 @@ client.on('message', (msg) => {
 		YT.handleMessage(msg, client);
 	}
 	
+	else if (msg.content.toLowerCase().startsWith('!rpg')) {
+		RPG.handleMessage(msg);
+	}
 	else if (msg.author.id == OWNER_ID && msg.content.toLowerCase().startsWith('!del')) {
 		msg.channel.fetchMessage(msg.content.substring(5)).then(message => message.delete().catch(console.error)).catch(console.error);
 	}
