@@ -52,7 +52,7 @@ function checkPlayer(msg) {
 function viewPlayers(msg) {
 	var str = '';
 	for (id in JSON_DATA) {
-		var user = client.users.find(val => val.id === id);
+		var user = msg.client.users.find(val => val.id === id);
 		var name = user.username;
 		str += '\n'+user.username;
 	}
