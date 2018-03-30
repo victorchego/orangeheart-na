@@ -118,11 +118,12 @@ function buyItems(msg, name, count=1) {
 	JSON_DATA[msg.author.id]["cookies"]-=cost;
 	var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]==name;});
 	if (!current_item) {
-		var new_item = newItem(item,{"count":count});
+		var new_item = newItem(item);
+		new_item["count"] = parseInt(count);
 		JSON_DATA[msg.author.id]["item"].push(new_item);
 	}
 	else {
-		current_item["count"]+=count;
+		current_item["count"]+=parseInt(count);
 	}
 	JSON_DATA[msg.author.id]["cookies"]-=cost;
 	msg.channel.send(`${msg.author} You have bought ${count} ${name}(s)`);
