@@ -133,24 +133,21 @@ function calcSteal(msg, obj) {
 	return result;
 }
 
-function loadDataFromWeb(obj) {
+function loadDataFromWeb() {
 	request(JSON_URL, function (err, response, data) {
 		if (err) {
 			console.log("Error has occurred: "+error);
 			return;
 		}	
 		if (data==null) {
-			obj = [];
+			JSON_DATA = [];
 			return;
 		}
-		obj = JSON.parse(data);
+		JSON_DATA = JSON.parse(data);
 	});
 }
 
 function objDataToWeb(obj) {
-	if (obj == null) {
-		obj = [];
-	}
 	request({url: JSON_URL, method: 'PUT', json: obj}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
 	});     
@@ -161,7 +158,7 @@ function resetGame(msg, obj) {
 }
 
 function startUp() {
-	loadDataFromWeb(JSON_DATA);
+	loadDataFromWeb();
 }
 
 function handleMessage(msg) {
@@ -193,7 +190,7 @@ function handleMessage(msg) {
 		msg.channel.send("Saved state to server");
 	}
 	else if (cmd == "load") {
-		loadDataFromWeb(JSON_DATA);
+		loadDataFromWeb();
 		msg.channel.send("Loaded state from server");
 	}
 	else if (cmd == "reset") {
