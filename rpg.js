@@ -116,7 +116,7 @@ function buyItems(msg, name, count=1) {
 		return;
 	}
 	JSON_DATA[msg.author.id]["cookies"]-=cost;
-	var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]==name;});
+	var current_item = Object.keys(JSON_DATA[msg.author.id]["item"]).find(function(item){return item["name"]==name;});
 	if (!current_item) {
 		var new_item = newItem(item,{"count":count});
 		JSON_DATA[msg.author.id]["item"].push(new_item);
