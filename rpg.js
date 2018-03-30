@@ -149,7 +149,7 @@ function loadDataFromWeb(msg) {
 			return;
 		}
 		JSON_DATA = JSON.parse(data);
-		msg.channel.send("Loaded state from server");
+		if (msg) msg.channel.send("Loaded state from server");
 	});
 }
 
@@ -157,7 +157,7 @@ function objDataToWeb(msg) {
 	request({url: JSON_URL, method: 'PUT', json: JSON_DATA}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
 		
-		msg.channel.send("Saved state to server");
+		if (msg) msg.channel.send("Saved state to server");
 	});     
 }	
 
@@ -166,9 +166,9 @@ function resetGame(msg) {
 	msg.channel.send("RPG has been reset");
 }
 
-function startUp(msg) {
+function startUp() {
 	if (JSON_DATA==null) {
-		loadDataFromWeb(msg);
+		loadDataFromWeb();
 	}
 }
 
