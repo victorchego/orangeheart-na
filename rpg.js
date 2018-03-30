@@ -101,7 +101,7 @@ function filterItems(msg, type, value) {
 }
 
 function stringItem(item) {
-	var str = `${capitalizeFirstLetter(item["name"])} is a ${toUpperCase(item["type"])} that has ${item["value"]} power. Costs ${item["cost"]}`;
+	var str = `${capitalizeFirstLetter(item["name"])} is a ${item["type"].toUpperCase()} that has ${item["value"]} power. Costs ${item["cost"]}`;
 	return str;
 }
 
