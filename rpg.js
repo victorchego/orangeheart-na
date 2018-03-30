@@ -41,7 +41,7 @@ function randomCookies(msg) {
 }
 
 function checkPlayer(msg) {
-	return msg.author.id in JSON_DATA;
+	return JSON_DATA.has;
 }
 
 function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
@@ -191,10 +191,10 @@ function handleMessage(msg) {
 		msg.channel.send("Test succeeded");
 	}
 	else if (cmd == "join") {
-		joinRPG(msg, JSON_DATA);
+		joinRPG(msg);
 	}
 	else if (cmd == "leave") {
-		leaveRPG(msg, JSON_DATA);
+		leaveRPG(msg);
 	}
 	else if (cmd == "save") {
 		objDataToWeb(msg);
