@@ -2,7 +2,7 @@ var CY_CHANNEL_ID = '401660510816436224';
 var OWNER_ID = '235263356397813762';
 
 var JSON_DATA = null;
-var JSON_URL = 'https://api.myjson.com/bins/qqp3b';
+var JSON_URL = 'https://api.jsonbin.io/b/5abe0678656b6e0b857ba953';
 
 var request = require('request');
 
@@ -44,11 +44,12 @@ function checkPlayer(msg,obj) {
 	return msg.author.id in obj;
 }
 
-function addPlayer(msg,obj) { //{<id>:{"user":@user,"cookies":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
+function addPlayer(msg,obj) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
 	if (checkPlayer(msg,obj)) return;
 	var elem = {};
 	elem["user"] = msg.author;
 	elem["cookies"] = 0;
+	elem["turns"] = 0;
 	elem["atk"] = 0;
 	elem["def"] = 0;
 	elem["steal"] = 0;
