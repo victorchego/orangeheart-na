@@ -186,7 +186,7 @@ function attackPlayer(msg) {
 		msg.channel.send(`${msg.author} Both you and your target must be participants`);
 		return;
 	}
-	var user = msg.client.users.find(val => val.id === target["id"]);
+	var user = msg.client.users.find(val => val.id === msg.mentions.users.firstKey());
 	if (elem["atk"] > target["def"]) {
 		var gain = elem["atk"]-target["def"];
 		elem["cookies"] += gain+elem["steal"];
