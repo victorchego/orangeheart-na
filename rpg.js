@@ -161,7 +161,7 @@ function resetGame(msg) {
 	msg.channel.send("RPG has been reset");
 }
 
-function startUp() {
+function startUp(msg) {
 	loadDataFromWeb(msg);
 }
 
@@ -172,7 +172,7 @@ function handleMessage(msg) {
 	}
 	
 	if (JSON_DATA==null) {
-		startUp();
+		startUp(msg);
 	}
 	var args = msg.content.substring(5).split(' ');
     var cmd = args[0];
