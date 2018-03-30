@@ -2,7 +2,7 @@ var CY_CHANNEL_ID = '401660510816436224';
 var OWNER_ID = '235263356397813762';
 
 var JSON_DATA = null;
-var JSON_URL = 'https://api.jsonbin.io/b/5abe0678656b6e0b857ba953';
+var JSON_URL = 'https://api.myjson.com/bins/qqp3b';
 
 var request = require('request');
 
@@ -44,7 +44,7 @@ function checkPlayer(msg,obj) {
 	return msg.author.id in obj;
 }
 
-function addPlayer(msg,obj) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
+function joinRPG(msg,obj) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
 	if (checkPlayer(msg,obj)) return;
 	var elem = {};
 	elem["user"] = msg.author;
@@ -57,11 +57,13 @@ function addPlayer(msg,obj) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"st
 	elem["merc"] = {};
 	elem["waifu"] = "";
 	obj[msg.author.id] = elem;
+	msg.channel.send("You have joined the RPG");
 }
 
-function removePlayer(msg,obj) {
+function leaveRPG(msg,obj) {
 	if (!checkPlayer(msg,obj)) return;
 	delete obj[msg.author.id];
+	msg.channel.send("You have left the RPG");
 }
 
 function viewProfile(msg,obj) {
@@ -166,6 +168,10 @@ function startUp(msg) {
 	loadDataFromWeb(msg);
 }
 
+function isOwner(msg) {
+	return msg.author.id == OWNER_ID;
+}
+
 function handleMessage(msg) {
 	if (msg.channel.id != CY_CHANNEL_ID) {
 		msg.channel.send("This command must be used in #cy-playground");
@@ -183,12 +189,10 @@ function handleMessage(msg) {
 		msg.channel.send("Test succeeded");
 	}
 	else if (cmd == "join") {
-		addPlayer(msg, JSON_DATA);
-		msg.channel.send("You have joined the RPG");
+		joinRPG(msg, JSON_DATA);
 	}
 	else if (cmd == "leave") {
-		removePlayer(msg, JSON_DATA);
-		msg.channel.send("You have left the RPG");
+		leaveRPG(msg, JSON_DATA);
 	}
 	else if (cmd == "save") {
 		objDataToWeb(msg);
@@ -197,6 +201,10 @@ function handleMessage(msg) {
 		loadDataFromWeb(msg);
 	}
 	else if (cmd == "reset") {
+		if (!isOwner(msg)) {
+			msg.channel.send("You aren't authorized to use this command");
+			return;
+		}
 		resetGame(msg);
 	}
 }
