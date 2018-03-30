@@ -97,6 +97,8 @@ function viewProfile(msg) {
 function filterItems(msg, type, value) {
 	var items = JSON_DATA[msg.author.id]["item"];
 	var list = Object.keys(items).filter(function(item) {return item[type]==value;});
+	console.log(items);
+	console.log(list);
 	return list;
 }
 
@@ -110,7 +112,7 @@ function buyItems(msg, name, count=1) {
 		msg.channel.send(msg.author+" Invalid item. Please check the item list for the correct item name.");
 		return;
 	}
-	var cost = item["cost"]*item["count"];
+	var cost = item["cost"]*parseInt(cost);
 	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
 		msg.channel.send(msg.author+" You do not have enough cookies to buy this selection.");
 		return;
@@ -183,6 +185,16 @@ function commandMessage(msg) {
 -join/leave/profile/about/command(s)/detail(s)
 -buy <item_name> <optional: quantity>`;
 	msg.channel.send('```'+str+'```');
+}
+
+function updateProperty(msg, key, value) {
+	JSON_DATA[msg.author.id][key]=value;
+}
+
+function updatePropertyAll(msg, key, value) {
+	for (id in JSON_DATA) {
+		JSON_DATA[id][key] = value;	
+	}
 }
 
 function loadDataFromWeb(msg) {
