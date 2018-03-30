@@ -101,7 +101,7 @@ function filterItems(msg, type, value) {
 }
 
 function buyItems(msg, name, count=1) {
-	if (!isNaN(count)) {
+	if (isNaN(count)) {
 		msg.channel.send(msg.author+" Invalid quantity. Only enter numbers as the second argument");
 		return;	
 	}
