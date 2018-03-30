@@ -163,6 +163,9 @@ function handleMessage(msg) {
 		return;
 	}
 	
+	if (JSON_DATA==null) {
+		startUp();
+	}
 	var args = msg.content.substring(5).split(' ');
     var cmd = args[0];
     args = args.splice(1);
@@ -186,8 +189,10 @@ function handleMessage(msg) {
 		loadDataFromWeb(JSON_DATA);
 		msg.channel.send("Loaded state from server");
 	}
+	else if (cmd == "reset") {
+		resetGame(JSON_DATA);
+		msg.channel.send("Reset");
+	}
 }
-
-startUp();
 
 module.exports = {handleMessage};
