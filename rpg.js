@@ -55,7 +55,7 @@ function addPlayer(msg,obj) { //{<id>:{"user":@user,"cookies":0,"atk":0,"def":0,
 	elem["item"] = {};
 	elem["merc"] = {};
 	elem["waifu"] = "";
-	obj.push(elem);
+	obj[msg.author.id] = elem;
 }
 
 function removePlayer(msg,obj) {
