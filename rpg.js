@@ -35,19 +35,18 @@ function showItemList(msg) {
 	msg.channel.send('```'+item_list+'```');
 }
 
-function randomCookies(msg, obj) {
+function randomCookies(msg) {
 	var val = Math.floor((Math.random() * 10) + 1);
-	obj[msg.author.id][cookies]+=val;
+	JSON_DATA[msg.author.id][cookies]+=val;
 }
 
-function checkPlayer(msg,obj) {
-	return msg.author.id in obj;
+function checkPlayer(msg) {
+	return msg.author.id in JSON_DATA;
 }
 
-function joinRPG(msg,obj) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
-	if (checkPlayer(msg,obj)) return;
+function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
+	if (checkPlayer(msg)) return;
 	var elem = {};
-	elem["user"] = msg.author;
 	elem["cookies"] = 0;
 	elem["turns"] = 0;
 	elem["atk"] = 0;
@@ -56,80 +55,83 @@ function joinRPG(msg,obj) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"stea
 	elem["item"] = {};
 	elem["merc"] = {};
 	elem["waifu"] = "";
-	obj[msg.author.id] = elem;
+	JSON_DATA[msg.author.id] = elem;
 	msg.channel.send("You have joined the RPG");
 }
 
-function leaveRPG(msg,obj) {
-	if (!checkPlayer(msg,obj)) return;
-	delete obj[msg.author.id];
+function leaveRPG(msg) {
+	if (!checkPlayer(msg)) return;
+	delete JSON_DATA[msg.author.id];
 	msg.channel.send("You have left the RPG");
 }
 
-function viewProfile(msg,obj) {
-	if (!checkPlayer(msg,obj)) return;
+function viewProfile(msg) {
+	if (!checkPlayer(msg)) {
+		msg.channel.send("You are not a RPG participant");
+		return;
+	}
 	var str = '';
 	str += msg.author+"'s profile:```";
-	str += "\nCookies: "+obj[msg.author.id]["cookies"];
-	str += "\nAttack: "+calcAtk(msg,obj);
-	str += "\nDefense: "+calcDef(msg,obj);
-	str += "\nSteal: "+calcSteal(msg,obj);
-	str += "\nItem List: "+obj[msg.author.id]["item"];
-	str += "\nHired Mercenaries: "+obj[msg.author.id]["merc"];
-	str += "\Waifu: "+obj[msg.author.id]["waifu"];
+	str += "\nCookies: "+JSON_DATA[msg.author.id]["cookies"];
+	str += "\nAttack: "+calcAtk(msg);
+	str += "\nDefense: "+calcDef(msg);
+	str += "\nSteal: "+calcSteal(msg);
+	str += "\nItem List: "+JSON_DATA[msg.author.id]["item"];
+	str += "\nHired Mercenaries: "+JSON_DATA[msg.author.id]["merc"];
+	str += "\Waifu: "+JSON_DATA[msg.author.id]["waifu"];
 	str += '```';
 	msg.channel.send(str);
 }
 
-function filterItems(msg, obj, type, value) {
-	var items = obj[msg.author.id]["item"];
+function filterItems(msg, type, value) {
+	var items = JSON_DATA[msg.author.id]["item"];
 	var list = Object.keys(items).filter(function(item) {return item[type]==value;});
 	return list;
 }
 
-function buyItems(msg, obj, name, count=1) {
+function buyItems(msg, name, count=1) {
 	var item = item_list.find(function(item){return item["name"]==name;});
 	if (!item) {
 		msg.channel.send("Invalid item. Please check the item list for the correct item name.");
 		return;
 	}
 	var cost = item["cost"]*item["count"];
-	if (obj[msg.author.id]["cookies"] < cost) {
+	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
 		msg.channel.send("You do not have enough cookies to buy this selection.");
 		return;
 	}
-	obj[msg.author.id]["cookies"]-=cost;
-	var current_item = obj[msg.author.id]["item"].find(function(item){return item["name"]==name;});
+	JSON_DATA[msg.author.id]["cookies"]-=cost;
+	var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]==name;});
 	if (!current_item) {
 		var new_item = newItem(item,{"count":count});
-		obj[msg.author.id]["item"].push(new_item);
+		JSON_DATA[msg.author.id]["item"].push(new_item);
 	}
 	else {
 		current_item["count"]+=count;
 	}
 }
 
-function calcAtk(msg, obj) {
+function calcAtk(msg) {
 	var result = 0;
-	var list = filterItems(msg, obj, "type", "atk");
+	var list = filterItems(msg, "type", "atk");
 	for (i in list) {
 		result += list[i]["value"]*list[i]["count"];
 	}
 	return result;
 }
 
-function calcDef(msg, obj) {
+function calcDef(msg) {
 	var result = 0;
-	var list = filterItems(msg, obj, "type", "def");
+	var list = filterItems(msg, "type", "def");
 	for (i in list) {
 		result += list[i]["value"]*list[i]["count"];
 	}
 	return result;
 }
 
-function calcSteal(msg, obj) {
+function calcSteal(msg) {
 	var result = 0;
-	var list = filterItems(msg, obj, "type", "steal");
+	var list = filterItems(msg, "type", "steal");
 	for (i in list) {
 		result += list[i]["value"]*list[i]["count"];
 	}
@@ -206,6 +208,9 @@ function handleMessage(msg) {
 			return;
 		}
 		resetGame(msg);
+	}
+	else if (cmd == "profile") {
+		viewProfile(msg);
 	}
 }
 
