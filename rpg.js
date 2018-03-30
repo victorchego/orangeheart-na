@@ -144,6 +144,27 @@ function calcSteal(msg) {
 	return result;
 }
 
+function aboutMessage(msg) {
+	var str = `
+	What is this RPG system? It's a WIP game intended to improve the current cookie system.
+	\n Few key differences are:
+	\n -items you can purchase with your cookies
+	\n -mercs will be more active in the gameplay
+	\n -you have a chance to earn cookies for a successful DEFENSE
+	\n -more TBA
+	\n Please check the available commands: !rpg commands
+	`;
+	msg.channel.sendCode(str);
+}
+
+function commandMessage(msg) {
+	var str = `
+	The prefix is !rpg
+	\n -join/leave/profile/about/command(s)
+	`;
+	msg.channel.sendCode(str);
+}
+
 function loadDataFromWeb(msg) {
 	request(JSON_URL, function (err, response, data) {
 		if (err) {
@@ -215,6 +236,12 @@ function handleMessage(msg) {
 	}
 	else if (cmd == "profile") {
 		viewProfile(msg);
+	}
+	else if (cmd == "about") {
+		aboutMessage(msg);
+	}
+	else if (cmd == "commands" || cmd == "command") {
+		commandMessage(msg);
 	}
 }
 
