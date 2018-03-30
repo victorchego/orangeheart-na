@@ -287,7 +287,7 @@ function handleMessage(msg) {
 		randomCookies(msg);
 	}
 	else {
-		msg.channel.send(`${msg.author} Check the command list`);
+		msg.channel.send(`${msg.author} Check the command list: !rpg commands`);
 	}
 }
 
