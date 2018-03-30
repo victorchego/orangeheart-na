@@ -49,6 +49,16 @@ function checkPlayer(msg) {
 	return msg.author.id in JSON_DATA;
 }
 
+function viewPlayers(msg) {
+	var str = '';
+	for (id in JSON_DATA) {
+		var user = client.users.find(val => val.id === id);
+		var name = user.username;
+		str += '\n'+user.username;
+	}
+	msg.channel.send(str);
+}
+
 function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":[<item1>,...],"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
 	if (checkPlayer(msg)) {
 		msg.channel.send("You have already a RPG participant");
@@ -85,6 +95,7 @@ function viewProfile(msg) {
 	var str = '';
 	str += msg.author+"'s profile:```";
 	str += "\nCookies: "+JSON_DATA[msg.author.id]["cookies"];
+	str += "\nTurns: "+JSON_DATA[msg.author.id]["turns"];
 	str += "\nAttack: "+JSON_DATA[msg.author.id]["atk"]
 	str += "\nDefense: "+JSON_DATA[msg.author.id]["def"]
 	str += "\nSteal: "+JSON_DATA[msg.author.id]["steal"]
@@ -324,6 +335,9 @@ function handleMessage(msg) {
 	else if (cmd == "profile") {
 		viewProfile(msg);
 	}
+	else if (cmd == "players") {
+		viewPlayers(msg);
+	}
 	else if (cmd == "about") {
 		aboutMessage(msg);
 	}
@@ -339,6 +353,7 @@ function handleMessage(msg) {
 			return;
 		}
 		buyItems(msg, args[0].toLowerCase(), args[1]);
+		objDataToWeb(msg);
 	}
 	else if (cmd == "itemlist") {
 		showItemList(msg);
