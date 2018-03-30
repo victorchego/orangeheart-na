@@ -101,7 +101,7 @@ function filterItems(msg, type, value) {
 }
 
 function stringItem(item) {
-	var str = `${capitalizeFirstLetter(item["name"])} is a ${item["type"]} that has ${item["value"]} power. Costs ${item["cost"]}`;
+	var str = `${capitalizeFirstLetter(item["name"])} is a ${toUpperCase(item["type"])} that has ${item["value"]} power. Costs ${item["cost"]}`;
 	return str;
 }
 
@@ -184,7 +184,7 @@ Your STEAL stats determine how much you steal directly from you target`;
 
 function commandMessage(msg) {
 	var str = `The prefix is !rpg
--join/leave/profile/about/command(s)/detail(s)
+-join/leave/profile/itemlist/about/command(s)/detail(s)
 -buy <item_name> <optional: quantity>`;
 	msg.channel.send('```'+str+'```');
 }
