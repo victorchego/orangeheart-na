@@ -50,13 +50,13 @@ function checkPlayer(msg) {
 }
 
 function viewPlayers(msg) {
-	var str = '';
+	var str = 'Current Players:';
 	for (id in JSON_DATA) {
 		var user = msg.client.users.find(val => val.id === id);
 		var name = user.username;
 		str += '\n'+user.username;
 	}
-	msg.channel.send(str);
+	msg.channel.send('```'+str+'```');
 }
 
 function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":[<item1>,...],"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
@@ -182,6 +182,10 @@ function calcSteal(msg) {
 function attackPlayer(msg) {
 	var elem = JSON_DATA[msg.author.id];
 	var target = JSON_DATA[msg.mentions.users.firstKey().id];
+	console.log(elem);
+	console.log(target);
+	console.log(msg.mentions.users.firstKey());
+	console.log(msg.mentions.users.firstKey().id);
 	if (!elem || !target) {
 		msg.channel.send(`${msg.author} Both you and your target must be participants`);
 		return;
@@ -229,7 +233,7 @@ You can earn cookies by attacking or defending. A successful action requires you
 A failed attempt does not earn you any profit based of ATK/DEF, but you can still get profit with STEAL
 Your ATK stats determine how strong your offense is. For every point your ATK is higher than your target's DEF, you gain more cookies
 Your DEF stats determine how strong your defense is. For every point your DEF is higher than your attacker's ATK, you gain more cookies
-Your STEAL stats determine how much you steal directly from you target`;
+Your STEAL stats determine how much you steal directly from your target`;
 	msg.channel.send('```'+str+'```');
 }
 
