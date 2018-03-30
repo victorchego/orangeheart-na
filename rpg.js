@@ -111,6 +111,8 @@ function buyItems(msg, name, count=1) {
 		return;
 	}
 	var cost = item["cost"]*count;
+	console.log(count);
+	console.log(item["cost"]);
 	console.log(cost);
 	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
 		msg.channel.send(msg.author+" You do not have enough cookies to buy this selection.");
