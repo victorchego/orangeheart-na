@@ -286,6 +286,9 @@ function handleMessage(msg) {
 	else if (cmd == "cookies" || cmd == "cookie") {
 		randomCookies(msg);
 	}
+	else {
+		msg.channel.send(`${msg.author} Check the command list`);
+	}
 }
 
 module.exports = {handleMessage, startUp};
