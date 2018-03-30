@@ -41,7 +41,7 @@ function showItemList(msg) {
 
 function randomCookies(msg) {
 	var val = Math.floor((Math.random() * 10) + 1);
-	JSON_DATA[msg.author.id][cookies]+=val;
+	JSON_DATA[msg.author.id]["cookies"]+=val;
 	msg.channel.send(`${msg.author} You have gained ${val} cookies`);
 }
 
@@ -194,15 +194,12 @@ function loadDataFromWeb(msg) {
 			return;
 		}
 		JSON_DATA = JSON.parse(data);
-		if (msg) msg.channel.send("Loaded state from server");
 	});
 }
 
 function objDataToWeb(msg) {
 	request({url: JSON_URL, method: 'PUT', json: JSON_DATA}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
-		
-		if (msg) msg.channel.send("Saved state to server");
 	});     
 }	
 
@@ -235,15 +232,27 @@ function handleMessage(msg) {
 	}
 	else if (cmd == "join") {
 		joinRPG(msg);
+		objDataToWeb(msg);
 	}
 	else if (cmd == "leave") {
 		leaveRPG(msg);
-	}
-	else if (cmd == "save") {
 		objDataToWeb(msg);
 	}
+	else if (cmd == "save") {
+		if (!isOwner(msg)) {
+			msg.channel.send("You aren't authorized to use this command");
+			return;
+		}
+		objDataToWeb(msg);
+		msg.channel.send("Saved state to server");
+	}
 	else if (cmd == "load") {
+		if (!isOwner(msg)) {
+			msg.channel.send("You aren't authorized to use this command");
+			return;
+		}
 		loadDataFromWeb(msg);
+		msg.channel.send("Loaded state from server");
 	}
 	else if (cmd == "reset") {
 		if (!isOwner(msg)) {
