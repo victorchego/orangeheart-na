@@ -45,7 +45,10 @@ function checkPlayer(msg) {
 }
 
 function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
-	if (checkPlayer(msg)) return;
+	if (checkPlayer(msg)) {
+		msg.channel.send("You have already a RPG participant");
+		return;
+	}
 	var elem = {};
 	elem["cookies"] = 0;
 	elem["turns"] = 0;
@@ -60,7 +63,10 @@ function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0
 }
 
 function leaveRPG(msg) {
-	if (!checkPlayer(msg)) return;
+	if (!checkPlayer(msg)) {
+		msg.channel.send("You are not a RPG participant");
+		return;
+	}
 	delete JSON_DATA[msg.author.id];
 	msg.channel.send("You have left the RPG");
 }
@@ -76,9 +82,9 @@ function viewProfile(msg) {
 	str += "\nAttack: "+calcAtk(msg);
 	str += "\nDefense: "+calcDef(msg);
 	str += "\nSteal: "+calcSteal(msg);
-	str += "\nItem List: "+JSON_DATA[msg.author.id]["item"];
-	str += "\nHired Mercenaries: "+JSON_DATA[msg.author.id]["merc"];
-	str += "\Waifu: "+JSON_DATA[msg.author.id]["waifu"];
+	str += "\nItem List: "+ JSON.stringify(JSON_DATA[msg.author.id]["item"]);
+	str += "\nHired Mercenaries: "+JSON.stringify(JSON_DATA[msg.author.id]["merc"]);
+	str += "\nWaifu: "+JSON_DATA[msg.author.id]["waifu"];
 	str += '```';
 	msg.channel.send(str);
 }
