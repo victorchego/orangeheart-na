@@ -2,7 +2,7 @@ var CY_CHANNEL_ID = '401660510816436224';
 var OWNER_ID = '235263356397813762';
 
 var JSON_DATA = null;
-var JSON_URL = 'https://api.jsonbin.io/b/5a9fb587c9bf323a2b75e8ce';
+var JSON_URL = 'https://api.myjson.com/bins/qqp3b';
 
 var request = require('request');
 
@@ -140,7 +140,7 @@ function loadDataFromWeb(msg) {
 			return;
 		}	
 		if (data==null) {
-			JSON_DATA = [];
+			JSON_DATA = {};
 			return;
 		}
 		JSON_DATA = JSON.parse(data);
@@ -157,7 +157,7 @@ function objDataToWeb(msg) {
 }	
 
 function resetGame(msg) {
-	JSON_DATA = [];
+	JSON_DATA = {};
 	msg.channel.send("RPG has been reset");
 }
 
