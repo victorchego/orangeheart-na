@@ -49,7 +49,7 @@ function checkPlayer(msg) {
 	return msg.author.id in JSON_DATA;
 }
 
-function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
+function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":[<item1>,...],"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
 	if (checkPlayer(msg)) {
 		msg.channel.send("You have already a RPG participant");
 		return;
@@ -60,7 +60,7 @@ function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0
 	elem["atk"] = 0;
 	elem["def"] = 0;
 	elem["steal"] = 0;
-	elem["item"] = {};
+	elem["item"] = [];
 	elem["merc"] = {};
 	elem["waifu"] = "";
 	JSON_DATA[msg.author.id] = elem;
@@ -116,7 +116,7 @@ function buyItems(msg, name, count=1) {
 		return;
 	}
 	JSON_DATA[msg.author.id]["cookies"]-=cost;
-	var current_item = Object.keys(JSON_DATA[msg.author.id]["item"]).find(function(item){return item["name"]==name;});
+	var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]==name;});
 	if (!current_item) {
 		var new_item = newItem(item,{"count":count});
 		JSON_DATA[msg.author.id]["item"].push(new_item);
