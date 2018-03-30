@@ -32,12 +32,17 @@ var item_009 = newItem({"name":"lockpick", "value":20, "cost":200, "type":"steal
 var item_list = [item_001,item_002,item_003,item_004,item_005,item_006,item_007,item_008,item_009];
 
 function showItemList(msg) {
-	msg.channel.send('```'+JSON.stringify(item_list)+'```');
+	var str = '';
+	for (i in item_list) {
+		str += '\n'+JSON.stringify(item_list[i]);
+	}
+	msg.channel.send('```'+str+'```');
 }
 
 function randomCookies(msg) {
 	var val = Math.floor((Math.random() * 10) + 1);
 	JSON_DATA[msg.author.id][cookies]+=val;
+	msg.channel.send(`${msg.author} You have gained ${val} cookies`);
 }
 
 function checkPlayer(msg) {
@@ -268,6 +273,9 @@ function handleMessage(msg) {
 	}
 	else if (cmd == "itemlist") {
 		showItemList(msg);
+	}
+	else if (cmd == "cookies" || cmd == "cookie") {
+		randomCookies(msg);
 	}
 }
 
