@@ -32,7 +32,7 @@ var item_009 = newItem({"name":"lockpick", "value":20, "cost":200, "type":"steal
 var item_list = [item_001,item_002,item_003,item_004,item_005,item_006,item_007,item_008,item_009];
 
 function showItemList(msg) {
-	msg.channel.send('```'+item_list+'```');
+	msg.channel.send('```'+JSON.stringify(item_list)+'```');
 }
 
 function randomCookies(msg) {
@@ -96,14 +96,18 @@ function filterItems(msg, type, value) {
 }
 
 function buyItems(msg, name, count=1) {
+	if (!isNaN(count)) {
+		msg.channel.send(msg.author+" Invalid quantity. Only enter numbers as the second argument");
+		return;	
+	}
 	var item = item_list.find(function(item){return item["name"]==name;});
 	if (!item) {
-		msg.channel.send("Invalid item. Please check the item list for the correct item name.");
+		msg.channel.send(msg.author+" Invalid item. Please check the item list for the correct item name.");
 		return;
 	}
 	var cost = item["cost"]*item["count"];
 	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
-		msg.channel.send("You do not have enough cookies to buy this selection.");
+		msg.channel.send(msg.author+" You do not have enough cookies to buy this selection.");
 		return;
 	}
 	JSON_DATA[msg.author.id]["cookies"]-=cost;
@@ -115,6 +119,7 @@ function buyItems(msg, name, count=1) {
 	else {
 		current_item["count"]+=count;
 	}
+	msg.channel.send(`${msg.author} You have bought ${count} ${name}(s)`);
 }
 
 function calcAtk(msg) {
@@ -151,13 +156,25 @@ Few key differences are:
 -mercs will be more active in the gameplay
 -you have a chance to earn cookies for a successful DEFENSE
 -more TBA
-Please check the available commands: !rpg commands`;
+Please check the available commands/details: !rpg commands/details`;
+	msg.channel.send('```'+str+'```');
+}
+
+function detailMessage(msg) {
+	var str = `How to play:
+Purchase items to increase your stats
+You can earn cookies by attacking or defending. A successful action requires you to have a higher stat than your target's OPPOSING stat
+A failed attempt does not earn you any profit based of ATK/DEF, but you can still get profit with STEAL
+Your ATK stats determine how strong your offense is. For every point your ATK is higher than your target's DEF, you gain more cookies
+Your DEF stats determine how strong your defense is. For every point your DEF is higher than your attacker's ATK, you gain more cookies
+Your STEAL stats determine how much you steal directly from you target`;
 	msg.channel.send('```'+str+'```');
 }
 
 function commandMessage(msg) {
 	var str = `The prefix is !rpg
--join/leave/profile/about/command(s)`;
+-join/leave/profile/about/command(s)/detail(s)
+-buy <item_name> <optional: quantity>`;
 	msg.channel.send('```'+str+'```');
 }
 
@@ -238,6 +255,19 @@ function handleMessage(msg) {
 	}
 	else if (cmd == "commands" || cmd == "command") {
 		commandMessage(msg);
+	}
+	else if (cmd == "details" || cmd == "detail") {
+		detailMessage(msg);
+	}
+	else if (cmd == "buy") {
+		if (args.length==0) {
+			msg.channel.send(msg.author+" You must specify the item name");
+			return;
+		}
+		buyItems(msg, args[0].toLowerCase(), args[1]);
+	}
+	else if (cmd == "itemlist") {
+		showItemList(msg);
 	}
 }
 
