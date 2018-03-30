@@ -154,7 +154,7 @@ function aboutMessage(msg) {
 	\n -more TBA
 	\n Please check the available commands: !rpg commands
 	`;
-	msg.channel.sendCode(str);
+	msg.channel.send('```'+str+'```');
 }
 
 function commandMessage(msg) {
@@ -162,7 +162,7 @@ function commandMessage(msg) {
 	The prefix is !rpg
 	\n -join/leave/profile/about/command(s)
 	`;
-	msg.channel.sendCode(str);
+	msg.channel.send('```'+str+'```');
 }
 
 function loadDataFromWeb(msg) {
