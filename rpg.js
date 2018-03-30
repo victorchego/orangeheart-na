@@ -1,4 +1,6 @@
 var CY_CHANNEL_ID = '401660510816436224';
+var OWNER_ID = '235263356397813762';
+
 var JSON_DATA = null;
 var JSON_URL = 'https://api.jsonbin.io/b/5a9fb587c9bf323a2b75e8ce';
 
@@ -150,7 +152,7 @@ function resetGame(msg, obj) {
 }
 
 function startUp() {
-	loadFromWeb(JSON_DATA);
+	loadDataFromWeb(JSON_DATA);
 }
 
 function handleMessage(msg) {
@@ -166,6 +168,24 @@ function handleMessage(msg) {
 	if (cmd == "test") {
 		msg.channel.send("Test succeeded");
 	}
+	else if (cmd == "join") {
+		addPlayer(msg, JSON_DATA);
+		msg.channel.send("You have joined the RPG");
+	}
+	else if (cmd == "leave") {
+		removePlayer(msg, JSON_DATA);
+		msg.channel.send("You have left the RPG");
+	}
+	else if (cmd == "save") {
+		objDataToWeb(JSON_DATA);
+		msg.channel.send("Saved state to server");
+	}
+	else if (cmd == "load") {
+		loadDataFromWeb(JSON_DATA);
+		msg.channel.send("Loaded state from server");
+	}
 }
+
+startUp();
 
 module.exports = {handleMessage};
