@@ -140,7 +140,8 @@ function loadDataFromWeb(obj) {
 			return;
 		}	
 		if (data==null) {
-			data = [];
+			obj = [];
+			return;
 		}
 		obj = JSON.parse(data);
 	});
