@@ -124,6 +124,7 @@ function buyItems(msg, name, count=1) {
 	else {
 		current_item["count"]+=count;
 	}
+	JSON_DATA[msg.author.id]["cookies"]-=cost;
 	msg.channel.send(`${msg.author} You have bought ${count} ${name}(s)`);
 }
 
