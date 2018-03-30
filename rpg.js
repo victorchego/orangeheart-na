@@ -110,7 +110,7 @@ function buyItems(msg, name, count=1) {
 		msg.channel.send(msg.author+" Invalid item. Please check the item list for the correct item name.");
 		return;
 	}
-	var cost = item["cost"]*parseInt(cost);
+	var cost = item["cost"]*parseInt(count);
 	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
 		msg.channel.send(msg.author+" You do not have enough cookies to buy this selection.");
 		return;
