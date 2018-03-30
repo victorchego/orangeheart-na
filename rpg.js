@@ -96,9 +96,7 @@ function viewProfile(msg) {
 
 function filterItems(msg, type, value) {
 	var items = JSON_DATA[msg.author.id]["item"];
-	var list = Object.keys(items).filter(function(item) {return item[type]==value;});
-	console.log(items);
-	console.log(list);
+	var list = items.filter(function(item) {return item[type]==value;});
 	return list;
 }
 
