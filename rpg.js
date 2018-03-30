@@ -139,17 +139,16 @@ function loadDataFromWeb(obj) {
 			console.log("Error has occurred: "+error);
 			return;
 		}	
-		console.log(data);
-		console.log(obj);
+		if (data==null) {
+			data = [];
+		}
 		obj = JSON.parse(data);
-		console.log(JSON_DATA);
 	});
 }
 
 function objDataToWeb(obj) {
 	request({url: JSON_URL, method: 'PUT', json: obj}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
-		console.log(JSON_DATA);
 	});     
 }	
 
