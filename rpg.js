@@ -41,7 +41,7 @@ function randomCookies(msg) {
 }
 
 function checkPlayer(msg) {
-	return JSON_DATA.has;
+	return msg.author.id in JSON_DATA;
 }
 
 function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":{<item1>,...},"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
