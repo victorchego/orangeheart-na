@@ -361,6 +361,9 @@ function handleMessage(msg) {
 	else if (cmd == "cookies" || cmd == "cookie") {
 		randomCookies(msg);
 	}
+	else if (cmd == "attack") {
+		attackPlayer(msg);
+	}
 	else {
 		msg.channel.send(`${msg.author} Check the command list: !rpg commands`);
 	}
