@@ -147,14 +147,14 @@ function loadDataFromWeb() {
 	});
 }
 
-function objDataToWeb(obj) {
-	request({url: JSON_URL, method: 'PUT', json: obj}, function (error, response, body) {
+function objDataToWeb() {
+	request({url: JSON_URL, method: 'PUT', json: JSON_DATA}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
 	});     
 }	
 
-function resetGame(msg, obj) {
-	obj = [];
+function resetGame(msg) {
+	JSON_DATA = [];
 }
 
 function startUp() {
@@ -186,7 +186,7 @@ function handleMessage(msg) {
 		msg.channel.send("You have left the RPG");
 	}
 	else if (cmd == "save") {
-		objDataToWeb(JSON_DATA);
+		objDataToWeb();
 		msg.channel.send("Saved state to server");
 	}
 	else if (cmd == "load") {
@@ -194,7 +194,7 @@ function handleMessage(msg) {
 		msg.channel.send("Loaded state from server");
 	}
 	else if (cmd == "reset") {
-		resetGame(JSON_DATA);
+		resetGame();
 		msg.channel.send("Reset");
 	}
 }
