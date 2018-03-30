@@ -94,6 +94,7 @@ client.on('ready', () => {
 	clearLists(cooldownList,cooldownMessageList);
 	clearTimer(client);
 	cookieOn(client);
+	RPG.startUp();
 	//executeScript(client);
 	//client.channels.find(val => val.id === CY_CHANNEL_ID).send('I AM ALIVEEEEE!');
 });

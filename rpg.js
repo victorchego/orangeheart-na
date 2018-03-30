@@ -167,7 +167,9 @@ function resetGame(msg) {
 }
 
 function startUp(msg) {
-	loadDataFromWeb(msg);
+	if (JSON_DATA==null) {
+		loadDataFromWeb(msg);
+	}
 }
 
 function isOwner(msg) {
@@ -178,10 +180,6 @@ function handleMessage(msg) {
 	if (msg.channel.id != CY_CHANNEL_ID) {
 		msg.channel.send("This command must be used in #cy-playground");
 		return;
-	}
-	
-	if (JSON_DATA==null) {
-		startUp(msg);
 	}
 	var args = msg.content.substring(5).split(' ');
     var cmd = args[0];
@@ -214,4 +212,4 @@ function handleMessage(msg) {
 	}
 }
 
-module.exports = {handleMessage};
+module.exports = {handleMessage, startUp};
