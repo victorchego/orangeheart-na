@@ -139,6 +139,8 @@ function loadDataFromWeb(obj) {
 			console.log("Error has occurred: "+error);
 			return;
 		}	
+		console.log(data);
+		console.log(obj);
 		obj = JSON.parse(data);
 		console.log(JSON_DATA);
 	});
