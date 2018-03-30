@@ -4,6 +4,8 @@ var OWNER_ID = '235263356397813762';
 var JSON_DATA = null;
 var JSON_URL = 'https://api.jsonbin.io/b/5a9fb587c9bf323a2b75e8ce';
 
+var request = require('request');
+
 var item_000 = {
 	"name": "",
 	"value": 0,
