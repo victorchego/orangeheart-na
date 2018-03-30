@@ -180,8 +180,8 @@ function calcSteal(msg) {
 }
 
 function attackPlayer(msg) {
-	var elem = JSON_DATA.find(function(item){return item["id"]==msg.author.id;});
-	var target = JSON_DATA.find(function(item){return item["id"]==msg.mentions.users.firstKey();});
+	var elem = JSON_DATA[msg.author.id];
+	var target = JSON_DATA[msg.mentions.users.firstKey().id];
 	if (!elem || !target) {
 		msg.channel.send(`${msg.author} Both you and your target must be participants`);
 		return;
