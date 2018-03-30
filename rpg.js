@@ -81,17 +81,24 @@ function viewProfile(msg) {
 		msg.channel.send("You are not a RPG participant");
 		return;
 	}
+	updateStats(msg);
 	var str = '';
 	str += msg.author+"'s profile:```";
 	str += "\nCookies: "+JSON_DATA[msg.author.id]["cookies"];
-	str += "\nAttack: "+calcAtk(msg);
-	str += "\nDefense: "+calcDef(msg);
-	str += "\nSteal: "+calcSteal(msg);
+	str += "\nAttack: "+JSON_DATA[msg.author.id]["atk"]
+	str += "\nDefense: "+JSON_DATA[msg.author.id]["def"]
+	str += "\nSteal: "+JSON_DATA[msg.author.id]["steal"]
 	str += "\nItem List: "+ JSON.stringify(JSON_DATA[msg.author.id]["item"]);
 	str += "\nHired Mercenaries: "+JSON.stringify(JSON_DATA[msg.author.id]["merc"]);
 	str += "\nWaifu: "+JSON_DATA[msg.author.id]["waifu"];
 	str += '```';
 	msg.channel.send(str);
+}
+
+function updateStats(msg) {
+	JSON_DATA[msg.author.id]["atk"] = calcAtk(msg);
+	JSON_DATA[msg.author.id]["def"] = calcDef(msg);
+	JSON_DATA[msg.author.id]["steal"] = calcSteal(msg);
 }
 
 function filterItems(msg, type, value) {
@@ -101,7 +108,7 @@ function filterItems(msg, type, value) {
 }
 
 function stringItem(item) {
-	var str = `${capitalizeFirstLetter(item["name"])} is a ${item["type"].toUpperCase()} that has ${item["value"]} power. Costs ${item["cost"]}`;
+	var str = `${capitalizeFirstLetter(item["name"])} is a ${item["type"].toUpperCase()} item that has ${item["value"]} power. Costs ${item["cost"]}`;
 	return str;
 }
 
@@ -130,6 +137,7 @@ function buyItems(msg, name, count=1) {
 		current_item["count"]+=parseInt(count);
 	}
 	JSON_DATA[msg.author.id]["cookies"]-=cost;
+	updateStats(msg);
 	msg.channel.send(`${msg.author} You have bought ${count} ${name}(s)`);
 }
 
@@ -158,6 +166,38 @@ function calcSteal(msg) {
 		result += list[i]["value"]*list[i]["count"];
 	}
 	return result;
+}
+
+function attackPlayer(msg) {
+	var elem = JSON_DATA.find(function(item){return item["id"]==msg.author.id;});
+	var target = JSON_DATA.find(function(item){return item["id"]==msg.mentions.users.firstKey();});
+	if (!elem || !target) {
+		msg.channel.send(`${msg.author} Both you and your target must be participants`);
+		return;
+	}
+	var user = msg.client.users.find(val => val.id === target["id"]);
+	if (elem["atk"] > target["def"]) {
+		var gain = elem["atk"]-target["def"];
+		elem["cookies"] += gain+elem["steal"];
+		target["cookies"] -= elem["steal"];
+		if (target["cookies"] < 0) target["cookies"] = 0;
+		msg.channel.send(`${msg.author} has successfully attacked ${user.username} and gained ${gain} cookies, additionally stealing ${elem["steal"]}`);
+		return;
+	}
+	if (elem["atk"] < target["def"]) {
+		var gain = target["def"]-elem["atk"];
+		target["cookies"] += gain-elem["steal"];
+		elem["cookies"] += elem["steal"];
+		if (target["cookies"] < 0) target["cookies"] = 0;
+		msg.channel.send(`${user.username} has successfully defended against ${msg.author} and gained ${gain} cookies, lost ${elem["steal"]} to steal`);
+		return;
+	}
+	else {
+		elem["cookies"] += elem["steal"];
+		target["cookies"] -= elem["steal"];
+		if (target["cookies"] < 0) target["cookies"] = 0;
+		msg.channel.send(`${msg.author} has stolen ${elem["steal"]} cookies from ${user.username}`);
+	}
 }
 
 function aboutMessage(msg) {
