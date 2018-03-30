@@ -34,7 +34,7 @@ var item_list = [item_001,item_002,item_003,item_004,item_005,item_006,item_007,
 function showItemList(msg) {
 	var str = '';
 	for (i in item_list) {
-		str += '\n'+JSON.stringify(item_list[i]);
+		str += '\n'+stringItem(item_list[i]);
 	}
 	msg.channel.send('```'+str+'```');
 }
@@ -100,6 +100,11 @@ function filterItems(msg, type, value) {
 	return list;
 }
 
+function stringItem(item) {
+	var str = `${capitalizeFirstLetter(item["name"])} is a ${item["type"]} that has ${item["value"]} power. Costs ${item["cost"]}`;
+	return str;
+}
+
 function buyItems(msg, name, count=1) {
 	if (isNaN(count)) {
 		msg.channel.send(msg.author+" Invalid quantity. Only enter numbers as the second argument");
@@ -115,7 +120,6 @@ function buyItems(msg, name, count=1) {
 		msg.channel.send(msg.author+" You do not have enough cookies to buy this selection");
 		return;
 	}
-	JSON_DATA[msg.author.id]["cookies"]-=cost;
 	var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]==name;});
 	if (!current_item) {
 		var new_item = newItem(item);
@@ -228,6 +232,10 @@ function startUp() {
 
 function isOwner(msg) {
 	return msg.author.id == OWNER_ID;
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function handleMessage(msg) {
