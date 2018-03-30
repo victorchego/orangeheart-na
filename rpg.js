@@ -148,6 +148,9 @@ function loadDataFromWeb(obj) {
 }
 
 function objDataToWeb(obj) {
+	if (obj == null) {
+		obj = [];
+	}
 	request({url: JSON_URL, method: 'PUT', json: obj}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
 	});     
