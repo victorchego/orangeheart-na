@@ -133,7 +133,7 @@ function calcSteal(msg, obj) {
 	return result;
 }
 
-function loadDataFromWeb() {
+function loadDataFromWeb(msg) {
 	request(JSON_URL, function (err, response, data) {
 		if (err) {
 			console.log("Error has occurred: "+error);
@@ -144,21 +144,25 @@ function loadDataFromWeb() {
 			return;
 		}
 		JSON_DATA = JSON.parse(data);
+		msg.channel.send("Loaded state from server");
 	});
 }
 
-function objDataToWeb() {
+function objDataToWeb(msg) {
 	request({url: JSON_URL, method: 'PUT', json: JSON_DATA}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
+		
+		msg.channel.send("Saved state to server");
 	});     
 }	
 
 function resetGame(msg) {
 	JSON_DATA = [];
+	msg.channel.send("RPG has been reset");
 }
 
 function startUp() {
-	loadDataFromWeb();
+	loadDataFromWeb(msg);
 }
 
 function handleMessage(msg) {
@@ -186,16 +190,13 @@ function handleMessage(msg) {
 		msg.channel.send("You have left the RPG");
 	}
 	else if (cmd == "save") {
-		objDataToWeb();
-		msg.channel.send("Saved state to server");
+		objDataToWeb(msg);
 	}
 	else if (cmd == "load") {
-		loadDataFromWeb();
-		msg.channel.send("Loaded state from server");
+		loadDataFromWeb(msg);
 	}
 	else if (cmd == "reset") {
-		resetGame();
-		msg.channel.send("Reset");
+		resetGame(msg);
 	}
 }
 
