@@ -55,7 +55,7 @@ function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0
 		return;
 	}
 	var elem = {};
-	elem["cookies"] = 0;
+	elem["cookies"] = 50;
 	elem["turns"] = 0;
 	elem["atk"] = 0;
 	elem["def"] = 0;
@@ -107,15 +107,12 @@ function buyItems(msg, name, count=1) {
 	}
 	var item = item_list.find(function(item){return item["name"]==name;});
 	if (!item) {
-		msg.channel.send(msg.author+" Invalid item. Please check the item list for the correct item name.");
+		msg.channel.send(msg.author+" Invalid item. Please check the item list for the correct item name");
 		return;
 	}
 	var cost = item["cost"]*count;
-	console.log(count);
-	console.log(item["cost"]);
-	console.log(cost);
 	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
-		msg.channel.send(msg.author+" You do not have enough cookies to buy this selection.");
+		msg.channel.send(msg.author+" You do not have enough cookies to buy this selection");
 		return;
 	}
 	JSON_DATA[msg.author.id]["cookies"]-=cost;
