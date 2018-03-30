@@ -146,20 +146,18 @@ function calcSteal(msg) {
 
 function aboutMessage(msg) {
 	var str = `What is this RPG system? It's a WIP game intended to improve the current cookie system.
-	Few key differences are:
-	-items you can purchase with your cookies
-	-mercs will be more active in the gameplay
-	-you have a chance to earn cookies for a successful DEFENSE
-	-more TBA
-	Please check the available commands: !rpg commands
-	`;
+Few key differences are:
+-items you can purchase with your cookies
+-mercs will be more active in the gameplay
+-you have a chance to earn cookies for a successful DEFENSE
+-more TBA
+Please check the available commands: !rpg commands`;
 	msg.channel.send('```'+str+'```');
 }
 
 function commandMessage(msg) {
 	var str = `The prefix is !rpg
-	-join/leave/profile/about/command(s)
-	`;
+-join/leave/profile/about/command(s)`;
 	msg.channel.send('```'+str+'```');
 }
 
