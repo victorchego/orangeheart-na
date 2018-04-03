@@ -68,6 +68,7 @@ function showMercList(msg) {
 }
 
 function randomCookies(msg) {
+	
 	var val = Math.floor((Math.random() * 10) + 1);
 	JSON_DATA[msg.author.id]["cookies"]+=val;
 	msg.channel.send(`${msg.author} You have gained ${val} cookies`);
@@ -78,6 +79,10 @@ function checkPlayer(msg) {
 }
 
 function viewPlayers(msg) {
+	if (!checkPlayer(msg)) {
+		msg.channel.send("You are not a RPG participant");
+		return;
+	}
 	var str = 'Current Players:';
 	for (id in JSON_DATA) {
 		var user = msg.client.users.find(val => val.id === id);
