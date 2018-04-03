@@ -152,6 +152,10 @@ function stringItem(item) {
 }
 
 function buyItems(msg, name, count=1) {
+	if (!checkPlayer(msg)) {
+		msg.channel.send("You are not a RPG participant");
+		return;
+	}
 	if (isNaN(count)) {
 		msg.channel.send(msg.author+" Invalid quantity. Only enter numbers as the second argument");
 		return;	
@@ -186,6 +190,10 @@ function stringMerc(merc) {
 }
 
 function hireMerc(msg, name) {
+	if (!checkPlayer(msg)) {
+		msg.channel.send("You are not a RPG participant");
+		return;
+	}
 	var merc = merc_list.find(function(merc){return merc["name"]==name;});
 	if (!merc) {
 		msg.channel.send(msg.author+" Invalid mercenary. Please check the mercenary list for the correct mercenary name");
