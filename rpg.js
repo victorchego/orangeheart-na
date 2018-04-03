@@ -6,7 +6,7 @@ var JSON_URL = 'https://api.myjson.com/bins/qqp3b';
 
 var request = require('request');
 
-var item_000 = {
+var new_item = {
 	"name": "",
 	"value": 0,
 	"cost": 0,
@@ -14,27 +14,55 @@ var item_000 = {
 	"count": 0
 }	
 
+var new_merc = {
+	"name": "",
+	"value": 0,
+	"cost": 0,
+	"type": "",
+	"count": 0,
+	"turns": 0,
+	"effect": ""
+}
+
 function newItem(fields) {
-	var item = Object.assign({}, item_000, fields);
+	var item = Object.assign({}, new_item, fields);
 	return item;
 }
 
-var item_001 = newItem({"name":"shuriken", "value":1, "cost":10, "type":"atk"});
-var item_002 = newItem({"name":"knife", "value":5, "cost":45, "type":"atk"});
-var item_003 = newItem({"name":"dagger", "value":20, "cost":100, "type":"atk"});
-var item_004 = newItem({"name":"glove", "value":1, "cost":10, "type":"def"});
-var item_005 = newItem({"name":"armguard", "value":3, "cost":25, "type":"def"});
-var item_006 = newItem({"name":"shield", "value":7, "cost":40, "type":"def"});
-var item_007 = newItem({"name":"pocket", "value":1, "cost":25, "type":"steal"});
-var item_008 = newItem({"name":"cutter", "value":4, "cost":80, "type":"steal"});
-var item_009 = newItem({"name":"lockpick", "value":20, "cost":200, "type":"steal"});
+function newMerc(fields) {
+	var merc = Object.assign({}, new_merc, fields);
+	return merc;
+}
 
-var item_list = [item_001,item_002,item_003,item_004,item_005,item_006,item_007,item_008,item_009];
+var item_list = [
+	newItem({"name":"shuriken", "value":1, "cost":10, "type":"atk"});
+	newItem({"name":"knife", "value":5, "cost":45, "type":"atk"});
+	newItem({"name":"dagger", "value":20, "cost":100, "type":"atk"});
+	newItem({"name":"glove", "value":1, "cost":10, "type":"def"});
+	newItem({"name":"armguard", "value":3, "cost":25, "type":"def"});
+	newItem({"name":"shield", "value":7, "cost":40, "type":"def"});
+	newItem({"name":"pocket", "value":1, "cost":25, "type":"steal"});
+	newItem({"name":"cutter", "value":4, "cost":80, "type":"steal"});
+	newItem({"name":"lockpick", "value":20, "cost":200, "type":"steal"});
+];
+
+var merc_list = [
+	newItem({"name":"owner", "value":100, "cost":5000, "type":"gold", "effect":"Hiring the owner gives you periodic gold income"});
+	newItem({"name":"father", "value":10, "cost":5000, "type":"gold", "effect":"Hiring the father gives you periodic shuriken income"});
+];
 
 function showItemList(msg) {
 	var str = '';
 	for (i in item_list) {
 		str += '\n'+stringItem(item_list[i]);
+	}
+	msg.channel.send('```'+str+'```');
+}
+
+function showMercList(msg) {
+	var str = '';
+	for (i in merc_list) {
+		str += '\n'+stringMerc(merc_list[i]);
 	}
 	msg.channel.send('```'+str+'```');
 }
@@ -152,6 +180,37 @@ function buyItems(msg, name, count=1) {
 	msg.channel.send(`${msg.author} You have bought ${count} ${name}(s)`);
 }
 
+function stringMerc(merc) {
+	var str = `${capitalizeFirstLetter(merc["name"])} costs ${merc["cost"]. Effect: ${merc["effect"]}`;
+	return str;
+}
+
+function hireMerc(msg, name) {
+	var merc = merc_list.find(function(merc){return merc["name"]==name;});
+	if (!merc) {
+		msg.channel.send(msg.author+" Invalid mercenary. Please check the mercenary list for the correct mercenary name");
+		return;
+	}
+	var cost = merc["cost"];
+	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
+		msg.channel.send(msg.author+" You do not have enough cookies to hire this selection");
+		return;
+	}
+	var current_merc = JSON_DATA[msg.author.id]["merc"].find(function(merc){return merc["name"]==name;});
+	if (!current_merc) {
+		var new_merc = newMerc(merc);
+		new_merc["count"] = 1;
+		JSON_DATA[msg.author.id]["merc"].push(new_merc);
+	}
+	else {
+		msg.channel.send(`${msg.author} You have already hired ${name}`);
+		return;
+	}
+	JSON_DATA[msg.author.id]["cookies"]-=cost;
+	updateStats(msg);
+	msg.channel.send(`${msg.author} You have hired ${name}`);
+}
+
 function calcAtk(msg) {
 	var result = 0;
 	var list = filterItems(msg, "type", "atk");
@@ -185,6 +244,9 @@ function attackPlayer(msg) {
 	if (!elem || !target) {
 		msg.channel.send(`${msg.author} Both you and your target must be participants`);
 		return;
+	}
+	if (elem==target) {
+		msg.channel.send(`${msg.author} You cannot attack yourself`);
 	}
 	var user = msg.client.users.find(val => val.id === msg.mentions.users.firstKey());
 	if (elem["atk"] > target["def"]) {
@@ -235,8 +297,10 @@ Your STEAL stats determine how much you steal directly from your target`;
 
 function commandMessage(msg) {
 	var str = `The prefix is !rpg
--join/leave/profile/itemlist/about/command(s)/detail(s)
--buy <item_name> <optional: quantity>`;
+-join/leave/profile/players/about/command(s)/detail(s)
+-buy <item_name> <optional: quantity>
+-hire <merc_name>
+-itemlist/merclist`;
 	msg.channel.send('```'+str+'```');
 }
 
@@ -355,8 +419,19 @@ function handleMessage(msg) {
 		buyItems(msg, args[0].toLowerCase(), args[1]);
 		objDataToWeb(msg);
 	}
+	else if (cmd == "hire") {
+		if (args.length==0) {
+			msg.channel.send(msg.author+" You must specify the mercenary name");
+			return;
+		}
+		hireMerc(msg, args[0].toLowerCase());
+		objDataToWeb(msg);
+	}
 	else if (cmd == "itemlist") {
 		showItemList(msg);
+	}
+	else if (cmd == "merclist") {
+		showMercList(msg);
 	}
 	else if (cmd == "cookies" || cmd == "cookie") {
 		randomCookies(msg);
