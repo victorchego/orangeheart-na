@@ -35,20 +35,20 @@ function newMerc(fields) {
 }
 
 var item_list = [
-	newItem({"name":"shuriken", "value":1, "cost":10, "type":"atk"});
-	newItem({"name":"knife", "value":5, "cost":45, "type":"atk"});
-	newItem({"name":"dagger", "value":20, "cost":100, "type":"atk"});
-	newItem({"name":"glove", "value":1, "cost":10, "type":"def"});
-	newItem({"name":"armguard", "value":3, "cost":25, "type":"def"});
-	newItem({"name":"shield", "value":7, "cost":40, "type":"def"});
-	newItem({"name":"pocket", "value":1, "cost":25, "type":"steal"});
-	newItem({"name":"cutter", "value":4, "cost":80, "type":"steal"});
-	newItem({"name":"lockpick", "value":20, "cost":200, "type":"steal"});
+	newItem({"name":"shuriken", "value":1, "cost":10, "type":"atk"}),
+	newItem({"name":"knife", "value":5, "cost":45, "type":"atk"}),
+	newItem({"name":"dagger", "value":20, "cost":100, "type":"atk"}),
+	newItem({"name":"glove", "value":1, "cost":10, "type":"def"}),
+	newItem({"name":"armguard", "value":3, "cost":25, "type":"def"}),
+	newItem({"name":"shield", "value":7, "cost":40, "type":"def"}),
+	newItem({"name":"pocket", "value":1, "cost":25, "type":"steal"}),
+	newItem({"name":"cutter", "value":4, "cost":80, "type":"steal"}),
+	newItem({"name":"lockpick", "value":20, "cost":200, "type":"steal"})
 ];
 
 var merc_list = [
-	newItem({"name":"owner", "value":100, "cost":5000, "type":"gold", "effect":"Hiring the owner gives you periodic gold income"});
-	newItem({"name":"father", "value":10, "cost":5000, "type":"gold", "effect":"Hiring the father gives you periodic shuriken income"});
+	newItem({"name":"owner", "value":100, "cost":5000, "type":"gold", "effect":"Hiring the owner gives you periodic gold income"}),
+	newItem({"name":"father", "value":10, "cost":5000, "type":"gold", "effect":"Hiring the father gives you periodic shuriken income"})
 ];
 
 function showItemList(msg) {
