@@ -99,7 +99,7 @@ function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0
 	elem["def"] = 0;
 	elem["steal"] = 0;
 	elem["item"] = [];
-	elem["merc"] = {};
+	elem["merc"] = [];
 	elem["waifu"] = "";
 	JSON_DATA[msg.author.id] = elem;
 	msg.channel.send("You have joined the RPG");
@@ -438,6 +438,13 @@ function handleMessage(msg) {
 	}
 	else if (cmd == "attack") {
 		attackPlayer(msg);
+	}
+	else if (cmd == "admin") {
+		if (!isOwner(msg)) {
+			msg.channel.send("You aren't authorized to use this command");
+			return;
+		}
+		updatePropertyAll(msg,"merc",[]);
 	}
 	else {
 		msg.channel.send(`${msg.author} Check the command list: !rpg commands`);
