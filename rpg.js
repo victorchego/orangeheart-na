@@ -181,7 +181,7 @@ function buyItems(msg, name, count=1) {
 }
 
 function stringMerc(merc) {
-	var str = `${capitalizeFirstLetter(merc["name"])} costs ${merc["cost"]. Effect: ${merc["effect"]}`;
+	var str = `${capitalizeFirstLetter(merc["name"])} costs ${merc["cost"]}. Effect: ${merc["effect"]}`;
 	return str;
 }
 
