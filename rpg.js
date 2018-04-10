@@ -420,6 +420,7 @@ function gift(msg, name, count) {
 	console.log(count);
 	console.log(msg.mentions.users);
 	if (name == "cookies") {
+		console.log('test');
 		for (user in msg.mentions.users) {
 			console.log(user);
 			JSON_DATA[user]["cookies"]+=count;
