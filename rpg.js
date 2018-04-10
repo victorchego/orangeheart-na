@@ -130,7 +130,7 @@ function viewProfile(msg) {
 		msg.channel.send("You are not a RPG participant");
 		return;
 	}
-	updateStats(msg);
+	updateStats(msg.author.id);
 	var str = '';
 	str += msg.author+"'s profile:```";
 	str += "\nCookies: "+JSON_DATA[msg.author.id]["cookies"];
@@ -145,14 +145,14 @@ function viewProfile(msg) {
 	msg.channel.send(str);
 }
 
-function updateStats(msg) {
-	JSON_DATA[msg.author.id]["atk"] = calcAtk(msg);
-	JSON_DATA[msg.author.id]["def"] = calcDef(msg);
-	JSON_DATA[msg.author.id]["steal"] = calcSteal(msg);
+function updateStats(id) {
+	JSON_DATA[id]["atk"] = calcAtk(id);
+	JSON_DATA[id]["def"] = calcDef(id);
+	JSON_DATA[id]["steal"] = calcSteal(id);
 }
 
-function filterItems(msg, type, value) {
-	var items = JSON_DATA[msg.author.id]["item"];
+function filterItems(id, type, value) {
+	var items = JSON_DATA[id]["item"];
 	var list = items.filter(function(item) {return item[type]==value;});
 	return list;
 }
@@ -191,7 +191,7 @@ function buyItems(msg, name, count=1) {
 		current_item["count"]+=parseInt(count);
 	}
 	JSON_DATA[msg.author.id]["cookies"]-=cost;
-	updateStats(msg);
+	updateStats(msg.author.id);
 	msg.channel.send(`${msg.author} You have bought ${count} ${name}(s)`);
 }
 
@@ -226,31 +226,31 @@ function hireMerc(msg, name) {
 		return;
 	}
 	JSON_DATA[msg.author.id]["cookies"]-=cost;
-	updateStats(msg);
+	updateStats(msg.author.id);
 	msg.channel.send(`${msg.author} You have hired ${name}`);
 }
 
-function calcAtk(msg) {
+function calcAtk(id) {
 	var result = 0;
-	var list = filterItems(msg, "type", "atk");
+	var list = filterItems(id, "type", "atk");
 	for (i in list) {
 		result += list[i]["value"]*list[i]["count"];
 	}
 	return result;
 }
 
-function calcDef(msg) {
+function calcDef(id) {
 	var result = 0;
-	var list = filterItems(msg, "type", "def");
+	var list = filterItems(id, "type", "def");
 	for (i in list) {
 		result += list[i]["value"]*list[i]["count"];
 	}
 	return result;
 }
 
-function calcSteal(msg) {
+function calcSteal(id) {
 	var result = 0;
-	var list = filterItems(msg, "type", "steal");
+	var list = filterItems(id, "type", "steal");
 	for (i in list) {
 		result += list[i]["value"]*list[i]["count"];
 	}
@@ -386,8 +386,14 @@ function capitalizeFirstLetter(string) {
 function hourlyUpdate(msg) {
 	mercUpdate(msg);
 	turnUpdate(msg);
-	updateStats(msg);
+	updateAll();
 	objDataToWeb(msg);
+}
+
+function updateAll() {
+	for (id in JSON_DATA) {
+		updateStats(id);
+	}
 }
 
 function mercUpdate(msg) {
