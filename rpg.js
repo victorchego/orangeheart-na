@@ -418,6 +418,7 @@ function turnUpdate(msg) {
 function gift(msg, name, count) {
 	if (name == "cookies") {
 		for (user in msg.mentions.users) {
+			console.log(msg.mentions.users[user]);
 			JSON_DATA[msg.mentions.users[user]]["cookies"]+=count;
 		}
 	}
