@@ -415,6 +415,30 @@ function turnUpdate(msg) {
 	}
 }
 
+function gift(msg, name, count) {
+	if (name == "cookies") {
+		for (user in msg.mentions.users) {
+			msg.mentions.users[user]["cookies"]+=count;
+		}
+	}
+	else {
+		var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]==name;});
+		var item = item_list.find(function(item){return item["name"]==name;});
+		if (!item) {
+			msg.channel.send("Invalid option");
+			return;
+		}
+		if (!current_item) {
+			var new_item = newItem(item);
+			new_item["count"] = count;
+			JSON_DATA[msg.author.id]["item"].push(new_item);
+		}
+		else {
+			current_item["count"]+=count;
+		}
+	}
+}
+
 function handleMessage(msg) {
 	if (msg.channel.id != CY_CHANNEL_ID) {
 		msg.channel.send("This command must be used in #cy-playground");
@@ -500,6 +524,17 @@ function handleMessage(msg) {
 	}
 	else if (cmd == "attack") {
 		attackPlayer(msg);
+	}
+	else if (cmd == "gift") {
+		if (args.length!=2) {
+			msg.channel.send(msg.author+" You must specify the name and count");
+			return;
+		}
+		if (!isOwner(msg)) {
+			msg.channel.send("You aren't authorized to use this command");
+			return;
+		}
+		gift(msg,args[0],args[1]);
 	}
 	else if (cmd == "admin") {
 		if (!isOwner(msg)) {
