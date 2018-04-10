@@ -416,6 +416,9 @@ function turnUpdate(msg) {
 }
 
 function gift(msg, name, count) {
+	console.log(name);
+	console.log(count);
+	console.log(msg.mentions.users);
 	if (name == "cookies") {
 		for (user in msg.mentions.users) {
 			console.log(msg.mentions.users[user]);
