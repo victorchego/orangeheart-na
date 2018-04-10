@@ -421,8 +421,8 @@ function gift(msg, name, count) {
 	console.log(msg.mentions.users);
 	if (name == "cookies") {
 		for (user in msg.mentions.users) {
-			console.log(msg.mentions.users[user]);
-			JSON_DATA[msg.mentions.users[user]]["cookies"]+=count;
+			console.log(user);
+			JSON_DATA[user]["cookies"]+=count;
 		}
 	}
 	else {
