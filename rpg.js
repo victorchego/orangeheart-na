@@ -4,6 +4,8 @@ var OWNER_ID = '235263356397813762';
 var JSON_DATA = null;
 var JSON_URL = 'https://api.myjson.com/bins/qqp3b';
 
+var HOURLY_TIMEOUT = null;
+
 var request = require('request');
 
 var new_item = {
@@ -47,8 +49,8 @@ var item_list = [
 ];
 
 var merc_list = [
-	newItem({"name":"owner", "value":100, "cost":5000, "type":"gold", "effect":"Hiring the owner gives you periodic gold income"}),
-	newItem({"name":"father", "value":10, "cost":5000, "type":"gold", "effect":"Hiring the father gives you periodic shuriken income"})
+	newMerc({"name":"owner", "value":100, "cost":5000, "type":"cookies", "effect":"Hiring the owner gives you periodic gold income"}),
+	newMerc({"name":"father", "value":10, "cost":5000, "type":"item", "effect":"Hiring the father gives you periodic shuriken income"})
 ];
 
 function showItemList(msg) {
@@ -95,7 +97,7 @@ function viewPlayers(msg) {
 	msg.channel.send('```'+str+'```');
 }
 
-function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":[<item1>,...],"merc":{<merc1>:0,<merc2>:3,...}, "waifu": ""}}
+function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0,"item":[<item1>,...],"merc":[<merc1>:0,<merc2>:3,...], "waifu": ""}}
 	if (checkPlayer(msg)) {
 		msg.channel.send("You have already a RPG participant");
 		return;
@@ -103,6 +105,7 @@ function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0
 	var elem = {};
 	elem["cookies"] = 50;
 	elem["turns"] = 0;
+	elem["maxturns"] = 5;
 	elem["atk"] = 0;
 	elem["def"] = 0;
 	elem["steal"] = 0;
@@ -359,6 +362,14 @@ function startUp() {
 	if (JSON_DATA==null) {
 		loadDataFromWeb();
 	}
+	var current_time = new Date();
+	if (current_time.getMinutes()!=0 || current_time.getSeconds()!=0) {
+		var next_hour = new Date(current_time.getFullYear(),current_time.getMonth(),current_time.getDate(),current_time.getHours()+1,0,0);
+		var time_diff = next_hour.getTime()-current_time.getTime();
+		if (HOURLY_TIMEOUT!=null) clearTimeout(HOURLY_TIMEOUT);
+		HOURLY_TIMEOUT = setTimeout(hourlyUpdate,time_diff,msg);
+	}
+	else hourlyUpdate(msg);
 }
 
 function isOwner(msg) {
@@ -367,6 +378,41 @@ function isOwner(msg) {
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function hourlyUpdate(msg) {
+	mercUpdate(msg);
+	turnUpdate(msg);
+	updateStats(msg);
+	objDataToWeb(msg);
+}
+
+function mercUpdate(msg) {
+	for (id in JSON_DATA) {
+		for (hire in JSON_DATA[id]["merc"]) {
+			if (hire["name"] == "owner") {
+				JSON_DATA[id]["cookies"]+=hire["value"];
+			}
+			else if (hire["name"] == "father") {
+				var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]=="shuriken";});
+				var item = item_list.find(function(item){return item["name"]=="shuriken";});
+				if (!current_item) {
+					var new_item = newItem(item);
+					new_item["count"] = hire["value"];
+					JSON_DATA[msg.author.id]["item"].push(new_item);
+				}
+				else {
+					current_item["count"]+=hire["value"];
+				}
+			}
+		}
+	}
+}
+
+function turnUpdate(msg) {
+	for (id in JSON_DATA) {
+		JSON_DATA[id]["turns"] = JSON_DATA[id]["maxturns"];
+	}
 }
 
 function handleMessage(msg) {
