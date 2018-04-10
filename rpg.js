@@ -418,7 +418,7 @@ function turnUpdate(msg) {
 function gift(msg, name, count) {
 	if (name == "cookies") {
 		for (user in msg.mentions.users) {
-			msg.mentions.users[user]["cookies"]+=count;
+			JSON_DATA[msg.mentions.users[user]]["cookies"]+=count;
 		}
 	}
 	else {
@@ -437,6 +437,7 @@ function gift(msg, name, count) {
 			current_item["count"]+=count;
 		}
 	}
+	msg.channel.send('Gift has been sent');
 }
 
 function handleMessage(msg) {
