@@ -419,7 +419,7 @@ function gift(msg, name, count) {
 	var users = msg.mentions.users.keyArray();
 	if (name == "cookies") {
 		for (user in users) {
-			JSON_DATA[users[user]]["cookies"]+=count;
+			JSON_DATA[users[user]]["cookies"]+=parseInt(count);
 		}
 	}
 	else {
@@ -432,11 +432,11 @@ function gift(msg, name, count) {
 			}
 			if (!current_item) {
 				var new_item = newItem(item);
-				new_item["count"] = count;
+				new_item["count"] = parseInt(count);
 				JSON_DATA[users[user]]["item"].push(new_item);
 			}
 			else {
-				current_item["count"]+=count;
+				current_item["count"]+=parseInt(count);
 			}
 		}
 	}
