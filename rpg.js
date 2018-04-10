@@ -447,13 +447,14 @@ function gift(msg, name, count) {
 }
 
 function handleMessage(msg) {
-	if (msg.channel.id != CY_CHANNEL_ID) {
-		msg.channel.send("This command must be used in #cy-playground");
-		return;
-	}
 	var args = msg.content.substring(5).split(' ');
     var cmd = args[0];
     args = args.splice(1);
+	
+	if (msg.channel.id != CY_CHANNEL_ID && (cmd != "cookie" && cmd != "cookies")) {
+		msg.channel.send("This command must be used in #cy-playground");
+		return;
+	}
 	
 	if (cmd == "test") {
 		msg.channel.send("Test succeeded");
