@@ -104,8 +104,8 @@ function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0
 	}
 	var elem = {};
 	elem["cookies"] = 50;
-	elem["turns"] = 0;
 	elem["maxturns"] = 5;
+	elem["turns"] = elem["maxturns"];
 	elem["atk"] = 0;
 	elem["def"] = 0;
 	elem["steal"] = 0;
