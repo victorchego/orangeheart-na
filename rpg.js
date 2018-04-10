@@ -521,13 +521,14 @@ function handleMessage(msg) {
 	}
 	else if (cmd == "cookies" || cmd == "cookie") {
 		randomCookies(msg);
+		msg.delete().catch(console.error);
 	}
 	else if (cmd == "attack") {
 		attackPlayer(msg);
 	}
 	else if (cmd == "gift") {
-		if (args.length!=2) {
-			msg.channel.send(msg.author+" You must specify the name and count");
+		if (args.length<2) {
+			msg.channel.send(msg.author+" You must specify the name, count, and user tags");
 			return;
 		}
 		if (!isOwner(msg)) {
