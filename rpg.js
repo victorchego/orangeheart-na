@@ -416,28 +416,28 @@ function turnUpdate(msg) {
 }
 
 function gift(msg, name, count) {
-	console.log(msg.mentions.users);
+	var users = msg.mentions.users.keyArray();
 	if (name == "cookies") {
-		console.log('test');
-		for (user in msg.mentions.users.keyArray()) {
-			console.log(user);
-			JSON_DATA[user]["cookies"]+=count;
+		for (user in users) {
+			JSON_DATA[users[user]]["cookies"]+=count;
 		}
 	}
 	else {
-		var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]==name;});
-		var item = item_list.find(function(item){return item["name"]==name;});
-		if (!item) {
-			msg.channel.send("Invalid option");
-			return;
-		}
-		if (!current_item) {
-			var new_item = newItem(item);
-			new_item["count"] = count;
-			JSON_DATA[msg.author.id]["item"].push(new_item);
-		}
-		else {
-			current_item["count"]+=count;
+		for (user in users) {
+			var current_item = JSON_DATA[users[user]]["item"].find(function(item){return item["name"]==name;});
+			var item = item_list.find(function(item){return item["name"]==name;});
+			if (!item) {
+				msg.channel.send("Invalid option");
+				return;
+			}
+			if (!current_item) {
+				var new_item = newItem(item);
+				new_item["count"] = count;
+				JSON_DATA[users[user]]["item"].push(new_item);
+			}
+			else {
+				current_item["count"]+=count;
+			}
 		}
 	}
 	msg.channel.send('Gift has been sent');
