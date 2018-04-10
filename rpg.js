@@ -273,6 +273,7 @@ function attackPlayer(msg) {
 		elem["cookies"] += gain+elem["steal"];
 		target["cookies"] -= elem["steal"];
 		if (target["cookies"] < 0) target["cookies"] = 0;
+		elem["turns"]--;
 		msg.channel.send(`${msg.author} has successfully attacked ${user.username} and gained ${gain} cookies, additionally stealing ${elem["steal"]}`);
 		return;
 	}
@@ -281,6 +282,7 @@ function attackPlayer(msg) {
 		target["cookies"] += gain-elem["steal"];
 		elem["cookies"] += elem["steal"];
 		if (target["cookies"] < 0) target["cookies"] = 0;
+		elem["turns"]--;
 		msg.channel.send(`${user.username} has successfully defended against ${msg.author} and gained ${gain} cookies, lost ${elem["steal"]} to steal`);
 		return;
 	}
@@ -288,6 +290,7 @@ function attackPlayer(msg) {
 		elem["cookies"] += elem["steal"];
 		target["cookies"] -= elem["steal"];
 		if (target["cookies"] < 0) target["cookies"] = 0;
+		elem["turns"]--;
 		msg.channel.send(`${msg.author} has stolen ${elem["steal"]} cookies from ${user.username}`);
 	}
 }
