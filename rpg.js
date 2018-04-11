@@ -400,20 +400,20 @@ function updateAll() {
 
 function mercUpdate() {
 	for (id in JSON_DATA) {
-		for (hire in JSON_DATA[id]["merc"]) {
-			if (hire["name"] == "owner") {
-				JSON_DATA[id]["cookies"]+=hire["value"];
+		for (merc in JSON_DATA[id]["merc"]) {
+			if (JSON_DATA[id]["merc"]["name"] == "owner") {
+				JSON_DATA[id]["cookies"]+=JSON_DATA[id]["merc"]["value"];
 			}
-			else if (hire["name"] == "father") {
+			else if (JSON_DATA[id]["merc"]["name"] == "father") {
 				var current_item = JSON_DATA[id]["item"].find(function(item){return item["name"]=="shuriken";});
 				var item = item_list.find(function(item){return item["name"]=="shuriken";});
 				if (!current_item) {
 					var new_item = newItem(item);
-					new_item["count"] = hire["value"];
+					new_item["count"] = JSON_DATA[id]["merc"]["value"];
 					JSON_DATA[id]["item"].push(new_item);
 				}
 				else {
-					current_item["count"]+=hire["value"];
+					current_item["count"]+=JSON_DATA[id]["merc"]["value"];
 				}
 			}
 		}
