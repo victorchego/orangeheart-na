@@ -384,10 +384,12 @@ function capitalizeFirstLetter(string) {
 }
 
 function hourlyUpdate(msg) {
-	mercUpdate(msg);
-	turnUpdate(msg);
+	mercUpdate();
+	turnUpdate();
 	updateAll();
 	objDataToWeb(msg);
+	if (HOURLY_TIMEOUT!=null) clearTimeout(HOURLY_TIMEOUT);
+	HOURLY_TIMEOUT = setTimeout(hourlyUpdate,3600000,msg);
 }
 
 function updateAll() {
@@ -396,19 +398,19 @@ function updateAll() {
 	}
 }
 
-function mercUpdate(msg) {
+function mercUpdate() {
 	for (id in JSON_DATA) {
 		for (hire in JSON_DATA[id]["merc"]) {
 			if (hire["name"] == "owner") {
 				JSON_DATA[id]["cookies"]+=hire["value"];
 			}
 			else if (hire["name"] == "father") {
-				var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]=="shuriken";});
+				var current_item = JSON_DATA[id]["item"].find(function(item){return item["name"]=="shuriken";});
 				var item = item_list.find(function(item){return item["name"]=="shuriken";});
 				if (!current_item) {
 					var new_item = newItem(item);
 					new_item["count"] = hire["value"];
-					JSON_DATA[msg.author.id]["item"].push(new_item);
+					JSON_DATA[id]["item"].push(new_item);
 				}
 				else {
 					current_item["count"]+=hire["value"];
@@ -418,7 +420,7 @@ function mercUpdate(msg) {
 	}
 }
 
-function turnUpdate(msg) {
+function turnUpdate() {
 	for (id in JSON_DATA) {
 		JSON_DATA[id]["turns"] = JSON_DATA[id]["maxturns"];
 	}
@@ -556,7 +558,7 @@ function handleMessage(msg) {
 			msg.channel.send("You aren't authorized to use this command");
 			return;
 		}
-		updatePropertyAll(msg,"merc",[]);
+		hourlyUpdate(msg);
 	}
 	else {
 		msg.channel.send(`${msg.author} Check the command list: !rpg commands`);
