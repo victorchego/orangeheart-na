@@ -50,7 +50,8 @@ var item_list = [
 
 var merc_list = [
 	newMerc({"name":"owner", "value":100, "cost":5000, "type":"cookies", "effect":"Hiring the owner gives you periodic gold income"}),
-	newMerc({"name":"father", "value":10, "cost":5000, "type":"item", "effect":"Hiring the father gives you periodic shuriken income"})
+	newMerc({"name":"father", "value":10, "cost":5000, "type":"item", "effect":"Hiring the father gives you periodic shuriken income"}),
+	newMerc({"name":"zina", "value":1, "cost":7500, "type":"item", "effect":"Hiring Zina gives you periodic shield income"})
 ];
 
 function showItemList(msg) {
@@ -266,6 +267,11 @@ function attackPlayer(msg) {
 	}
 	if (elem==target) {
 		msg.channel.send(`${msg.author} You cannot attack yourself`);
+		return;
+	}
+	if (elem["turns"]<=0) {
+		msg.channel.send(`${msg.author} You must wait until your turns refresh`);
+		return;
 	}
 	var user = msg.client.users.find(val => val.id === msg.mentions.users.firstKey());
 	if (elem["atk"] > target["def"]) {
@@ -407,6 +413,18 @@ function mercUpdate() {
 			else if (JSON_DATA[id]["merc"][hire]["name"] == "father") {
 				var current_item = JSON_DATA[id]["item"].find(function(item){return item["name"]=="shuriken";});
 				var item = item_list.find(function(item){return item["name"]=="shuriken";});
+				if (!current_item) {
+					var new_item = newItem(item);
+					new_item["count"] = JSON_DATA[id]["merc"][hire]["value"];
+					JSON_DATA[id]["item"].push(new_item);
+				}
+				else {
+					current_item["count"]+=JSON_DATA[id]["merc"][hire]["value"];
+				}
+			}
+			else if (JSON_DATA[id]["merc"][hire]["name"] == "zina") {
+				var current_item = JSON_DATA[id]["item"].find(function(item){return item["name"]=="shield";});
+				var item = item_list.find(function(item){return item["name"]=="shield";});
 				if (!current_item) {
 					var new_item = newItem(item);
 					new_item["count"] = JSON_DATA[id]["merc"][hire]["value"];

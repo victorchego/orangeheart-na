@@ -54,7 +54,7 @@ var MARI_TIMEOUT = null;
 var BOOST_DURATION = 3600000;
 var TYCOON_DURATION = 6000;
 var LOTTERY_DURATION = 300000;
-var TAX_DURATION = 1200000;
+var TAX_DURATION = 1800000;
 var MARI_DURATION = 1800000;
 
 var BANNED_CHANNELS = ['380045950879793153','348328808975302658','264149019524071424','384028008375123978','264149324831784960',
@@ -1100,8 +1100,8 @@ function setTax(client) {
 					kings.push(obj[x]);
 					continue;
 				}
-				total += Math.ceil(0.02*obj[x]["cookies"]);
-				obj[x]["cookies"] = Math.ceil(0.98*obj[x]["cookies"]);
+				total += Math.ceil(0.025*obj[x]["cookies"]);
+				obj[x]["cookies"] = Math.ceil(0.975*obj[x]["cookies"]);
 			}
 			for (k in kings) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});
