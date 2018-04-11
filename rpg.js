@@ -401,6 +401,7 @@ function updateAll() {
 function mercUpdate() {
 	for (id in JSON_DATA) {
 		for (merc in JSON_DATA[id]["merc"]) {
+			console.log(merc);
 			if (JSON_DATA[id]["merc"]["name"] == "owner") {
 				JSON_DATA[id]["cookies"]+=JSON_DATA[id]["merc"]["value"];
 			}
