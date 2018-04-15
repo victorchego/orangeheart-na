@@ -438,7 +438,35 @@ client.on('message', (msg) => {
 					resetCookies(client, msg, args);
 					clearTimer(client);
 				}
-				else msg.channel.send('Cannot obey command');
+				else {
+					if (!COOKIE_STATUS) {
+					msg.channel.send('Cookie commands are disabled currently');
+					return;
+					}
+					request(URL_JSON, function (err, response, data) {
+					if (err) {
+						console.log('Error reading points file: '+err);
+						msg.channel.send('An unexpected error has occurred');
+						return;
+					}	
+
+					var obj = JSON.parse(data);
+					obj = assignKings(obj);
+					var arr = [];
+					for (x in obj){
+						arr.push([obj[x]["id"],obj[x]["cookies"],obj[x]["waifu"],obj[x]["king"],obj[x]["tycoon"]]);
+					}
+					arr.sort(function(a,b){return b[1]-a[1];});
+					if (arr.length >= 3) {
+						if (msg.author.id == arr[0][0] || msg.author.id == arr[1][0] || msg.author.id == arr[2][0]) {
+							resetCookies(client, msg, args);
+							clearTimer(client);
+						}
+						else msg.channel.send('You must be in the top 3 to reset the game');
+					}
+					else msg.channel.send('An unexpected error has occurred');
+					});
+				}
 			break;
 			case 'talk':
 				try {
