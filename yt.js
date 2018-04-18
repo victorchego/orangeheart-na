@@ -237,6 +237,10 @@ function processSearch(client,msg,args) {
 			titles += i + ". " + results[i]["title"] + "\n";
 		}
 		result_data = results;
+		if (!results.length) {
+			msg.channel.send('There is no search result');
+			return;
+		}
 		titles += "```";
 		msg.channel.send(titles);
 		client.on('message', messageCallback);
