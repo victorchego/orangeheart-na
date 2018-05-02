@@ -54,7 +54,7 @@ var MARI_TIMEOUT = null;
 var BOOST_DURATION = 3600000;
 var TYCOON_DURATION = 6000;
 var LOTTERY_DURATION = 300000;
-var TAX_DURATION = 1800000;
+var TAX_DURATION = 3600000;
 var MARI_DURATION = 1800000;
 
 var BANNED_CHANNELS = ['380045950879793153','348328808975302658','264149019524071424','384028008375123978','264149324831784960',
@@ -754,6 +754,7 @@ function stealCookies(client, msg, args) {
 				if (target["mari"]>0) {
 					elem["cookies"]+=Math.ceil((steal_bonus+steal_amount)/2);
 					target["cookies"]-=Math.ceil(steal_amount/2);
+					target["mari"]++;
 				}
 				else {
 					elem["cookies"]+=(steal_bonus+steal_amount);
@@ -984,17 +985,10 @@ function hireFather(client, msg, args) {
 				msg.channel.send(msg.author+", you don't have enough cookies to hire Father");
 				return;
 			}
-			var hires = 0;
-			for (x in obj) {
-				hires += obj[x]["father"];
-			}
-			var pay = Math.ceil(0.01*hires*(elem["cookies"]));
+			var pay = Math.ceil(0.5*(elem["cookies"]));
 			if (pay > elem["cookies"]) {
 				msg.channel.send(msg.author+", you don't have enough cookies to hire Father");
 				return;
-			}
-			for (x in obj) {
-				obj[x]["father"] = 0;
 			}
 			elem["cookies"] -= pay;
 			elem["father"] = 3;
@@ -1031,7 +1025,7 @@ function hireMari(client, msg, args) {
 			if (target!=undefined) {
 				msg.channel.send(msg.author+", Mari has been hired by another player. Please wait until her hire duration expires");
 			}
-			var pay = Math.ceil(0.05*(elem["cookies"]));
+			var pay = Math.ceil(0.1*(elem["cookies"]));
 			if (pay > elem["cookies"]) {
 				msg.channel.send(msg.author+", you don't have enough cookies to hire Mari");
 				return;
@@ -1053,6 +1047,7 @@ function hireMari(client, msg, args) {
 				}	
 				var obj_2 = JSON.parse(data_2);
 				var elem_2 = obj_2.find(function(item){return item["id"]==msg.author.id;});
+				elem_2["zina"] += elem_2["mari"];
 				elem_2["mari"] = 0;
 				msg.channel.send('Mari is free to hire');
 				objToWeb(obj_2,URL_JSON);
@@ -1128,8 +1123,8 @@ function setTax(client) {
 					kings.push(obj[x]);
 					continue;
 				}
-				total += Math.ceil(0.025*obj[x]["cookies"]);
-				obj[x]["cookies"] = Math.ceil(0.975*obj[x]["cookies"]);
+				total += Math.ceil(0.1*obj[x]["cookies"]);
+				obj[x]["cookies"] = Math.ceil(0.9*obj[x]["cookies"]);
 			}
 			for (k in kings) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});

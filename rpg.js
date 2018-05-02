@@ -70,6 +70,24 @@ function showMercList(msg) {
 	msg.channel.send('```'+str+'```');
 }
 
+function printItems(msg) {
+	var str = '';
+	for (i in JSON_DATA[msg.author.id]["item"]) {
+		str += JSON_DATA[msg.author.id]["item"][i]["name"] + " x" + JSON_DATA[msg.author.id]["item"][i]["count"];
+		if (i != JSON_DATA[msg.author.id]["item"].length-1) str += ", ";
+	}
+	return str;
+}
+
+function printMercs(msg) {
+	var str = '';
+	for (i in JSON_DATA[msg.author.id]["merc"]) {
+		str += JSON_DATA[msg.author.id]["item"][i]["name"];
+		if (i != JSON_DATA[msg.author.id]["item"].length-1) str += ", ";
+	}
+	return str;
+}
+
 function randomCookies(msg) {
 	if (!checkPlayer(msg)) {
 		msg.channel.send("You are not a RPG participant");
@@ -139,8 +157,8 @@ function viewProfile(msg) {
 	str += "\nAttack: "+JSON_DATA[msg.author.id]["atk"]
 	str += "\nDefense: "+JSON_DATA[msg.author.id]["def"]
 	str += "\nSteal: "+JSON_DATA[msg.author.id]["steal"]
-	str += "\nItem List: "+ JSON.stringify(JSON_DATA[msg.author.id]["item"]);
-	str += "\nHired Mercenaries: "+JSON.stringify(JSON_DATA[msg.author.id]["merc"]);
+	str += "\nItem List: "+ printItems(msg);
+	str += "\nHired Mercenaries: "+ printMercs(msg);
 	str += "\nWaifu: "+JSON_DATA[msg.author.id]["waifu"];
 	str += '```';
 	msg.channel.send(str);
@@ -276,7 +294,7 @@ function attackPlayer(msg) {
 	var user = msg.client.users.find(val => val.id === msg.mentions.users.firstKey());
 	if (elem["atk"] > target["def"]) {
 		var gain = elem["atk"]-target["def"];
-		elem["cookies"] += gain+elem["steal"];
+		elem["cookies"] += target["cookies"] < elem["steal"] ? gain+target["cookies"]: gain+elem["steal"];
 		target["cookies"] -= elem["steal"];
 		if (target["cookies"] < 0) target["cookies"] = 0;
 		elem["turns"]--;
@@ -285,15 +303,16 @@ function attackPlayer(msg) {
 	}
 	if (elem["atk"] < target["def"]) {
 		var gain = target["def"]-elem["atk"];
-		target["cookies"] += gain-elem["steal"];
-		elem["cookies"] += elem["steal"];
+		target["cookies"] += gain;
+		elem["cookies"] += target["cookies"] < elem["steal"] ? target["cookies"] : elem["steal"];
+		target["cookies"] -= elem["steal"];
 		if (target["cookies"] < 0) target["cookies"] = 0;
 		elem["turns"]--;
 		msg.channel.send(`${user.username} has successfully defended against ${msg.author} and gained ${gain} cookies, lost ${elem["steal"]} to steal`);
 		return;
 	}
 	else {
-		elem["cookies"] += elem["steal"];
+		elem["cookies"] += target["cookies"] < elem["steal"] ? target["cookies"] : elem["steal"];
 		target["cookies"] -= elem["steal"];
 		if (target["cookies"] < 0) target["cookies"] = 0;
 		elem["turns"]--;
