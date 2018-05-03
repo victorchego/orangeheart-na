@@ -233,7 +233,7 @@ function hireMerc(msg, name) {
 		return;
 	}
 	var current_merc = JSON_DATA[msg.author.id]["merc"].find(function(merc){return merc["name"]==name;});
-	var cost = merc["cost"]*current_merc["count"];
+	var cost = current_merc ? merc["cost"]*current_merc["count"] : merc["cost"];
 	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
 		msg.channel.send(msg.author+" You do not have enough cookies to hire this selection");
 		return;
