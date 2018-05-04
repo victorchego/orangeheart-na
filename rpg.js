@@ -85,10 +85,24 @@ function printItems(msg) {
 function printMercs(msg) {
 	var str = '';
 	for (i in JSON_DATA[msg.author.id]["merc"]) {
-		str += JSON_DATA[msg.author.id]["merc"][i]["name"] + " x" + JSON_DATA[msg.author.id]["merc"][i]["count"];
+		str += capitalizeFirstLetter(JSON_DATA[msg.author.id]["merc"][i]["name"]) + " x" + JSON_DATA[msg.author.id]["merc"][i]["count"];
 		if (i != JSON_DATA[msg.author.id]["merc"].length-1) str += ", ";
 	}
 	return str;
+}
+
+function limitItem(msg) { // edit accordingly
+	return;
+}
+
+function limitMerc(msg) { // edit accordingly
+	for (id in JSON_DATA) {
+		var merc = JSON_DATA[id]["merc"].find(function(merc){return merc["name"]=="ikiru";});
+		if (merc) {
+			if (merc["count"] > 15) merc["count"] = 15;
+		}
+	}
+	return;
 }
 
 function randomCookies(msg) {
@@ -604,12 +618,20 @@ function handleMessage(msg) {
 		}
 		gift(msg,args[0],args[1]);
 	}
-	else if (cmd == "admin") {
+	else if (cmd == "refresh") {
 		if (!isOwner(msg)) {
 			msg.channel.send("You aren't authorized to use this command");
 			return;
 		}
 		hourlyUpdate(msg);
+	}
+	else if (cmd == "limit") {
+		if (!isOwner(msg)) {
+			msg.channel.send("You aren't authorized to use this command");
+			return;
+		}
+		limitItem(msg);
+		limitMerc(msg);
 	}
 	else {
 		msg.channel.send(`${msg.author} Check the command list: !rpg commands`);
