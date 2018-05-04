@@ -54,7 +54,7 @@ var merc_list = [
 	newMerc({"name":"owner", "value":100, "cost":5000, "type":"cookies", "effect":"Hiring the owner gives you periodic gold income"}),
 	newMerc({"name":"father", "value":10, "cost":5000, "type":"item", "effect":"Hiring the father gives you periodic shuriken income"}),
 	newMerc({"name":"zina", "value":1, "cost":7500, "type":"item", "effect":"Hiring Zina gives you periodic shield income"}),
-	newMerc({"name":"ikiru", "value":1, "cost":10000, "type":"stats", "effect":"Hiring Ikiru gives you extra turns. Cost increases per hire"})
+	newMerc({"name":"ikiru", "value":1, "cost":10000, "type":"stats", "effect":"Hiring Ikiru gives you extra turns. Cost doubles per hire"})
 	];
 
 function showItemList(msg) {
@@ -85,7 +85,7 @@ function printItems(msg) {
 function printMercs(msg) {
 	var str = '';
 	for (i in JSON_DATA[msg.author.id]["merc"]) {
-		str += JSON_DATA[msg.author.id]["merc"][i]["name"];
+		str += JSON_DATA[msg.author.id]["merc"][i]["name"] + " x" + JSON_DATA[msg.author.id]["merc"][i]["count"];
 		if (i != JSON_DATA[msg.author.id]["merc"].length-1) str += ", ";
 	}
 	return str;
@@ -233,7 +233,7 @@ function hireMerc(msg, name) {
 		return;
 	}
 	var current_merc = JSON_DATA[msg.author.id]["merc"].find(function(merc){return merc["name"]==name;});
-	var cost = current_merc ? merc["cost"]*current_merc["count"] : merc["cost"];
+	var cost = current_merc ? merc["cost"]*Math.pow(2,current_merc["count"]) : merc["cost"];
 	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
 		msg.channel.send(msg.author+" You do not have enough cookies to hire this selection");
 		return;
@@ -244,6 +244,11 @@ function hireMerc(msg, name) {
 		JSON_DATA[msg.author.id]["merc"].push(new_merc);
 	}
 	else if (current_merc["name"]=="ikiru") {
+		if (current_merc["count"]>= 15) {
+			current_merc["count"]= 15;
+			msg.channel.send(`${msg.author} You cannot hire ${name} anymore`);
+			return;
+		}
 		current_merc["count"]++;
 	}
 	else {

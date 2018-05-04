@@ -747,7 +747,7 @@ function stealCookies(client, msg, args) {
 				if (cookie_ratio >= 0.8) cookie_ratio = 0.8;
 				var self_percent = Math.ceil(0.01*(elem["cookies"]));
 				var target_percent = Math.ceil(0.01*(target["cookies"]));
-				var total_percent = Math.ceil(self_percent/total);
+				var total_percent = Math.ceil(self_percent/total/1000);
 				var steal_bonus = Math.ceil(higher*target_percent);
 				var steal_amount = total_percent+self_percent;
 				var steal_cooldown = 10+40*((0.8-cookie_ratio)/0.7);
