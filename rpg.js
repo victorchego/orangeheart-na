@@ -203,7 +203,7 @@ function buyItems(msg, name, count=1) {
 		msg.channel.send("You are not a RPG participant");
 		return;
 	}
-	if (isNaN(count)) {
+	if (isNaN(count) || count == '') {
 		msg.channel.send(msg.author+" Invalid quantity. Only enter numbers as the second argument");
 		return;	
 	}
