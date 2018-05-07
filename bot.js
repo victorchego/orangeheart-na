@@ -26,6 +26,8 @@ var GENERAL_ID = '264145505452425227';
 var WELCOME_ID = '342822506060709912';
 var BOT_LOG_ID = '404613773832224768';
 
+var MUTED_ROLE = "Bad Child";
+
 var URL_JSON = 'https://api.myjson.com/bins/663th';
 var TIMER_JSON = 'https://api.myjson.com/bins/z65jl'; // [{"id":"X", "time":"X", "type":"steal/donate"}]
 var TIMER_TIMEOUT = null;
@@ -1644,7 +1646,7 @@ function muteUser(msg, client, args) {
 		msg.channel.send('Invalid guild');
 		return;
 	}
-	var role = guild.roles.find("name", "Muted");
+	var role = guild.roles.find("name", MUTED_ROLE);
 	if (!role) {
 		msg.channel.send('Invalid role');
 		return;
@@ -1667,7 +1669,7 @@ function unmuteUser(msg, client, args) {
 		msg.channel.send('Invalid guild');
 		return;
 	}
-	var role = guild.roles.find("name", "Muted");
+	var role = guild.roles.find("name", MUTED_ROLE);
 	if (!role) {
 		msg.channel.send('Invalid role');
 		return;
