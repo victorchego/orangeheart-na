@@ -9,6 +9,8 @@ var SELECTED_VOICE = null;
 
 var TARGET_CHANNEL_ID = RADIO_VOICE_ID;
 
+var BANNED_CHANNELS = [];
+
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
 var opts = {
@@ -78,7 +80,7 @@ function outOfBounds(num) {
 
 function handleMessage(msg, client) {
 	selectChannel(msg);
-	if (msg.channel.id != CY_CHANNEL_ID && msg.channel.id != RADIO_TEXT_ID) return;
+	if (isBannedChannel(msg.client.id)) return;
 	var radio_channel = client.channels.find(val => val.id == TARGET_CHANNEL_ID);
 	
 	if (!radio_channel) {
@@ -279,6 +281,10 @@ function selectChannel(msg) {
 			SELECTED_VOICE = RADIO_VOICE_ID;
 			break;
 	}
+}
+
+function isBannedChannel(id) {
+	return BANNED_CHANNELS.find(val => val.id == id);
 }
 
 module.exports = {handleMessage};
