@@ -81,6 +81,10 @@ function outOfBounds(num) {
 function handleMessage(msg, client) {
 	selectChannel(msg);
 	if (isBannedChannel(msg.client.id)) return;
+	if (dispatcher || stream) {
+		msg.channel.send("Cy's radio is being used elsewhere");
+		return;
+	}
 	var radio_channel = client.channels.find(val => val.id == SELECTED_VOICE);
 	
 	if (!radio_channel) {
