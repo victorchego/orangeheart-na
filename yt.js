@@ -39,7 +39,7 @@ const voiceCallback = (oldMember, newMember) => {
 	var oldUserChannel = oldMember.voiceChannel;
 	var radio_channel = newMember? newMember.client.channels.find(val => val.id == SELECTED_VOICE) : oldMember.client.channels.find(val => val.id == SELECTED_VOICE);
 	if (!radio_channel) return;
-	var cy_channel = radio_channel.connection.client.channels.find(val => val.id == SELECTED_CHANNEL);
+	//var cy_channel = radio_channel.connection.client.channels.find(val => val.id == SELECTED_CHANNEL);
 	if (oldUserChannel === undefined && newUserChannel !== undefined) {
     // User Joins a voice channel
 		return;
@@ -52,7 +52,7 @@ const voiceCallback = (oldMember, newMember) => {
 			radio_channel.leave();
 			queue = [];
 			titles = [];
-			cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
+			radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 			return;
 		}
 	}
