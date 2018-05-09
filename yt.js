@@ -199,20 +199,20 @@ function addLink(radio_channel, msg, client, url) {
 }
 
 function playNext(radio_channel) {
-	var cy_channel = radio_channel.connection.client.channels.find(val => val.id == CY_CHANNEL_ID);
+	var text_channel = radio_channel.connection.client.channels.find(val => val.id == SELECTED_CHANNEL);
 	if (radio_channel.members.size == 1) {
-		cy_channel.send('Queue terminated due to no listeners');
+		text_channel.send('Queue terminated due to no listeners');
 		dispatcher.end();
 		dispatcher = null;
 		radio_channel.leave();
 		queue = [];
 		titles = [];
-		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
+		radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		return;
 	}
 	if (queue.length == 0) {
-		cy_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
-		cy_channel.send('Queue has terminated');
+		radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
+		text_channel.send('Queue has terminated');
 		dispatcher = null;
 		radio_channel.leave();
 	}
@@ -223,7 +223,7 @@ function playNext(radio_channel) {
 			queue.push(url);
 			titles.push(title);
 		}
-		cy_channel.send('Now playing: '+title);
+		text_channel.send('Now playing: '+title);
 		stream = ytdl(url, { filter : 'audioonly' });
 		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
 		dispatcher.once("end", reason => {
