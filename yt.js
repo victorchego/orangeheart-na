@@ -3,6 +3,10 @@ var ANIME_CHANNEL_ID = '335150939029766144';
 var CY_CHANNEL_ID = '401660510816436224';
 var RADIO_TEXT_ID = '348328808975302658';
 
+var SELECTED_SERVER = null;
+var SELECTED_CHANNEL = null;
+var SELECTED_VOICE = null;
+
 var TARGET_CHANNEL_ID = RADIO_VOICE_ID;
 
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
@@ -73,6 +77,7 @@ function outOfBounds(num) {
 }
 
 function handleMessage(msg, client) {
+	selectChannel(msg);
 	if (msg.channel.id != CY_CHANNEL_ID && msg.channel.id != RADIO_TEXT_ID) return;
 	var radio_channel = client.channels.find(val => val.id == TARGET_CHANNEL_ID);
 	
@@ -261,6 +266,19 @@ function firstResult(client,msg,args) {
 		if (results[0]) addLink(radio_channel,msg,client,results[0]["link"]);
 		else msg.channel.send('Invalid search result. Please try again.');
 	});
+}
+
+function selectChannel(msg) {
+	SELECTED_CHANNEL = msg.channel.id;
+	SELECTED_SERVER = msg.guild.id;
+	switch (SELECTED_SERVER) {
+		case '443328437642461184': //izo server
+			SELECTED_VOICE = '443328437642461188';
+			break;
+		default:
+			SELECTED_VOICE = RADIO_VOICE_ID;
+			break;
+	}
 }
 
 module.exports = {handleMessage};
