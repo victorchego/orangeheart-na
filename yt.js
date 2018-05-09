@@ -7,7 +7,7 @@ var SELECTED_SERVER = null;
 var SELECTED_CHANNEL = null;
 var SELECTED_VOICE = null;
 
-var TARGET_CHANNEL_ID = RADIO_VOICE_ID;
+var SELECTED_VOICE = RADIO_VOICE_ID;
 
 var BANNED_CHANNELS = [];
 
@@ -37,7 +37,7 @@ var result_data = null;
 const voiceCallback = (oldMember, newMember) => {
 	var newUserChannel = newMember.voiceChannel;
 	var oldUserChannel = oldMember.voiceChannel;
-	var radio_channel = newMember? newMember.client.channels.find(val => val.id == TARGET_CHANNEL_ID) : oldMember.client.channels.find(val => val.id == TARGET_CHANNEL_ID);
+	var radio_channel = newMember? newMember.client.channels.find(val => val.id == SELECTED_VOICE) : oldMember.client.channels.find(val => val.id == SELECTED_VOICE);
 	var cy_channel = radio_channel.connection.client.channels.find(val => val.id == CY_CHANNEL_ID);
 	if (oldUserChannel === undefined && newUserChannel !== undefined) {
     // User Joins a voice channel
@@ -65,7 +65,7 @@ const messageCallback = (msg) => {
 			msg.channel.send('You must specify a number (0-9)');
 			return;
 		}
-		var radio_channel = msg.client.channels.find(val => val.id == TARGET_CHANNEL_ID);
+		var radio_channel = msg.client.channels.find(val => val.id == SELECTED_VOICE);
 		addLink(radio_channel, msg, msg.client, result_data[num]["link"]);
 		msg.client.removeListener('message', messageCallback);
 		clearTimeout(searchTimeout);
@@ -81,7 +81,7 @@ function outOfBounds(num) {
 function handleMessage(msg, client) {
 	selectChannel(msg);
 	if (isBannedChannel(msg.client.id)) return;
-	var radio_channel = client.channels.find(val => val.id == TARGET_CHANNEL_ID);
+	var radio_channel = client.channels.find(val => val.id == SELECTED_VOICE);
 	
 	if (!radio_channel) {
 		msg.channel.send('Designated voice channel not found.');
@@ -181,7 +181,7 @@ function addLink(radio_channel, msg, client, url) {
 			ytdl.getInfo(url,{ filter : 'audioonly' }, function (err, info) {
 			if (err) msg.channel.send('Error getting video info');
 			else {
-				msg.channel.send('Now playing in the <#'+TARGET_CHANNEL_ID+'> voice channel: '+info["title"]);
+				msg.channel.send('Now playing in the <#'+SELECTED_VOICE+'> voice channel: '+info["title"]);
 				}
 			});
 			client.on('voiceStateUpdate', voiceCallback);
@@ -263,7 +263,7 @@ function processSearch(client,msg,args) {
 
 function firstResult(client,msg,args) {
 	var str = args.join(' ');
-	var radio_channel = client.channels.find(val => val.id == TARGET_CHANNEL_ID);
+	var radio_channel = client.channels.find(val => val.id == SELECTED_VOICE);
 	search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
 		if (results[0]) addLink(radio_channel,msg,client,results[0]["link"]);
 		else msg.channel.send('Invalid search result. Please try again.');
