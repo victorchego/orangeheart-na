@@ -130,6 +130,9 @@ function handleMessage(msg, client) {
 		msg.channel.send(str);
 		return;
 	}
+	else if (cmd == "remove" || cmd == "r") {
+		removeResult(msg, args);
+	}
 	else if (cmd == "loop" || cmd == "l") {
 		loop = !loop;
 		var str = loop ? "Loop enabled for queue" : "Loop disabled for queue";
