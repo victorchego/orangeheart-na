@@ -280,7 +280,7 @@ function firstResult(client,msg,args) {
 function removeResult(msg,args) {
 	var str = args.join(' ');
 	var i = titles.findIndex(val => val.toLowerCase().includes(str.toLowerCase()));
-	if (i) {
+	if (i>-1) {
 		var t = titles[i];
 		queue.splice(i,1);
 		titles.splice(i,1);
