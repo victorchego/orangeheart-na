@@ -274,6 +274,19 @@ function firstResult(client,msg,args) {
 	});
 }
 
+function removeResult(msg,args) {
+	var str = args.join(' ');
+	var i = titles.find(val => val.includes(str));
+	if (i) {
+		queue.splice(i,1);
+		titles.splice(i,1);
+		msg.channel.send("Removed item from queue");
+	}
+	else {
+		msg.channel.send("Could not find item from queue. Please make sure the spelling(s) are correct");
+	}
+}
+
 function selectChannel(msg) {
 	SELECTED_CHANNEL = msg.channel.id;
 	SELECTED_SERVER = msg.guild.id;
