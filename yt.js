@@ -279,11 +279,12 @@ function firstResult(client,msg,args) {
 
 function removeResult(msg,args) {
 	var str = args.join(' ');
-	var i = titles.findIndex(val => val.toLowerCase().includes(str));
+	var i = titles.findIndex(val => val.toLowerCase().includes(str.toLowerCase()));
 	if (i) {
+		var t = titles[i];
 		queue.splice(i,1);
 		titles.splice(i,1);
-		msg.channel.send("Removed item from queue");
+		msg.channel.send(`Removed ${t} from queue`);
 	}
 	else {
 		msg.channel.send("Could not find item from queue. Please make sure the spelling(s) are correct");
