@@ -65,6 +65,7 @@ var titles = [];
 var result_data = null;
 
 const voiceCallback = (oldMember, newMember) => {
+	selectChannel(msg);
 	var newUserChannel = newMember.voiceChannel;
 	var oldUserChannel = oldMember.voiceChannel;
 	var radio_channel = newMember? newMember.client.channels.find(val => val.id == SELECTED_VOICE) : oldMember.client.channels.find(val => val.id == SELECTED_VOICE);
@@ -89,6 +90,7 @@ const voiceCallback = (oldMember, newMember) => {
 }
 
 const messageCallback = (msg) => {
+	selectChannel(msg);
 	if (msg.content.toLowerCase().startsWith('!sel')) {
 		var num = msg.content.substring(4).trim();
 		if (outOfBounds(num)) {
