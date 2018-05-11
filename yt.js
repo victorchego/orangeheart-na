@@ -74,6 +74,8 @@ const voiceCallback = (oldMember, newMember) => {
 	else if(newUserChannel === undefined){
     // User leaves a voice channel
 		if (oldUserChannel.members.size == 1) {
+			console.log(oldUserChannel.guild.id);
+			console.log(radios.keys());
 			radios[oldUserChannel.guild.id]["dispatcher"].end();
 			radios[oldUserChannel.guild.id]["dispatcher"] = null;
 			oldUserChannel.leave();
