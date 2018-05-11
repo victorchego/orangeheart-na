@@ -70,14 +70,14 @@ const voiceCallback = (oldMember, newMember) => {
 	var radio_channel = newMember? newUserChannel : oldUserChannel;
 	if (!radio_channel) return;
 	//var cy_channel = radio_channel.connection.client.channels.find(val => val.id == SELECTED_CHANNEL);
+	console.log(radio_channel.members.size);
+	console.log(oldUserChannel.members.size);
 	if (oldUserChannel === undefined && newUserChannel !== undefined) {
     // User Joins a voice channel
 		return;
 	} 
 	else if(newUserChannel === undefined){
     // User leaves a voice channel
-		console.log(radio_channel.members.size);
-		console.log(oldUserChannel.members.size);
 		if (radio_channel.members.size == 1) {
 			radios[radio_channel.guild.id]["dispatcher"].end();
 			radios[radio_channel.guild.id]["dispatcher"] = null;
