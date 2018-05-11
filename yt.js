@@ -67,28 +67,28 @@ var result_data = null;
 const voiceCallback = (oldMember, newMember) => {
 	var newUserChannel = newMember.voiceChannel;
 	var oldUserChannel = oldMember.voiceChannel;
+	var radio_channel = newMember? newMember.client.channels.find(val => val.id == SELECTED_VOICE) : oldMember.client.channels.find(val => val.id == SELECTED_VOICE);
+	if (!radio_channel) return;
+	//var cy_channel = radio_channel.connection.client.channels.find(val => val.id == SELECTED_CHANNEL);
 	if (oldUserChannel === undefined && newUserChannel !== undefined) {
     // User Joins a voice channel
 		return;
 	} 
 	else if(newUserChannel === undefined){
     // User leaves a voice channel
-		if (oldUserChannel.members.size == 1) {
-			console.log(oldUserChannel.guild.id);
-			console.log(radios[oldUserChannel.guild.id]);
-			radios[oldUserChannel.guild.id]["dispatcher"].end();
-			radios[oldUserChannel.guild.id]["dispatcher"] = null;
-			oldUserChannel.leave();
-			radios[oldUserChannel.guild.id]["queue"] = [];
-			radios[oldUserChannel.guild.id]["titles"] = [];
-			oldUserChannel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
+		if (radio_channel.members.size == 1) {
+			dispatcher.end();
+			dispatcher = null;
+			radio_channel.leave();
+			queue = [];
+			titles = [];
+			radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 			return;
 		}
 	}
 }
 
 const messageCallback = (msg) => {
-	selectChannel(msg);
 	if (msg.content.toLowerCase().startsWith('!sel')) {
 		var num = msg.content.substring(4).trim();
 		if (outOfBounds(num)) {
@@ -96,11 +96,11 @@ const messageCallback = (msg) => {
 			return;
 		}
 		var radio_channel = msg.client.channels.find(val => val.id == SELECTED_VOICE);
-		addLink(radio_channel, msg, msg.client, radios[SELECTED_SERVER]["result_data"][num]["link"]);
+		addLink(radio_channel, msg, msg.client, result_data[num]["link"]);
 		msg.client.removeListener('message', messageCallback);
-		clearTimeout(radios[SELECTED_SERVER]["searchTimeout"]);
-		radios[SELECTED_SERVER]["searchTimeout"] = null;
-		radios[SELECTED_SERVER]["result_data"] = null;
+		clearTimeout(searchTimeout);
+		searchTimeout = null;
+		result_data = null;
 	}
 }
 
@@ -111,10 +111,7 @@ function outOfBounds(num) {
 function handleMessage(msg, client) {
 	selectChannel(msg);
 	if (isBannedChannel(msg.client.id)) return;
-	if (!(SELECTED_SERVER in radios)) {
-		addRadio(SELECTED_SERVER);
-	}
-	if (radios[SELECTED_SERVER]["dispatcher"] && radios[SELECTED_SERVER]["dispatcher"].player.voiceConnection.channel.id != SELECTED_VOICE) {
+	if (dispatcher && dispatcher.player.voiceConnection.channel.id != SELECTED_VOICE) {
 		msg.channel.send("Cy's radio is being used elsewhere");
 		return;
 	}
@@ -138,11 +135,11 @@ function handleMessage(msg, client) {
     args = args.splice(1);
 	
 	if (cmd == "disconnect" || cmd == "dc" || cmd == "stop") {
-		radios[SELECTED_SERVER]["queue"] = [];
-		radios[SELECTED_SERVER]["titles"] = [];
-		if (radios[SELECTED_SERVER]["dispatcher"]) {
-			radios[SELECTED_SERVER]["dispatcher"].end();
-			radios[SELECTED_SERVER]["dispatcher"] = null;
+		queue = [];
+		titles = [];
+		if (dispatcher) {
+			dispatcher.end();
+			dispatcher = null;
 		}
 		radio_channel.leave();
 		return;
@@ -156,8 +153,8 @@ function handleMessage(msg, client) {
 	}
 	else if (cmd == "queue" || cmd == "q") {
 		var str = 'Queued videos: ```\n';
-		for (t in radios[SELECTED_SERVER]["titles"]) {
-			str += radios[SELECTED_SERVER]["titles"][t]+'\n';
+		for (t in titles) {
+			str += titles[t]+'\n';
 		}
 		str += '```';
 		msg.channel.send(str);
@@ -167,17 +164,17 @@ function handleMessage(msg, client) {
 		removeResult(msg, args);
 	}
 	else if (cmd == "loop" || cmd == "l") {
-		radios[SELECTED_SERVER]["loop"] = !radios[SELECTED_SERVER]["loop"];
-		var str = radios[SELECTED_SERVER]["loop"] ? "Loop enabled for queue" : "Loop disabled for queue";
+		loop = !loop;
+		var str = loop ? "Loop enabled for queue" : "Loop disabled for queue";
 		msg.channel.send(str);
 	}
 	else if (cmd == "next" || cmd == "n") {
-		if (radios[SELECTED_SERVER]["queue"].length == 0) {
+		if (queue.length == 0) {
 			msg.channel.send('Queue is empty');
 			return;
 		}
-		if (radios[SELECTED_SERVER]["dispatcher"]) {
-			radios[SELECTED_SERVER]["dispatcher"].end();
+		if (dispatcher) {
+			dispatcher.end();
 			return;
 		}
 		else {
@@ -209,15 +206,15 @@ function addLink(radio_channel, msg, client, url) {
 			if (err) msg.channel.send('Error getting video info');
 			else {
 				msg.channel.send('Video queued: '+info["title"]);
-				radios[SELECTED_SERVER]["queue"].push(url);
-				radios[SELECTED_SERVER]["titles"].push(info["title"]);
+				queue.push(url);
+				titles.push(info["title"]);
 			}
 		});
 		return;
 	}
 	else {
 		radio_channel.join().then(connection => {
-			radios[SELECTED_SERVER]["loop"] = false;
+			loop = false;
 			ytdl.getInfo(url,{ filter : 'audioonly' }, function (err, info) {
 			if (err) msg.channel.send('Error getting video info');
 			else {
@@ -226,12 +223,8 @@ function addLink(radio_channel, msg, client, url) {
 			});
 			client.on('voiceStateUpdate', voiceCallback);
 			stream = ytdl(url, { filter : 'audioonly' });
-					console.log(radios[SELECTED_SERVER]);
-		console.log(SELECTED_SERVER+'\n\n\n\n\n\n');
-			radios[SELECTED_SERVER]["dispatcher"] = connection.playStream(stream, streamOptions);
-					console.log(radios[SELECTED_SERVER]);
-		console.log(SELECTED_SERVER+'\n\n\n\n\n\n');
-			radios[SELECTED_SERVER]["dispatcher"].once("end", reason => {
+			dispatcher = connection.playStream(stream, streamOptions);
+			dispatcher.once("end", reason => {
 				playNext(radio_channel);
 			});
 		}).catch(err => console.log(err));
@@ -242,38 +235,38 @@ function playNext(radio_channel) {
 	var text_channel = radio_channel.connection.client.channels.find(val => val.id == SELECTED_CHANNEL);
 	if (radio_channel.members.size == 1) {
 		text_channel.send('Queue terminated due to no listeners');
-		radios[SELECTED_SERVER]["dispatcher"].end();
-		radios[SELECTED_SERVER]["dispatcher"] = null;
+		dispatcher.end();
+		dispatcher = null;
 		radio_channel.leave();
-		radios[SELECTED_SERVER]["queue"] = [];
-		radios[SELECTED_SERVER]["titles"] = [];
+		queue = [];
+		titles = [];
 		radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		return;
 	}
-	if (radios[SELECTED_SERVER]["queue"].length == 0) {
+	if (queue.length == 0) {
 		radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		text_channel.send('Queue has terminated');
-		radios[SELECTED_SERVER]["dispatcher"] = null;
+		dispatcher = null;
 		radio_channel.leave();
 	}
 	else {
-		var url = radios[SELECTED_SERVER]["queue"].shift();
-		var title = radios[SELECTED_SERVER]["titles"].shift();
-		if (radios[SELECTED_SERVER]["loop"]) {
-			radios[SELECTED_SERVER]["queue"].push(url);
-			radios[SELECTED_SERVER]["titles"].push(title);
+		var url = queue.shift();
+		var title = titles.shift();
+		if (loop) {
+			queue.push(url);
+			titles.push(title);
 		}
 		text_channel.send('Now playing: '+title);
 		stream = ytdl(url, { filter : 'audioonly' });
-		radios[SELECTED_SERVER]["dispatcher"] = radio_channel.connection.playStream(stream, streamOptions);
-		radios[SELECTED_SERVER]["dispatcher"].once("end", reason => {
+		dispatcher = radio_channel.connection.playStream(stream, streamOptions);
+		dispatcher.once("end", reason => {
 			playNext(radio_channel);
 		});
 	}
 }
 
 function processSearch(client,msg,args) {
-	if (radios[SELECTED_SERVER]["searchTimeout"]) {
+	if (searchTimeout) {
 		msg.channel.send('There is an active search. Please wait until that search is finished');
 		return;
 	}
@@ -287,7 +280,7 @@ function processSearch(client,msg,args) {
 		for (i in results) {
 			titles += i + ". " + results[i]["title"] + "\n";
 		}
-		radios[SELECTED_SERVER]["result_data"] = results;
+		result_data = results;
 		if (!results.length) {
 			msg.channel.send('There is no search result');
 			return;
@@ -295,12 +288,12 @@ function processSearch(client,msg,args) {
 		titles += "```";
 		msg.channel.send(titles);
 		client.on('message', messageCallback);
-		radios[SELECTED_SERVER]["searchTimeout"] = setTimeout(function() {
+		searchTimeout = setTimeout(function() {
 			msg.channel.send('Search timed out. Please try again.');
 			client.removeListener('message', messageCallback);
 			clearTimeout(searchTimeout);
-			radios[SELECTED_SERVER]["searchTimeout"] = null;
-			radios[SELECTED_SERVER]["result_data"] = null;
+			searchTimeout = null;
+			result_data = null;
 		},30000);
 	});
 }
@@ -316,11 +309,11 @@ function firstResult(client,msg,args) {
 
 function removeResult(msg,args) {
 	var str = args.join(' ');
-	var i = radios[SELECTED_SERVER]["titles"].findIndex(val => val.toLowerCase().includes(str.toLowerCase()));
+	var i = titles.findIndex(val => val.toLowerCase().includes(str.toLowerCase()));
 	if (i>-1) {
-		var t = radios[SELECTED_SERVER]["titles"][i];
-		radios[SELECTED_SERVER]["queue"].splice(i,1);
-		radios[SELECTED_SERVER]["titles"].splice(i,1);
+		var t = titles[i];
+		queue.splice(i,1);
+		titles.splice(i,1);
 		msg.channel.send(`Removed ${t} from queue`);
 	}
 	else {

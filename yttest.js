@@ -67,28 +67,28 @@ var result_data = null;
 const voiceCallback = (oldMember, newMember) => {
 	var newUserChannel = newMember.voiceChannel;
 	var oldUserChannel = oldMember.voiceChannel;
-	var radio_channel = newMember? newMember.client.channels.find(val => val.id == SELECTED_VOICE) : oldMember.client.channels.find(val => val.id == SELECTED_VOICE);
-	if (!radio_channel) return;
-	//var cy_channel = radio_channel.connection.client.channels.find(val => val.id == SELECTED_CHANNEL);
 	if (oldUserChannel === undefined && newUserChannel !== undefined) {
     // User Joins a voice channel
 		return;
 	} 
 	else if(newUserChannel === undefined){
     // User leaves a voice channel
-		if (radio_channel.members.size == 1) {
-			radios[SELECTED_SERVER]["dispatcher"].end();
-			radios[SELECTED_SERVER]["dispatcher"] = null;
-			radio_channel.leave();
-			radios[SELECTED_SERVER]["queue"] = [];
-			radios[SELECTED_SERVER]["titles"] = [];
-			radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
+		if (oldUserChannel.members.size == 1) {
+			console.log(oldUserChannel.guild.id);
+			console.log(radios[oldUserChannel.guild.id]);
+			radios[oldUserChannel.guild.id]["dispatcher"].end();
+			radios[oldUserChannel.guild.id]["dispatcher"] = null;
+			oldUserChannel.leave();
+			radios[oldUserChannel.guild.id]["queue"] = [];
+			radios[oldUserChannel.guild.id]["titles"] = [];
+			oldUserChannel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 			return;
 		}
 	}
 }
 
 const messageCallback = (msg) => {
+	selectChannel(msg);
 	if (msg.content.toLowerCase().startsWith('!sel')) {
 		var num = msg.content.substring(4).trim();
 		if (outOfBounds(num)) {
@@ -226,7 +226,11 @@ function addLink(radio_channel, msg, client, url) {
 			});
 			client.on('voiceStateUpdate', voiceCallback);
 			stream = ytdl(url, { filter : 'audioonly' });
+					console.log(radios[SELECTED_SERVER]);
+		console.log(SELECTED_SERVER+'\n\n\n\n\n\n');
 			radios[SELECTED_SERVER]["dispatcher"] = connection.playStream(stream, streamOptions);
+					console.log(radios[SELECTED_SERVER]);
+		console.log(SELECTED_SERVER+'\n\n\n\n\n\n');
 			radios[SELECTED_SERVER]["dispatcher"].once("end", reason => {
 				playNext(radio_channel);
 			});
