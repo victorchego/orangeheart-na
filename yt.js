@@ -67,10 +67,6 @@ var result_data = null;
 const voiceCallback = (oldMember, newMember) => {
 	var newUserChannel = newMember.voiceChannel;
 	var oldUserChannel = oldMember.voiceChannel;
-	var radio_channel = newMember? newUserChannel : oldUserChannel;
-	if (!radio_channel) return;
-	//var cy_channel = radio_channel.connection.client.channels.find(val => val.id == SELECTED_CHANNEL);
-	console.log(radio_channel.members.size);
 	console.log(oldUserChannel.members.size);
 	if (oldUserChannel === undefined && newUserChannel !== undefined) {
     // User Joins a voice channel
@@ -78,13 +74,13 @@ const voiceCallback = (oldMember, newMember) => {
 	} 
 	else if(newUserChannel === undefined){
     // User leaves a voice channel
-		if (radio_channel.members.size == 1) {
-			radios[radio_channel.guild.id]["dispatcher"].end();
-			radios[radio_channel.guild.id]["dispatcher"] = null;
-			radio_channel.leave();
-			radios[radio_channel.guild.id]["queue"] = [];
-			radios[radio_channel.guild.id]["titles"] = [];
-			radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
+		if (oldUserChannel.members.size == 1) {
+			radios[oldUserChannel.guild.id]["dispatcher"].end();
+			radios[oldUserChannel.guild.id]["dispatcher"] = null;
+			oldUserChannel.leave();
+			radios[oldUserChannel.guild.id]["queue"] = [];
+			radios[oldUserChannel.guild.id]["titles"] = [];
+			oldUserChannel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 			return;
 		}
 	}
