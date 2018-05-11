@@ -74,7 +74,8 @@ const voiceCallback = (oldMember, newMember) => {
 	else if(newUserChannel === undefined){
     // User leaves a voice channel
 		if (oldUserChannel.members.size == 1) {
-			//console.log(radios[oldUserChannel.guild.id]);
+			console.log(oldUserChannel.guild.id);
+			console.log(radios[oldUserChannel.guild.id]);
 			radios[oldUserChannel.guild.id]["dispatcher"].end();
 			radios[oldUserChannel.guild.id]["dispatcher"] = null;
 			oldUserChannel.leave();
@@ -226,10 +227,10 @@ function addLink(radio_channel, msg, client, url) {
 			client.on('voiceStateUpdate', voiceCallback);
 			stream = ytdl(url, { filter : 'audioonly' });
 					console.log(radios[SELECTED_SERVER]);
-		console.log('\n\n\n\n\n\n');
+		console.log(SELECTED_SERVER+'\n\n\n\n\n\n');
 			radios[SELECTED_SERVER]["dispatcher"] = connection.playStream(stream, streamOptions);
 					console.log(radios[SELECTED_SERVER]);
-		console.log('\n\n\n\n\n\n');
+		console.log(SELECTED_SERVER+'\n\n\n\n\n\n');
 			radios[SELECTED_SERVER]["dispatcher"].once("end", reason => {
 				playNext(radio_channel);
 			});
