@@ -67,7 +67,7 @@ var result_data = null;
 const voiceCallback = (oldMember, newMember) => {
 	var newUserChannel = newMember.voiceChannel;
 	var oldUserChannel = oldMember.voiceChannel;
-	var radio_channel = newMember? newUserChannel : oldUserChannel);
+	var radio_channel = newMember? newUserChannel : oldUserChannel;
 	if (!radio_channel) return;
 	//var cy_channel = radio_channel.connection.client.channels.find(val => val.id == SELECTED_CHANNEL);
 	if (oldUserChannel === undefined && newUserChannel !== undefined) {
