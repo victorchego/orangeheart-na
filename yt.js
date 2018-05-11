@@ -111,7 +111,7 @@ function outOfBounds(num) {
 function handleMessage(msg, client) {
 	selectChannel(msg);
 	if (isBannedChannel(msg.client.id)) return;
-	if (!SELECTED_SERVER in radios) {
+	if (!(SELECTED_SERVER in radios)) {
 		addRadio(SELECTED_SERVER);
 	}
 	if (radios[SELECTED_SERVER]["dispatcher"] && radios[SELECTED_SERVER]["dispatcher"].player.voiceConnection.channel.id != SELECTED_VOICE) {
