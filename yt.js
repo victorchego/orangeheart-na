@@ -225,7 +225,11 @@ function addLink(radio_channel, msg, client, url) {
 			});
 			client.on('voiceStateUpdate', voiceCallback);
 			stream = ytdl(url, { filter : 'audioonly' });
+					console.log(radios[SELECTED_SERVER]);
+		console.log('\n\n\n\n\n\n');
 			radios[SELECTED_SERVER]["dispatcher"] = connection.playStream(stream, streamOptions);
+					console.log(radios[SELECTED_SERVER]);
+		console.log('\n\n\n\n\n\n');
 			radios[SELECTED_SERVER]["dispatcher"].once("end", reason => {
 				playNext(radio_channel);
 			});
@@ -260,10 +264,7 @@ function playNext(radio_channel) {
 		}
 		text_channel.send('Now playing: '+title);
 		stream = ytdl(url, { filter : 'audioonly' });
-		console.log(radios[SELECTED_SERVER]);
-		console.log('\n\n\n\n\n\n');
 		radios[SELECTED_SERVER]["dispatcher"] = radio_channel.connection.playStream(stream, streamOptions);
-		console.log(radios[SELECTED_SERVER]);
 		radios[SELECTED_SERVER]["dispatcher"].once("end", reason => {
 			playNext(radio_channel);
 		});
