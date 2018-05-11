@@ -76,6 +76,8 @@ const voiceCallback = (oldMember, newMember) => {
 	} 
 	else if(newUserChannel === undefined){
     // User leaves a voice channel
+		console.log(radio_channel.members.size);
+		console.log(oldUserChannel.members.size);
 		if (radio_channel.members.size == 1) {
 			radios[radio_channel.guild.id]["dispatcher"].end();
 			radios[radio_channel.guild.id]["dispatcher"] = null;
@@ -115,8 +117,6 @@ function handleMessage(msg, client) {
 	if (!(SELECTED_SERVER in radios)) {
 		addRadio(SELECTED_SERVER);
 	}
-	console.log(radios);
-	console.log(radios[SELECTED_SERVER]);
 	if (radios[SELECTED_SERVER]["dispatcher"] && radios[SELECTED_SERVER]["dispatcher"].player.voiceConnection.channel.id != SELECTED_VOICE) {
 		msg.channel.send("Cy's radio is being used elsewhere");
 		return;
