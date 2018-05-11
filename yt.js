@@ -74,8 +74,7 @@ const voiceCallback = (oldMember, newMember) => {
 	else if(newUserChannel === undefined){
     // User leaves a voice channel
 		if (oldUserChannel.members.size == 1) {
-			console.log(oldUserChannel.guild.id);
-			console.log(Object.keys(radios));
+			console.log(radios[oldUserChannel.guild.id]);
 			radios[oldUserChannel.guild.id]["dispatcher"].end();
 			radios[oldUserChannel.guild.id]["dispatcher"] = null;
 			oldUserChannel.leave();
@@ -261,7 +260,9 @@ function playNext(radio_channel) {
 		}
 		text_channel.send('Now playing: '+title);
 		stream = ytdl(url, { filter : 'audioonly' });
+		console.log(radios[SELECTED_SERVER]);
 		radios[SELECTED_SERVER]["dispatcher"] = radio_channel.connection.playStream(stream, streamOptions);
+		console.log(radios[SELECTED_SERVER]);
 		radios[SELECTED_SERVER]["dispatcher"].once("end", reason => {
 			playNext(radio_channel);
 		});
