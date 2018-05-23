@@ -365,6 +365,8 @@ var SOUL_ERR = "No data found. Please make sure you use one of the following for
 				return line[3]+' triple boost';
 			case 'gacha':
 				return line[3]+' gacha';
+			case 'ht':
+				return line[3]+' heart troops';
 			case 'nf':
 				return 'NF delight';
 			case 'fm':
