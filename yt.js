@@ -13,11 +13,20 @@ var BANNED_CHANNELS = [];
 
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
-var opts = {
+var opts_default = {
 	maxResults: 10,
 	type: 'video',
 	key: YOUTUBE_API_KEY
 };
+
+var opts_JP = {
+	maxResults: 10,
+	type: 'video',
+	key: YOUTUBE_API_KEY,
+	regionCode: 'JP'
+};
+
+var opts = opts_default;
 
 const ytdl = require('ytdl-core');
 const streamOptions = { seek: 0, volume: 1 };
