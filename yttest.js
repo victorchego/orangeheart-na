@@ -13,11 +13,20 @@ var BANNED_CHANNELS = [];
 
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
-var opts = {
+var opts_default = {
 	maxResults: 10,
 	type: 'video',
 	key: YOUTUBE_API_KEY
 };
+
+var opts_JP = {
+	maxResults: 10,
+	type: 'video',
+	key: YOUTUBE_API_KEY,
+	regionCode: 'JP'
+};
+
+var opts = opts_default;
 
 const ytdl = require('ytdl-core');
 const streamOptions = { seek: 0, volume: 1 };
@@ -148,8 +157,18 @@ function handleMessage(msg, client) {
 		return;
 	}
 	else if (cmd == "commands") {
-		msg.channel.send("```!yt commands/queue/q/next/n/disconnect/dc/stop/loop/l\n!yt play/p/search/s youtube_url/search_words```");
+		msg.channel.send("```!yt commands/queue/q/next/n/disconnect/dc/stop/loop/l/region\n!yt play/p/search/s youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
 		return;
+	}
+	else if (cmd == "region") {
+		if (opts == opts_default) {
+			opts = opts_JP;
+			msg.channel.send('Region has been set to Japan');
+		}
+		else {
+			opts = opts_default;
+			msg.channel.send('Region has been set to default');
+		}
 	}
 	else if (cmd == "search" || cmd == "s") {
 		processSearch(client, msg, args);
