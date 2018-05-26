@@ -309,6 +309,8 @@ function firstResult(client,msg,args) {
 	var str = args.join(' ');
 	var radio_channel = client.channels.find(val => val.id == SELECTED_VOICE);
 	search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
+		console.log(err);
+		console.log(results);
 		if (results[0]) addLink(radio_channel,msg,client,results[0]["link"]);
 		else msg.channel.send('Invalid search result. Please try again.');
 	});
