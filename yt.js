@@ -19,11 +19,11 @@ var opts_default = {
 	key: YOUTUBE_API_KEY
 };
 
-var opts_JP = {
+var opts_TW = {
 	maxResults: 10,
 	type: 'video',
 	key: YOUTUBE_API_KEY,
-	regionCode: 'JP'
+	regionCode: 'TW'
 };
 
 var opts = opts_default;
@@ -160,8 +160,8 @@ function handleMessage(msg, client) {
 	}
 	else if (cmd == "region") {
 		if (opts == opts_default) {
-			opts = opts_JP;
-			msg.channel.send('Region has been set to Japan');
+			opts = opts_TW;
+			msg.channel.send('Region has been set to TW');
 		}
 		else {
 			opts = opts_default;
