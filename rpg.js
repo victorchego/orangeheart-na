@@ -132,7 +132,8 @@ function randomCookies(msg) {
 }
 
 function checkPlayer(msg) {
-	return msg.author.id in JSON_DATA[msg.channel.id];
+	var channel = JSON_DATA.find(function(channel){return JSON_DATA[channel].indexOf(msg.author.id) > -1;});
+	return msg.author.id in JSON_DATA[channel];
 }
 
 function viewPlayers(msg) {
