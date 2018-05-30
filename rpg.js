@@ -404,6 +404,7 @@ function updatePropertyAll(msg, key, value) {
 
 function loadDataFromWeb(msg) {
 	request(JSON_URL, function (err, response, data) {
+		console.log(JSON_URL);
 		if (err) {
 			console.log("Error has occurred: "+error);
 			return;
