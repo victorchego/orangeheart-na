@@ -126,13 +126,13 @@ function randomCookies(msg) {
 		return;
 	}
 	var val = Math.floor((Math.random() * 10) + 1);
-	var channel = Object.keys(JSON_DATA).find(function(channel){return JSON_DATA[channel].indexOf(msg.author.id) > -1;});
+	var channel = Object.keys(JSON_DATA).find(function(channel){return msg.author.id in JSON_DATA[channel];});
 	JSON_DATA[channel][msg.author.id]["cookies"]+=val;
 	msg.channel.send(`${msg.author} You have gained ${val} cookies`);
 }
 
 function checkPlayer(msg) {
-	var channel = Object.keys(JSON_DATA).find(function(channel){return JSON_DATA[channel].indexOf(msg.author.id) > -1;});
+	var channel = Object.keys(JSON_DATA).find(function(channel){return msg.author.id in JSON_DATA[channel];});
 	return msg.author.id in JSON_DATA[channel];
 }
 
