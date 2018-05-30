@@ -405,17 +405,17 @@ function updatePropertyAll(msg, key, value) {
 	}
 }
 
-function loadDataFromWeb(msg) {
+function loadDataFromWeb(server_id) {
 	request(JSON_URL, function (err, response, data) {
 		if (err) {
 			console.log("Error has occurred: "+error);
 			return;
 		}	
 		if (data==null) {
-			JSON_DATA[msg.channel.id] = {};
+			JSON_DATA[server_id] = {};
 			return;
 		}
-		JSON_DATA[msg.channel.id] = JSON.parse(data);
+		JSON_DATA[server_id] = JSON.parse(data);
 	});
 }
 
@@ -432,7 +432,9 @@ function resetGame(msg) {
 
 function startUp(msg) {
 	if (JSON_DATA[CY_CHANNEL_ID]==null) {
-		loadDataFromWeb(msg);
+		for (server in Object.keys(JSON_DATA)) {
+			loadDataFromWeb(Object.keys(JSON_DATA)[server]);
+		}
 	}
 	var current_time = new Date();
 	if (current_time.getMinutes()!=0 || current_time.getSeconds()!=0) {
@@ -550,9 +552,6 @@ function handleMessage(msg) {
 	
 	JSON_URL = JSON_LINKS[msg.channel.id];	
 	
-	if (JSON_DATA[CY_CHANNEL_ID]==null) {
-		loadDataFromWeb(msg);
-	}
 	if (cmd == "test") {
 		msg.channel.send("Test succeeded");
 	}
@@ -577,7 +576,7 @@ function handleMessage(msg) {
 			msg.channel.send("You aren't authorized to use this command");
 			return;
 		}
-		loadDataFromWeb(msg);
+		loadDataFromWeb(msg.channel.id);
 		msg.channel.send("Loaded state from server");
 	}
 	else if (cmd == "reset") {
