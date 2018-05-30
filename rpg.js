@@ -132,6 +132,7 @@ function randomCookies(msg) {
 }
 
 function checkPlayer(msg) {
+	console.log(JSON_DATA);
 	var channel = JSON_DATA.keys().find(function(channel){return JSON_DATA[channel].indexOf(msg.author.id) > -1;});
 	return msg.author.id in JSON_DATA[channel];
 }
@@ -404,6 +405,7 @@ function updatePropertyAll(msg, key, value) {
 }
 
 function loadDataFromWeb(msg) {
+	console.log(JSON_DATA);
 	request(JSON_URL, function (err, response, data) {
 		if (err) {
 			console.log("Error has occurred: "+error);
@@ -547,9 +549,11 @@ function handleMessage(msg) {
 	}
 	
 	JSON_URL = JSON_LINKS[msg.channel.id];	
+	
 	if (JSON_DATA[CY_CHANNEL_ID]==null) {
 		loadDataFromWeb(msg);
 	}
+	console.log(JSON_DATA);
 	if (cmd == "test") {
 		msg.channel.send("Test succeeded");
 	}
