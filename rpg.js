@@ -184,7 +184,7 @@ function viewProfile(msg) {
 		msg.channel.send("You are not a RPG participant");
 		return;
 	}
-	updateStats(msg.author.id);
+	updateStats(msg.channel.id,msg.author.id);
 	var str = '';
 	str += msg.author+"'s profile:```";
 	str += "\nCookies: "+JSON_DATA[msg.channel.id][msg.author.id]["cookies"];
@@ -200,9 +200,9 @@ function viewProfile(msg) {
 }
 
 function updateStats(server_id, player_id) {
-	JSON_DATA[server_id][player_id]["atk"] = calcAtk(id);
-	JSON_DATA[server_id][player_id]["def"] = calcDef(id);
-	JSON_DATA[server_id][player_id]["steal"] = calcSteal(id);
+	JSON_DATA[server_id][player_id]["atk"] = calcAtk(player_id);
+	JSON_DATA[server_id][player_id]["def"] = calcDef(player_id);
+	JSON_DATA[server_id][player_id]["steal"] = calcSteal(player_id);
 }
 
 function filterItems(id, type, value) {
