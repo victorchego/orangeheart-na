@@ -126,7 +126,7 @@ function randomCookies(msg) {
 		return;
 	}
 	var val = Math.floor((Math.random() * 10) + 1);
-	var channel = JSON_DATA.keys().find(function(channel){return JSON_DATA[channel].indexOf(msg.author.id) > -1;});
+	var channel = JSON_DATA.find(function(channel){return JSON_DATA[channel].indexOf(msg.author.id) > -1;});
 	JSON_DATA[channel][msg.author.id]["cookies"]+=val;
 	msg.channel.send(`${msg.author} You have gained ${val} cookies`);
 }
@@ -405,7 +405,6 @@ function updatePropertyAll(msg, key, value) {
 }
 
 function loadDataFromWeb(msg) {
-	console.log(JSON_DATA);
 	request(JSON_URL, function (err, response, data) {
 		if (err) {
 			console.log("Error has occurred: "+error);
@@ -553,7 +552,6 @@ function handleMessage(msg) {
 	if (JSON_DATA[CY_CHANNEL_ID]==null) {
 		loadDataFromWeb(msg);
 	}
-	console.log(JSON_DATA);
 	if (cmd == "test") {
 		msg.channel.send("Test succeeded");
 	}
