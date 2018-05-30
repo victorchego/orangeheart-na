@@ -132,7 +132,6 @@ function randomCookies(msg) {
 }
 
 function checkPlayer(msg) {
-	console.log(Object.keys(JSON_DATA));
 	var channel = Object.keys(JSON_DATA).find(channel => Object.keys(JSON_DATA[channel]).indexOf(msg.author.id)>-1);
 	if (!channel) return false;
 	return msg.author.id in JSON_DATA[channel];
@@ -200,10 +199,10 @@ function viewProfile(msg) {
 	msg.channel.send(str);
 }
 
-function updateStats(id) {
-	JSON_DATA[msg.channel.id][id]["atk"] = calcAtk(id);
-	JSON_DATA[msg.channel.id][id]["def"] = calcDef(id);
-	JSON_DATA[msg.channel.id][id]["steal"] = calcSteal(id);
+function updateStats(server_id, player_id) {
+	JSON_DATA[server_id][player_id]["atk"] = calcAtk(id);
+	JSON_DATA[server_id][player_id]["def"] = calcDef(id);
+	JSON_DATA[server_id][player_id]["steal"] = calcSteal(id);
 }
 
 function filterItems(id, type, value) {
@@ -246,7 +245,7 @@ function buyItems(msg, name, count=1) {
 		current_item["count"]+=parseInt(count);
 	}
 	JSON_DATA[msg.channel.id][msg.author.id]["cookies"]-=cost;
-	updateStats(msg.author.id);
+	updateStats(msg.channel.id,msg.author.id);
 	msg.channel.send(`${msg.author} You have bought ${count} ${name}(s)`);
 }
 
@@ -289,7 +288,7 @@ function hireMerc(msg, name) {
 		return;
 	}
 	JSON_DATA[msg.channel.id][msg.author.id]["cookies"]-=cost;
-	updateStats(msg.author.id);
+	updateStats(msg.channel.id,msg.author.id);
 	msg.channel.send(`${msg.author} You have hired ${name}`);
 }
 
@@ -432,8 +431,10 @@ function resetGame(msg) {
 
 function startUp(msg) {
 	if (JSON_DATA[CY_CHANNEL_ID]==null) {
-		for (server in Object.keys(JSON_DATA)) {
-			loadDataFromWeb(Object.keys(JSON_DATA)[server]);
+		var server_list = Object.keys(JSON_DATA);
+		for (server in server_list) {
+			JSON_URL = JSON_LINKS[server_list[server]];
+			loadDataFromWeb(server_list[server]);
 		}
 	}
 	var current_time = new Date();
@@ -464,8 +465,11 @@ function hourlyUpdate(msg) {
 }
 
 function updateAll() {
-	for (id in JSON_DATA[msg.channel.id]) {
-		updateStats(id);
+	var server_list = Object.keys(JSON_DATA);
+	for (server in server_list) {
+		for (id in JSON_DATA[server_list[server]]) {
+			updateStats(server_list[server], id);
+		}
 	}
 }
 
