@@ -200,13 +200,13 @@ function viewProfile(msg) {
 }
 
 function updateStats(server_id, player_id) {
-	JSON_DATA[server_id][player_id]["atk"] = calcAtk(player_id);
-	JSON_DATA[server_id][player_id]["def"] = calcDef(player_id);
-	JSON_DATA[server_id][player_id]["steal"] = calcSteal(player_id);
+	JSON_DATA[server_id][player_id]["atk"] = calcAtk(server_id, player_id);
+	JSON_DATA[server_id][player_id]["def"] = calcDef(server_id, player_id);
+	JSON_DATA[server_id][player_id]["steal"] = calcSteal(server_id, player_id);
 }
 
-function filterItems(id, type, value) {
-	var items = JSON_DATA[msg.channel.id][id]["item"];
+function filterItems(server_id, player_id, type, value) {
+	var items = JSON_DATA[server_id][player_id]["item"];
 	var list = items.filter(function(item) {return item[type]==value;});
 	return list;
 }
@@ -292,27 +292,27 @@ function hireMerc(msg, name) {
 	msg.channel.send(`${msg.author} You have hired ${name}`);
 }
 
-function calcAtk(id) {
+function calcAtk(server_id, player_id) {
 	var result = 0;
-	var list = filterItems(id, "type", "atk");
+	var list = filterItems(server_id, player_id, "type", "atk");
 	for (i in list) {
 		result += list[i]["value"]*list[i]["count"];
 	}
 	return result;
 }
 
-function calcDef(id) {
+function calcDef(server_id, player_id) {
 	var result = 0;
-	var list = filterItems(id, "type", "def");
+	var list = filterItems(server_id, player_id, "type", "def");
 	for (i in list) {
 		result += list[i]["value"]*list[i]["count"];
 	}
 	return result;
 }
 
-function calcSteal(id) {
+function calcSteal(server_id, player_id) {
 	var result = 0;
-	var list = filterItems(id, "type", "steal");
+	var list = filterItems(server_id, player_id, "type", "steal");
 	for (i in list) {
 		result += list[i]["value"]*list[i]["count"];
 	}
