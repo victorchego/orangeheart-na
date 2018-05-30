@@ -116,8 +116,11 @@ function outOfBounds(num) {
 }
 
 function handleMessage(msg, client) {
-	selectChannel(msg);
-	if (isBannedChannel(msg.client.id)) return;
+	var valid_server = selectChannel(msg);
+	if (isBannedChannel(msg.client.id) || !valid_server) {
+		msg.channel.send("This server is either banned or unlisted from the bot's use. Please contact the bot's developer for more info.");
+		return;
+	}
 	if (!(SELECTED_SERVER in radios)) {
 		addRadio(SELECTED_SERVER);
 	}
@@ -347,13 +350,16 @@ function selectChannel(msg) {
 	switch (SELECTED_SERVER) {
 		case '382741253353242624': //test server
 			SELECTED_VOICE = '382741253353242628';
-			break;
+			return true;
 		case '443328437642461184': //izo server
 			SELECTED_VOICE = '443328437642461188';
-			break;
+			return true;
+		case '264145505452425227': //main
+			SELECTED_VOICE = '348328771797123073';
+			return true;
 		default:
 			SELECTED_VOICE = RADIO_VOICE_ID;
-			break;
+			return false;
 	}
 }
 

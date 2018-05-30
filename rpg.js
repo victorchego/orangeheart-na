@@ -1,5 +1,11 @@
 var CY_CHANNEL_ID = '401660510816436224';
+var WONDERLAND_ID = '451384954547470367';
 var OWNER_ID = '235263356397813762';
+
+var ALLOWED_CHANNELS = [
+	CY_CHANNEL_ID,
+	WONDERLAND_ID
+];
 
 var JSON_DATA = null;
 var JSON_URL = 'https://api.myjson.com/bins/qqp3b';
@@ -524,8 +530,8 @@ function handleMessage(msg) {
     var cmd = args[0];
     args = args.splice(1);
 	
-	if (msg.channel.id != CY_CHANNEL_ID && (cmd != "cookie" && cmd != "cookies")) {
-		msg.channel.send("This command must be used in #cy-playground");
+	if (!isAllowedChannel(msg.channel.id) && (cmd != "cookie" && cmd != "cookies")) {
+		msg.channel.send("This command must be used in #cy-playground (or the like in other servers)");
 		return;
 	}
 	
@@ -636,6 +642,10 @@ function handleMessage(msg) {
 	else {
 		msg.channel.send(`${msg.author} Check the command list: !rpg commands`);
 	}
+}
+
+function isAllowedChannel(id) {
+	return ALLOWED_CHANNELS.indexOf(id) > -1;
 }
 
 module.exports = {handleMessage, startUp};
