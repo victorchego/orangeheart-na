@@ -429,8 +429,8 @@ function resetGame(msg) {
 }
 
 function startUp(msg) {
-	if (JSON_DATA[msg.channel.id]==null) {
-		loadDataFromWeb();
+	if (JSON_DATA[CY_CHANNEL_ID]==null) {
+		loadDataFromWeb(msg);
 	}
 	var current_time = new Date();
 	if (current_time.getMinutes()!=0 || current_time.getSeconds()!=0) {
