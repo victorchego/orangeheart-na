@@ -7,7 +7,10 @@ var ALLOWED_CHANNELS = [
 	WONDERLAND_ID
 ];
 
-var JSON_DATA = null;
+var JSON_DATA[msg.channel.id] = {
+	CY_CHANNEL_ID: null,
+	WONDERLAND_ID: null
+}
 var JSON_LINKS = {
 	CY_CHANNEL_ID:'https://api.myjson.com/bins/qqp3b',
 	WONDERLAND_ID:'https://api.myjson.com/bins/tbiou'
@@ -86,18 +89,18 @@ function showMercList(msg) {
 
 function printItems(msg) {
 	var str = '';
-	for (i in JSON_DATA[msg.author.id]["item"]) {
-		str += JSON_DATA[msg.author.id]["item"][i]["name"] + " x" + JSON_DATA[msg.author.id]["item"][i]["count"];
-		if (i != JSON_DATA[msg.author.id]["item"].length-1) str += ", ";
+	for (i in JSON_DATA[msg.channel.id][msg.author.id]["item"]) {
+		str += JSON_DATA[msg.channel.id][msg.author.id]["item"][i]["name"] + " x" + JSON_DATA[msg.channel.id][msg.author.id]["item"][i]["count"];
+		if (i != JSON_DATA[msg.channel.id][msg.author.id]["item"].length-1) str += ", ";
 	}
 	return str;
 }
 
 function printMercs(msg) {
 	var str = '';
-	for (i in JSON_DATA[msg.author.id]["merc"]) {
-		str += capitalizeFirstLetter(JSON_DATA[msg.author.id]["merc"][i]["name"]) + " x" + JSON_DATA[msg.author.id]["merc"][i]["count"];
-		if (i != JSON_DATA[msg.author.id]["merc"].length-1) str += ", ";
+	for (i in JSON_DATA[msg.channel.id][msg.author.id]["merc"]) {
+		str += capitalizeFirstLetter(JSON_DATA[msg.channel.id][msg.author.id]["merc"][i]["name"]) + " x" + JSON_DATA[msg.channel.id][msg.author.id]["merc"][i]["count"];
+		if (i != JSON_DATA[msg.channel.id][msg.author.id]["merc"].length-1) str += ", ";
 	}
 	return str;
 }
@@ -107,8 +110,8 @@ function limitItem(msg) { // edit accordingly
 }
 
 function limitMerc(msg) { // edit accordingly
-	for (id in JSON_DATA) {
-		var merc = JSON_DATA[id]["merc"].find(function(merc){return merc["name"]=="ikiru";});
+	for (id in JSON_DATA[msg.channel.id]) {
+		var merc = JSON_DATA[msg.channel.id][id]["merc"].find(function(merc){return merc["name"]=="ikiru";});
 		if (merc) {
 			if (merc["count"] > 15) merc["count"] = 15;
 		}
@@ -122,12 +125,13 @@ function randomCookies(msg) {
 		return;
 	}
 	var val = Math.floor((Math.random() * 10) + 1);
-	JSON_DATA[msg.author.id]["cookies"]+=val;
+	var channel = JSON_DATA.find(function(channel){return JSON_DATA[channel].indexOf(msg.author.id) > -1;});
+	JSON_DATA[channel][msg.author.id]["cookies"]+=val;
 	msg.channel.send(`${msg.author} You have gained ${val} cookies`);
 }
 
 function checkPlayer(msg) {
-	return msg.author.id in JSON_DATA;
+	return msg.author.id in JSON_DATA[msg.channel.id];
 }
 
 function viewPlayers(msg) {
@@ -136,7 +140,7 @@ function viewPlayers(msg) {
 		return;
 	}
 	var str = 'Current Players:';
-	for (id in JSON_DATA) {
+	for (id in JSON_DATA[msg.channel.id]) {
 		var user = msg.client.users.find(val => val.id === id);
 		var name = user.username;
 		str += '\n'+user.username;
@@ -159,7 +163,7 @@ function joinRPG(msg) { //{<id>:{"cookies":0,"turns":0,"atk":0,"def":0,"steal":0
 	elem["item"] = [];
 	elem["merc"] = [];
 	elem["waifu"] = "";
-	JSON_DATA[msg.author.id] = elem;
+	JSON_DATA[msg.channel.id][msg.author.id] = elem;
 	msg.channel.send("You have joined the RPG");
 }
 
@@ -168,7 +172,7 @@ function leaveRPG(msg) {
 		msg.channel.send("You are not a RPG participant");
 		return;
 	}
-	delete JSON_DATA[msg.author.id];
+	delete JSON_DATA[msg.channel.id][msg.author.id];
 	msg.channel.send("You have left the RPG");
 }
 
@@ -180,26 +184,26 @@ function viewProfile(msg) {
 	updateStats(msg.author.id);
 	var str = '';
 	str += msg.author+"'s profile:```";
-	str += "\nCookies: "+JSON_DATA[msg.author.id]["cookies"];
-	str += "\nTurns: "+JSON_DATA[msg.author.id]["turns"];
-	str += "\nAttack: "+JSON_DATA[msg.author.id]["atk"]
-	str += "\nDefense: "+JSON_DATA[msg.author.id]["def"]
-	str += "\nSteal: "+JSON_DATA[msg.author.id]["steal"]
+	str += "\nCookies: "+JSON_DATA[msg.channel.id][msg.author.id]["cookies"];
+	str += "\nTurns: "+JSON_DATA[msg.channel.id][msg.author.id]["turns"];
+	str += "\nAttack: "+JSON_DATA[msg.channel.id][msg.author.id]["atk"]
+	str += "\nDefense: "+JSON_DATA[msg.channel.id][msg.author.id]["def"]
+	str += "\nSteal: "+JSON_DATA[msg.channel.id][msg.author.id]["steal"]
 	str += "\nItem List: "+ printItems(msg);
 	str += "\nHired Mercenaries: "+ printMercs(msg);
-	str += "\nWaifu: "+JSON_DATA[msg.author.id]["waifu"];
+	str += "\nWaifu: "+JSON_DATA[msg.channel.id][msg.author.id]["waifu"];
 	str += '```';
 	msg.channel.send(str);
 }
 
 function updateStats(id) {
-	JSON_DATA[id]["atk"] = calcAtk(id);
-	JSON_DATA[id]["def"] = calcDef(id);
-	JSON_DATA[id]["steal"] = calcSteal(id);
+	JSON_DATA[msg.channel.id][id]["atk"] = calcAtk(id);
+	JSON_DATA[msg.channel.id][id]["def"] = calcDef(id);
+	JSON_DATA[msg.channel.id][id]["steal"] = calcSteal(id);
 }
 
 function filterItems(id, type, value) {
-	var items = JSON_DATA[id]["item"];
+	var items = JSON_DATA[msg.channel.id][id]["item"];
 	var list = items.filter(function(item) {return item[type]==value;});
 	return list;
 }
@@ -224,20 +228,20 @@ function buyItems(msg, name, count=1) {
 		return;
 	}
 	var cost = item["cost"]*count;
-	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
+	if (JSON_DATA[msg.channel.id][msg.author.id]["cookies"] < cost) {
 		msg.channel.send(msg.author+" You do not have enough cookies to buy this selection");
 		return;
 	}
-	var current_item = JSON_DATA[msg.author.id]["item"].find(function(item){return item["name"]==name;});
+	var current_item = JSON_DATA[msg.channel.id][msg.author.id]["item"].find(function(item){return item["name"]==name;});
 	if (!current_item) {
 		var new_item = newItem(item);
 		new_item["count"] = parseInt(count);
-		JSON_DATA[msg.author.id]["item"].push(new_item);
+		JSON_DATA[msg.channel.id][msg.author.id]["item"].push(new_item);
 	}
 	else {
 		current_item["count"]+=parseInt(count);
 	}
-	JSON_DATA[msg.author.id]["cookies"]-=cost;
+	JSON_DATA[msg.channel.id][msg.author.id]["cookies"]-=cost;
 	updateStats(msg.author.id);
 	msg.channel.send(`${msg.author} You have bought ${count} ${name}(s)`);
 }
@@ -257,16 +261,16 @@ function hireMerc(msg, name) {
 		msg.channel.send(msg.author+" Invalid mercenary. Please check the mercenary list for the correct mercenary name");
 		return;
 	}
-	var current_merc = JSON_DATA[msg.author.id]["merc"].find(function(merc){return merc["name"]==name;});
+	var current_merc = JSON_DATA[msg.channel.id][msg.author.id]["merc"].find(function(merc){return merc["name"]==name;});
 	var cost = current_merc ? merc["cost"]*Math.pow(2,current_merc["count"]) : merc["cost"];
-	if (JSON_DATA[msg.author.id]["cookies"] < cost) {
+	if (JSON_DATA[msg.channel.id][msg.author.id]["cookies"] < cost) {
 		msg.channel.send(msg.author+" You do not have enough cookies to hire this selection");
 		return;
 	}
 	if (!current_merc) {
 		var new_merc = newMerc(merc);
 		new_merc["count"] = 1;
-		JSON_DATA[msg.author.id]["merc"].push(new_merc);
+		JSON_DATA[msg.channel.id][msg.author.id]["merc"].push(new_merc);
 	}
 	else if (current_merc["name"]=="ikiru") {
 		if (current_merc["count"]>= 15) {
@@ -280,7 +284,7 @@ function hireMerc(msg, name) {
 		msg.channel.send(`${msg.author} You have already hired ${name}`);
 		return;
 	}
-	JSON_DATA[msg.author.id]["cookies"]-=cost;
+	JSON_DATA[msg.channel.id][msg.author.id]["cookies"]-=cost;
 	updateStats(msg.author.id);
 	msg.channel.send(`${msg.author} You have hired ${name}`);
 }
@@ -313,8 +317,8 @@ function calcSteal(id) {
 }
 
 function attackPlayer(msg) {
-	var elem = JSON_DATA[msg.author.id];
-	var target = JSON_DATA[msg.mentions.users.firstKey()];
+	var elem = JSON_DATA[msg.channel.id][msg.author.id];
+	var target = JSON_DATA[msg.channel.id][msg.mentions.users.firstKey()];
 	if (!elem || !target) {
 		msg.channel.send(`${msg.author} Both you and your target must be participants`);
 		return;
@@ -388,12 +392,12 @@ function commandMessage(msg) {
 }
 
 function updateProperty(msg, key, value) {
-	JSON_DATA[msg.author.id][key]=value;
+	JSON_DATA[msg.channel.id][msg.author.id][key]=value;
 }
 
 function updatePropertyAll(msg, key, value) {
-	for (id in JSON_DATA) {
-		JSON_DATA[id][key] = value;	
+	for (id in JSON_DATA[msg.channel.id]) {
+		JSON_DATA[msg.channel.id][id][key] = value;	
 	}
 }
 
@@ -404,26 +408,26 @@ function loadDataFromWeb(msg) {
 			return;
 		}	
 		if (data==null) {
-			JSON_DATA = {};
+			JSON_DATA[msg.channel.id] = {};
 			return;
 		}
-		JSON_DATA = JSON.parse(data);
+		JSON_DATA[msg.channel.id] = JSON.parse(data);
 	});
 }
 
 function objDataToWeb(msg) {
-	request({url: JSON_URL, method: 'PUT', json: JSON_DATA}, function (error, response, body) {
+	request({url: JSON_URL, method: 'PUT', json: JSON_DATA[msg.channel.id]}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
 	});     
 }	
 
 function resetGame(msg) {
-	JSON_DATA = {};
+	JSON_DATA[msg.channel.id] = {};
 	msg.channel.send("RPG has been reset");
 }
 
 function startUp(msg) {
-	if (JSON_DATA==null) {
+	if (JSON_DATA[msg.channel.id]==null) {
 		loadDataFromWeb();
 	}
 	var current_time = new Date();
@@ -454,51 +458,51 @@ function hourlyUpdate(msg) {
 }
 
 function updateAll() {
-	for (id in JSON_DATA) {
+	for (id in JSON_DATA[msg.channel.id]) {
 		updateStats(id);
 	}
 }
 
 function mercUpdate() {
-	for (id in JSON_DATA) {
-		for (hire in JSON_DATA[id]["merc"]) {
-			if (JSON_DATA[id]["merc"][hire]["name"] == "owner") {
-				JSON_DATA[id]["cookies"]+=JSON_DATA[id]["merc"][hire]["value"];
+	for (id in JSON_DATA[msg.channel.id]) {
+		for (hire in JSON_DATA[msg.channel.id][id]["merc"]) {
+			if (JSON_DATA[msg.channel.id][id]["merc"][hire]["name"] == "owner") {
+				JSON_DATA[msg.channel.id][id]["cookies"]+=JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
 			}
-			else if (JSON_DATA[id]["merc"][hire]["name"] == "father") {
-				var current_item = JSON_DATA[id]["item"].find(function(item){return item["name"]=="shuriken";});
+			else if (JSON_DATA[msg.channel.id][id]["merc"][hire]["name"] == "father") {
+				var current_item = JSON_DATA[msg.channel.id][id]["item"].find(function(item){return item["name"]=="shuriken";});
 				var item = item_list.find(function(item){return item["name"]=="shuriken";});
 				if (!current_item) {
 					var new_item = newItem(item);
-					new_item["count"] = JSON_DATA[id]["merc"][hire]["value"];
-					JSON_DATA[id]["item"].push(new_item);
+					new_item["count"] = JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
+					JSON_DATA[msg.channel.id][id]["item"].push(new_item);
 				}
 				else {
-					current_item["count"]+=JSON_DATA[id]["merc"][hire]["value"];
+					current_item["count"]+=JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
 				}
 			}
-			else if (JSON_DATA[id]["merc"][hire]["name"] == "zina") {
-				var current_item = JSON_DATA[id]["item"].find(function(item){return item["name"]=="shield";});
+			else if (JSON_DATA[msg.channel.id][id]["merc"][hire]["name"] == "zina") {
+				var current_item = JSON_DATA[msg.channel.id][id]["item"].find(function(item){return item["name"]=="shield";});
 				var item = item_list.find(function(item){return item["name"]=="shield";});
 				if (!current_item) {
 					var new_item = newItem(item);
-					new_item["count"] = JSON_DATA[id]["merc"][hire]["value"];
-					JSON_DATA[id]["item"].push(new_item);
+					new_item["count"] = JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
+					JSON_DATA[msg.channel.id][id]["item"].push(new_item);
 				}
 				else {
-					current_item["count"]+=JSON_DATA[id]["merc"][hire]["value"];
+					current_item["count"]+=JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
 				}
 			}
-			else if (JSON_DATA[id]["merc"][hire]["name"] == "ikiru") {
-				JSON_DATA[id]["maxturns"] = INIT_TURNS + JSON_DATA[id]["merc"][hire]["count"];
+			else if (JSON_DATA[msg.channel.id][id]["merc"][hire]["name"] == "ikiru") {
+				JSON_DATA[msg.channel.id][id]["maxturns"] = INIT_TURNS + JSON_DATA[msg.channel.id][id]["merc"][hire]["count"];
 			}
 		}
 	}
 }
 
 function turnUpdate() {
-	for (id in JSON_DATA) {
-		JSON_DATA[id]["turns"] = JSON_DATA[id]["maxturns"];
+	for (id in JSON_DATA[msg.channel.id]) {
+		JSON_DATA[msg.channel.id][id]["turns"] = JSON_DATA[msg.channel.id][id]["maxturns"];
 	}
 }
 
@@ -506,12 +510,12 @@ function gift(msg, name, count) {
 	var users = msg.mentions.users.keyArray();
 	if (name == "cookies") {
 		for (user in users) {
-			JSON_DATA[users[user]]["cookies"]+=parseInt(count);
+			JSON_DATA[msg.channel.id][users[user]]["cookies"]+=parseInt(count);
 		}
 	}
 	else {
 		for (user in users) {
-			var current_item = JSON_DATA[users[user]]["item"].find(function(item){return item["name"]==name;});
+			var current_item = JSON_DATA[msg.channel.id][users[user]]["item"].find(function(item){return item["name"]==name;});
 			var item = item_list.find(function(item){return item["name"]==name;});
 			if (!item) {
 				msg.channel.send("Invalid option");
@@ -520,7 +524,7 @@ function gift(msg, name, count) {
 			if (!current_item) {
 				var new_item = newItem(item);
 				new_item["count"] = parseInt(count);
-				JSON_DATA[users[user]]["item"].push(new_item);
+				JSON_DATA[msg.channel.id][users[user]]["item"].push(new_item);
 			}
 			else {
 				current_item["count"]+=parseInt(count);
