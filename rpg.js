@@ -7,7 +7,7 @@ var ALLOWED_CHANNELS = [
 	WONDERLAND_ID
 ];
 
-var JSON_DATA[msg.channel.id] = {
+var JSON_DATA = {
 	CY_CHANNEL_ID: null,
 	WONDERLAND_ID: null
 };
