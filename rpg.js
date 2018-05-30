@@ -8,7 +8,12 @@ var ALLOWED_CHANNELS = [
 ];
 
 var JSON_DATA = null;
-var JSON_URL = 'https://api.myjson.com/bins/qqp3b';
+var JSON_LINKS = {
+	CY_CHANNEL_ID:'https://api.myjson.com/bins/qqp3b',
+	WONDERLAND_ID:'https://api.myjson.com/bins/tbiou'
+};
+
+var JSON_URL = JSON_LINKS[CY_CHANNEL_ID];
 
 var HOURLY_TIMEOUT = null;
 
@@ -534,6 +539,8 @@ function handleMessage(msg) {
 		msg.channel.send("This command must be used in #cy-playground (or the like in other servers)");
 		return;
 	}
+	
+	JSON_URL = JSON_LINKS[msg.channel.id];
 	
 	if (cmd == "test") {
 		msg.channel.send("Test succeeded");
