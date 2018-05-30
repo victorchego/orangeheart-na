@@ -10,7 +10,8 @@ var ALLOWED_CHANNELS = [
 var JSON_DATA[msg.channel.id] = {
 	CY_CHANNEL_ID: null,
 	WONDERLAND_ID: null
-}
+};
+
 var JSON_LINKS = {
 	CY_CHANNEL_ID:'https://api.myjson.com/bins/qqp3b',
 	WONDERLAND_ID:'https://api.myjson.com/bins/tbiou'
