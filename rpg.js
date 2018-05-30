@@ -547,7 +547,7 @@ function handleMessage(msg) {
 	}
 	
 	JSON_URL = JSON_LINKS[msg.channel.id];
-	if (JSON_DATA[msg.channel.id]==null) loadDataFromWeb(msg);
+	if (JSON_DATA[msg.channel.id]==null) loadDataFromWeb();
 	
 	if (cmd == "test") {
 		msg.channel.send("Test succeeded");
