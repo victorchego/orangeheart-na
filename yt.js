@@ -357,6 +357,9 @@ function selectChannel(msg) {
 		case '264145505452425227': //main
 			SELECTED_VOICE = '348328771797123073';
 			return true;
+		case '445010123480498176': //wonderland academy
+			SELECTED_VOICE = '445115568002170881';
+			return true;
 		default:
 			SELECTED_VOICE = RADIO_VOICE_ID;
 			return false;
