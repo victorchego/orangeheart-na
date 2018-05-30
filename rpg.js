@@ -404,9 +404,6 @@ function updatePropertyAll(msg, key, value) {
 }
 
 function loadDataFromWeb(msg) {
-			console.log('test '+JSON_URL);
-		console.log(JSON_LINKS);
-		console.log(msg.channel.id);
 	request(JSON_URL, function (err, response, data) {
 		if (err) {
 			console.log("Error has occurred: "+error);
@@ -550,6 +547,7 @@ function handleMessage(msg) {
 	}
 	
 	JSON_URL = JSON_LINKS[msg.channel.id];
+	if (JSON_DATA[msg.channel.id]==null) loadDataFromWeb(msg);
 	
 	if (cmd == "test") {
 		msg.channel.send("Test succeeded");
