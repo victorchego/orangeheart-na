@@ -8,13 +8,13 @@ var ALLOWED_CHANNELS = [
 ];
 
 var JSON_DATA = {
-	CY_CHANNEL_ID: null,
-	WONDERLAND_ID: null
+	[CY_CHANNEL_ID]: null,
+	[WONDERLAND_ID]: null
 };
 
 var JSON_LINKS = {
-	CY_CHANNEL_ID:'https://api.myjson.com/bins/qqp3b',
-	WONDERLAND_ID:'https://api.myjson.com/bins/tbiou'
+	[CY_CHANNEL_ID]:'https://api.myjson.com/bins/qqp3b',
+	[WONDERLAND_ID]:'https://api.myjson.com/bins/tbiou'
 };
 
 var JSON_URL = JSON_LINKS[CY_CHANNEL_ID];
