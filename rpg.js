@@ -132,6 +132,7 @@ function randomCookies(msg) {
 }
 
 function checkPlayer(msg) {
+	console.log(Object.keys(JSON_DATA));
 	var channel = Object.keys(JSON_DATA).find(function(channel){return msg.author.id in JSON_DATA[channel];});
 	return msg.author.id in JSON_DATA[channel];
 }
