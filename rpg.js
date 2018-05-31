@@ -474,45 +474,51 @@ function updateAll() {
 }
 
 function mercUpdate() {
-	for (id in JSON_DATA[msg.channel.id]) {
-		for (hire in JSON_DATA[msg.channel.id][id]["merc"]) {
-			if (JSON_DATA[msg.channel.id][id]["merc"][hire]["name"] == "owner") {
-				JSON_DATA[msg.channel.id][id]["cookies"]+=JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
-			}
-			else if (JSON_DATA[msg.channel.id][id]["merc"][hire]["name"] == "father") {
-				var current_item = JSON_DATA[msg.channel.id][id]["item"].find(function(item){return item["name"]=="shuriken";});
-				var item = item_list.find(function(item){return item["name"]=="shuriken";});
-				if (!current_item) {
-					var new_item = newItem(item);
-					new_item["count"] = JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
-					JSON_DATA[msg.channel.id][id]["item"].push(new_item);
+	var server_list = Object.keys(JSON_DATA);
+	for (server in server_list) {
+		for (id in JSON_DATA[server_list[server]]) {
+			for (hire in JSON_DATA[server_list[server]][id]["merc"]) {
+				if (JSON_DATA[server_list[server]][id]["merc"][hire]["name"] == "owner") {
+					JSON_DATA[server_list[server]][id]["cookies"]+=JSON_DATA[server_list[server]][id]["merc"][hire]["value"];
 				}
-				else {
-					current_item["count"]+=JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
+				else if (JSON_DATA[server_list[server]][id]["merc"][hire]["name"] == "father") {
+					var current_item = JSON_DATA[server_list[server]][id]["item"].find(function(item){return item["name"]=="shuriken";});
+					var item = item_list.find(function(item){return item["name"]=="shuriken";});
+					if (!current_item) {
+						var new_item = newItem(item);
+						new_item["count"] = JSON_DATA[server_list[server]][id]["merc"][hire]["value"];
+						JSON_DATA[server_list[server]][id]["item"].push(new_item);
+					}
+					else {
+						current_item["count"]+=JSON_DATA[server_list[server]][id]["merc"][hire]["value"];
+					}
 				}
-			}
-			else if (JSON_DATA[msg.channel.id][id]["merc"][hire]["name"] == "zina") {
-				var current_item = JSON_DATA[msg.channel.id][id]["item"].find(function(item){return item["name"]=="shield";});
-				var item = item_list.find(function(item){return item["name"]=="shield";});
-				if (!current_item) {
-					var new_item = newItem(item);
-					new_item["count"] = JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
-					JSON_DATA[msg.channel.id][id]["item"].push(new_item);
+				else if (JSON_DATA[server_list[server]][id]["merc"][hire]["name"] == "zina") {
+					var current_item = JSON_DATA[server_list[server]][id]["item"].find(function(item){return item["name"]=="shield";});
+					var item = item_list.find(function(item){return item["name"]=="shield";});
+					if (!current_item) {
+						var new_item = newItem(item);
+						new_item["count"] = JSON_DATA[server_list[server]][id]["merc"][hire]["value"];
+						JSON_DATA[server_list[server]][id]["item"].push(new_item);
+					}
+					else {
+						current_item["count"]+=JSON_DATA[server_list[server]][id]["merc"][hire]["value"];
+					}
 				}
-				else {
-					current_item["count"]+=JSON_DATA[msg.channel.id][id]["merc"][hire]["value"];
+				else if (JSON_DATA[server_list[server]][id]["merc"][hire]["name"] == "ikiru") {
+					JSON_DATA[server_list[server]][id]["maxturns"] = INIT_TURNS + JSON_DATA[server_list[server]][id]["merc"][hire]["count"];
 				}
-			}
-			else if (JSON_DATA[msg.channel.id][id]["merc"][hire]["name"] == "ikiru") {
-				JSON_DATA[msg.channel.id][id]["maxturns"] = INIT_TURNS + JSON_DATA[msg.channel.id][id]["merc"][hire]["count"];
 			}
 		}
 	}
 }
 
 function turnUpdate() {
-	for (id in JSON_DATA[msg.channel.id]) {
-		JSON_DATA[msg.channel.id][id]["turns"] = JSON_DATA[msg.channel.id][id]["maxturns"];
+	var server_list = Object.keys(JSON_DATA);
+	for (server in server_list) {
+		for (id in JSON_DATA[server_list[server]]) {
+			JSON_DATA[server_list[server]][id]["turns"] = JSON_DATA[server_list[server]][id]["maxturns"];
+		}
 	}
 }
 
