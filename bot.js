@@ -1125,8 +1125,8 @@ function setTax(client) {
 					kings.push(obj[x]);
 					continue;
 				}
-				total += Math.ceil(0.1*obj[x]["cookies"]);
-				obj[x]["cookies"] = Math.ceil(0.9*obj[x]["cookies"]);
+				total += Math.ceil(0.2*obj[x]["cookies"]);
+				obj[x]["cookies"] = Math.ceil(0.8*obj[x]["cookies"]);
 			}
 			for (k in kings) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});
@@ -1157,7 +1157,7 @@ function setTycoon(client, msg, args) {
 			total += amount;
 			//if (highest<amount) highest = amount;
 		}
-		var ratio = 0.2*(1-elem["cookies"]/total);
+		var ratio = 0.3*(1-elem["cookies"]/total);
 		msg.channel.send('Tycoon will target in '+parseFloat(time)/60000+' minutes at a '+ratio+' rate');
 		if (TYCOON_TIMEOUT!=null) clearTimeout(TYCOON_TIMEOUT);
 		TYCOON_TIMEOUT = setTimeout(function(){
