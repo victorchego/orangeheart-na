@@ -497,7 +497,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (msg.author.id==OWNER_ID && msg.channel.id==CY_CHANNEL_ID) {
+				if (msg.author.id==OWNER_ID) {
 					removeCookies(client, msg, args);
 				}
 				else msg.channel.send('Cannot obey command');
@@ -507,7 +507,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (msg.author.id==OWNER_ID && msg.channel.id==CY_CHANNEL_ID) {
+				if (msg.author.id==OWNER_ID) {
 					addPropertyString(client, msg, args);
 				}
 				else msg.channel.send('Cannot obey command');
@@ -517,7 +517,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (msg.author.id==OWNER_ID && msg.channel.id==CY_CHANNEL_ID) {
+				if (msg.author.id==OWNER_ID) {
 					addPropertyNumber(client, msg, args);
 				}
 				else msg.channel.send('Cannot obey command');
@@ -527,7 +527,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (msg.author.id==OWNER_ID && msg.channel.id==CY_CHANNEL_ID) {
+				if (msg.author.id==OWNER_ID) {
 					removeProperty(client, msg, args);
 				}
 				else msg.channel.send('Cannot obey command');
@@ -537,7 +537,7 @@ client.on('message', (msg) => {
 					msg.channel.send('Cookie commands are disabled currently');
 					return;
 				}
-				if (msg.author.id==OWNER_ID && msg.channel.id==CY_CHANNEL_ID) {
+				if (msg.author.id==OWNER_ID) {
 					request(URL_JSON, function (err, response, data) {
 						if (err) {
 							console.log('Error reading points file: '+err);
