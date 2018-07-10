@@ -1126,7 +1126,7 @@ function setTax(client) {
 					continue;
 				}
 				total += Math.ceil(0.2*obj[x]["cookies"]);
-				obj[x]["cookies"] = Math.ceil(0.8*obj[x]["cookies"]);
+				obj[x]["cookies"] = Math.floor(0.8*obj[x]["cookies"]);
 			}
 			for (k in kings) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});
