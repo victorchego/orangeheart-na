@@ -14,7 +14,7 @@ var YT = require('./yt.js');
 
 var cooldownList = [];
 var cooldownMessageList = [];
-var MNG_WAIFUS = ["akari", "enju", "myu", "ricka", "tengge", "yamabuki", "lily", "nanao"];
+var MNG_WAIFUS = ["akari", "enju", "myu", "ricka", "tengge", "yamabuki", "lily", "nanao", "hotaru"];
 var HIRE_LIST = ["zina", "father", "kikuko", "sakurako", "tycoon", "mari", "owner"];
 
 var TARGET_CHANNEL_ID = '382741253353242626';  // channel ID specific client
@@ -1241,6 +1241,7 @@ function resetCookies(client, msg, args) {
 	addNPC(obj,["Zina"]);
 	addNPC(obj,["Owner"]);
 	addNPC(obj,["Mari"]);
+	addNPC(obj,["Kashin"]);
 	objToWeb(obj,URL_JSON);
 	msg.channel.send('Cookies have been reset!');
 }
