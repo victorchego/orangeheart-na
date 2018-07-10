@@ -340,6 +340,7 @@ client.on('message', (msg) => {
 					objToWeb(obj,URL_JSON);
 				});
 			break;
+			case 'lb':
 			case 'leaderboards':
 			case 'leaderboard':
 				if (!COOKIE_STATUS) {
