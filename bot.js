@@ -711,6 +711,7 @@ function stealCookies(client, msg, args) {
 			else if (args[0]!=null && args[0].toLowerCase()=="mari") return item["id"]=="Mari";
 			else if (args[0]!=null && args[0].toLowerCase()=="zina") return item["id"]=="Zina";
 			else if (args[0]!=null && args[0].toLowerCase()=="owner") return item["id"]=="Owner";
+			else if (args[0]!=null && args[0].toLowerCase()=="kashin") return item["id"]=="Kashin";
 			else return item["id"]==msg.mentions.users.firstKey();
 			});
 		if (elem != undefined) {
@@ -750,7 +751,7 @@ function stealCookies(client, msg, args) {
 				if (cookie_ratio >= 0.8) cookie_ratio = 0.8;
 				var self_percent = Math.ceil(0.01*(elem["cookies"]));
 				var target_percent = Math.ceil(0.01*(target["cookies"]));
-				var total_percent = Math.ceil(self_percent/total/1000);
+				var total_percent = Math.ceil(self_percent/(Math.power(total, 1/10)));
 				var steal_bonus = Math.ceil(higher*target_percent);
 				var steal_amount = total_percent+self_percent;
 				var steal_cooldown = 10+40*((0.8-cookie_ratio)/0.7);
