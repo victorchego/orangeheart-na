@@ -1107,7 +1107,7 @@ function setLottery(client, msg, args) {
 }
 
 function setTax(client) {
-	var time = 10000; //TAX_DURATION;
+	var time = TAX_DURATION;
 	var total = 0;
 	var channel = client.channels.find(val => val.id === CY_CHANNEL_ID);	
 	if (TAX_TIMEOUT!=null) clearTimeout(TAX_TIMEOUT);
