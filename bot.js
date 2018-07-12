@@ -1125,7 +1125,7 @@ function setTax(client) {
 			var higher = [];
 			var kashin = obj.find(function(item){return item["id"]=="Kashin";});
 			for (x in obj) {
-				if (kashin && obj[x]["cookies"] > 0 && obj[x]["cookies"] >= kashin["cookies"]) {
+				if (kashin && obj[x]["cookies"] > 0 && obj[x]["cookies"] >= kashin["cookies"] && obj[x]["id"] != "Kashin") {
 					higher.push(obj[x]);
 				}
 				if (obj[x]["king"]==1) {
