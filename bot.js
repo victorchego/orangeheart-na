@@ -1107,7 +1107,7 @@ function setLottery(client, msg, args) {
 }
 
 function setTax(client) {
-	var time = TAX_DURATION;
+	var time = 10000; //TAX_DURATION;
 	var total = 0;
 	var channel = client.channels.find(val => val.id === CY_CHANNEL_ID);	
 	if (TAX_TIMEOUT!=null) clearTimeout(TAX_TIMEOUT);
@@ -1122,7 +1122,12 @@ function setTax(client) {
 			obj = assignKings(obj);
 			var total = 0;
 			var kings = [];
+			var higher = [];
+			var kashin = obj.find(function(item){return item["id"]=="Kashin";});
 			for (x in obj) {
+				if (kashin && obj[x]["cookies"] > 0 && obj[x]["cookies"] >= kashin["cookies"]) {
+					higher.push(obj[x]);
+				}
 				if (obj[x]["king"]==1) {
 					kings.push(obj[x]);
 					continue;
@@ -1130,6 +1135,9 @@ function setTax(client) {
 				total += Math.ceil(0.2*obj[x]["cookies"]);
 				obj[x]["cookies"] = Math.floor(0.8*obj[x]["cookies"]);
 			}
+			higher.sort(function(a,b){return a["cookies"]-b["cookies"];});
+			kashin["cookies"] += higher[0]["cookies"];
+			higher[0]["cookies"] = 0;
 			for (k in kings) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});
 				king["cookies"]+=total;
