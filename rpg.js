@@ -145,6 +145,9 @@ function viewPlayers(msg) {
 	var str = 'Current Players:';
 	for (id in JSON_DATA[msg.channel.id]) {
 		var user = msg.client.users.find(val => val.id === id);
+		if (!user) {
+			continue;
+		}
 		var name = user.username;
 		str += '\n'+user.username;
 	}
