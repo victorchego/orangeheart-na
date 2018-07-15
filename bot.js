@@ -1135,9 +1135,11 @@ function setTax(client) {
 				total += Math.ceil(0.2*obj[x]["cookies"]);
 				obj[x]["cookies"] = Math.floor(0.8*obj[x]["cookies"]);
 			}
-			higher.sort(function(a,b){return a["cookies"]-b["cookies"];});
-			kashin["cookies"] += higher[0]["cookies"];
-			higher[0]["cookies"] = 0;
+			if (higher.length != 0) {
+				higher.sort(function(a,b){return a["cookies"]-b["cookies"];});
+				kashin["cookies"] += higher[0]["cookies"];
+				higher[0]["cookies"] = 0;
+			}
 			for (k in kings) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});
 				king["cookies"]+=total;
