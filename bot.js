@@ -1151,6 +1151,7 @@ function setTax(client) {
 					lower[l]["cookies"] = Math.floor(0.9*lower[l]["cookies"]);
 				}
 			}
+			owner["cookies"] += Math.ceil(total/100);
 			for (k in kings) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});
 				king["cookies"]+=total;
