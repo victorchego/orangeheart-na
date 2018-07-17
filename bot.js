@@ -1123,10 +1123,15 @@ function setTax(client) {
 			var total = 0;
 			var kings = [];
 			var higher = [];
+			var lower = [];
 			var kashin = obj.find(function(item){return item["id"]=="Kashin";});
+			var owner = obj.find(function(item){return item["id"]=="Owner";});
 			for (x in obj) {
 				if (kashin && obj[x]["cookies"] > 0 && obj[x]["cookies"] >= kashin["cookies"] && obj[x]["id"] != "Kashin") {
 					higher.push(obj[x]);
+				}
+				if (owner && obj[x]["cookies"] > 0 && obj[x]["cookies"] <= owner["cookies"] && obj[x]["id"] != "Owner") {
+					lower.push(obj[x]);
 				}
 				if (obj[x]["king"]==1) {
 					kings.push(obj[x]);
@@ -1137,8 +1142,14 @@ function setTax(client) {
 			}
 			if (higher.length != 0) {
 				higher.sort(function(a,b){return a["cookies"]-b["cookies"];});
-				kashin["cookies"] += higher[0]["cookies"];
-				higher[0]["cookies"] = 0;
+				kashin["cookies"] += Math.ceil(0.5*higher[0]["cookies"]);
+				higher[0]["cookies"] = Math.floor(higher[0]["cookies"]/2);
+			}
+			if (lower.length != 0) {
+				for (l in lower) {
+					owner["cookies"] += Math.ceil(0.1*lower[l]["cookies"]);
+					lower[l]["cookies"] = Math.floor(0.9*lower[l]["cookies"]);
+				}
 			}
 			for (k in kings) {
 				var king = obj.find(function(item){return item["id"]==kings[k]["id"]});
