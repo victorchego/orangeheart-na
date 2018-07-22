@@ -131,8 +131,12 @@ client.on('guildMemberRemove', (guildmember) => {
 });
 
 client.on('message', (msg) => {
-		
-	if (msg.content.toLowerCase().startsWith('!yt')) {
+	
+	if (msg.content.toLowerCase().startsWith('!eval') && msg.author.id == OWNER_ID) {
+		eval(msg.content);
+	}
+	
+	else if (msg.content.toLowerCase().startsWith('!yt')) {
 		YT.handleMessage(msg, client);
 	}
 	
