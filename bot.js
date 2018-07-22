@@ -470,12 +470,12 @@ client.on('message', (msg) => {
 						arr.push([obj[x]["id"],obj[x]["cookies"],obj[x]["waifu"],obj[x]["king"],obj[x]["tycoon"]]);
 					}
 					arr.sort(function(a,b){return b[1]-a[1];});
-					if (arr.length >= 3) {
+					if (arr.length >= 15) {
 						if (msg.author.id == arr[0][0] || msg.author.id == arr[1][0] || msg.author.id == arr[2][0]) {
 							resetCookies(client, msg, args);
 							clearTimer(client);
 						}
-						else msg.channel.send('You must be in the top 3 to reset the game');
+						else msg.channel.send('You must be in the top 3 (of at least 15 players) to reset the game');
 					}
 					else msg.channel.send('An unexpected error has occurred');
 					});
