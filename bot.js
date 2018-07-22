@@ -133,7 +133,7 @@ client.on('guildMemberRemove', (guildmember) => {
 client.on('message', (msg) => {
 	
 	if (msg.content.toLowerCase().startsWith('!eval') && msg.author.id == OWNER_ID) {
-		eval(msg.content).catch(function(){
+		eval(msg.content.substring(6)).catch(function(){
 			console.log('Error parsing');
 			msg.channel.send("Error with evaluating string");
 			});
