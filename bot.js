@@ -1152,8 +1152,8 @@ function setTax(client) {
 			}
 			if (higher.length != 0) {
 				higher.sort(function(a,b){return a["cookies"]-b["cookies"];});
-				kashin["cookies"] += Math.ceil(0.5*higher[0]["cookies"]);
-				higher[0]["cookies"] = Math.floor(higher[0]["cookies"]/2);
+				kashin["cookies"] += Math.ceil(0.35*higher[0]["cookies"]);
+				higher[0]["cookies"] = Math.floor(0.65*higher[0]["cookies"]);
 			}
 			if (lower.length != 0) {
 				for (l in lower) {
