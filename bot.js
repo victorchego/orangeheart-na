@@ -12,6 +12,8 @@ var Game = require('./game.js');
 var RPG = require('./rpg.js');
 var YT = require('./yt.js');
 
+var ANNOUNCEMENT = "Hello all. Due to circumstances, I will be retiring my service as an info bot in some time. Please contact the owner if you have any concerns, requests, or would like to keep me alive";
+
 var cooldownList = [];
 var cooldownMessageList = [];
 var MNG_WAIFUS = ["akari", "enju", "myu", "ricka", "tengge", "yamabuki", "lily", "nanao", "hotaru"];
@@ -96,7 +98,7 @@ client.on('ready', () => {
 	clearLists(cooldownList,cooldownMessageList);
 	clearTimer(client);
 	cookieOn(client);
-	client.channels.find(val => val.id === CY_CHANNEL_ID).send('Booting up').then(msg => RPG.startUp(msg));
+	client.channels.find(val => val.id === CY_CHANNEL_ID).send('Booting up...\n'+ANNOUNCEMENT).then(msg => RPG.startUp(msg));
 	//executeScript(client);
 	//client.channels.find(val => val.id === CY_CHANNEL_ID).send('I AM ALIVEEEEE!');
 });
@@ -593,6 +595,7 @@ client.on('message', (msg) => {
             break;
             // Just add any case commands if you want to..
          }
+		 msg.author.send(ANNOUNCEMENT).catch(function(){console.log('Cannot send to '+msg.author.username);});
 		 cooldownList.push(msg.author);
 		 setTimeout(function(){
 			removeFromList(msg.author, cooldownList);
