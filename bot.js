@@ -1285,7 +1285,7 @@ function resetCookies(client, msg, args) {
 
 function talkCy(client, msg, args) {
 	if (msg.author.id!=OWNER_ID) throw 'Not owner';
-	if (args[0]!=null)) {
+	if (args[0]!=null) {
 		var channel = client.channels.find(val => val.id === args[0]);
 		var str = '';
 		for (var i = 1; i < args.length; i++) {
