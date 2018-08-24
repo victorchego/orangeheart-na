@@ -13,6 +13,7 @@ var URL_JSON = 'https://api.myjson.com/bins/663th';
 var TIMER_JSON = 'https://api.myjson.com/bins/z65jl'; // [{"id":"X", "time":"X", "type":"steal/donate"}]
 var TIMER_TIMEOUT = null;
 
+var OWNER_ID = '235263356397813762';
 /* LIST OF SERVERS
 264145505452425227 - MNG 
 */
