@@ -133,7 +133,7 @@ client.on('message', (msg) => {
 									});
             break;
 			case 'help':
-				msg.author.send(```Type !commands to see a list of commands```).then(function(){
+				msg.author.send('Type !commands to see a list of commands').then(function(){
 								msg.channel.send("Details have been sent "+msg.author);
 								}).catch(function(){
 									console.log('Cannot send to '+msg.author.username);
