@@ -428,7 +428,7 @@ function viewFav(msg) {
 			return;
 		}	
 		var obj = JSON.parse(data);
-		var elem = obj.find(val => val.id  == msg.author.id);
+		var elem = obj.find(function(item){return item["id"]==msg.author.id;});
 		if (!elem) {
 			msg.channel.send("You don't have any favorites");
 			return;
