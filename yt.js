@@ -249,6 +249,10 @@ function handleMessage(msg, client) {
 		//removeFav(radio_channel, msg, client, args[0]);
 		return;
 	}
+	else if (cmd == "favoritelist" || cmd == "favlist" || cmd == "fl") {
+		viewFav(msg);
+		return;
+	}
 	else {
 		msg.channel.send('Undefined command. Type !yt commands');
 		return;
@@ -414,7 +418,7 @@ function addFav(msg, args) {
 	});
 }
 
-function viewFav(msg, args) {
+function viewFav(msg) {
 	request(FAV_JSON, function (err, response, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
