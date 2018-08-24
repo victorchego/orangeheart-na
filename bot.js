@@ -118,7 +118,7 @@ client.on('message', (msg) => {
 			return;
 		}
 		*/
-        var args = msg.content.substring(4).split(' ');
+        var args = msg.content.substring(1).split(' ');
         var cmd = args[0];
        
         args = args.splice(1);
