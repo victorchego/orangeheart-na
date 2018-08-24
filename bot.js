@@ -96,7 +96,7 @@ client.on('message', (msg) => {
 		msg.channel.fetchMessage(msg.content.substring(5)).then(message => message.delete().catch(console.error)).catch(console.error);
 	}
 	
-    else if (msg.content.startsWith('!') {
+    else if (msg.content.startsWith('!')) {
 		// if user warned of cooldown, ignore
 		/*
 		if (inList(msg.author, cooldownMessageList) && msg.channel.type=='text') {
