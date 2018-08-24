@@ -435,7 +435,7 @@ function viewFav(msg, args) {
 					else {
 						str += i + ". " + info["title"] + "\n";
 					}
-				}
+				});
 			}
 			str += "```";
 			msg.channel.send(str);
