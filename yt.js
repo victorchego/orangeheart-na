@@ -381,6 +381,73 @@ function removeResult(msg,args) {
 	}
 }
 
+function addFav(msg, args) {
+	request(FAV_JSON, function (err, response, data) {
+		if (err) {
+			console.log('Error reading points file: '+err);
+			//msg.channel.send('An unexpected error has occurred');
+			return;
+		}	
+		var obj = JSON.parse(data);
+		var elem = obj.find(val => val.id  == msg.author.id);
+		if (!elem) {
+			elem = {};
+			elem["id"] = msg.author.id;
+			elem["list"] = [];
+		}
+		if (elem[msg.author.id].length>=10) {
+			msg.channel.send('You have capped at 10 favorites. Please remove one to add another');
+			return;
+		}
+		var str = args.join(' ');
+		search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
+			if (results[0]) {
+				elem["list"].push(url);
+			}
+			else {
+				msg.channel.send('Invalid search result. Please try again.');
+				return;
+			}
+			obj.push(elem);
+			objToWeb(obj, FAV_JSON);
+		});
+	});
+}
+
+function viewFav(msg, args) {
+	request(FAV_JSON, function (err, response, data) {
+		if (err) {
+			console.log('Error reading points file: '+err);
+			//msg.channel.send('An unexpected error has occurred');
+			return;
+		}	
+		var obj = JSON.parse(data);
+		var elem = obj.find(val => val.id  == msg.author.id);
+		if (!elem) {
+			msg.channel.send("You don't have any favorites");
+			return;
+		}
+		else {
+			var str = msg.author+"'s favorites: \n```";
+			for (i in elem["list"]) {
+				ytdl.getInfo(elem["list"][i],{ filter : 'audioonly' }, function (err, info) {
+					if (err) msg.channel.send('Error getting video info');
+					else {
+						str += i + ". " + info["title"] + "\n";
+					}
+				}
+			}
+			str += "```";
+			msg.channel.send(str);
+			return;
+		}
+	});
+}
+
+function removeFav(msg, args) {
+	
+}
+
 function selectChannel(msg) {
 	if (msg.channel.type != "text") {
 		msg.channel.send("You can only use this in text channels");
