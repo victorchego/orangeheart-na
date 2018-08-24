@@ -11,7 +11,7 @@ var SELECTED_VOICE = RADIO_VOICE_ID;
 
 var BANNED_CHANNELS = [];
 
-var FAV_JSON = 'https://api.myjson.com/bins/ox3pc';
+var FAV_JSON = 'https://api.myjson.com/bins/ox3pc'; //{user:[0,1,2,3,4,5,6,7,8,9]}
 
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
@@ -154,7 +154,7 @@ function handleMessage(msg, client) {
 	if (cmd == "disconnect" || cmd == "dc" || cmd == "stop") {
 		radios[SELECTED_SERVER]["queue"] = [];
 		radios[SELECTED_SERVER]["titles"] = [];
-		radios[oldUserChannel.guild.id]["current"] = "";
+		radios[SELECTED_SERVER]["current"] = "";
 		if (radios[SELECTED_SERVER]["dispatcher"]) {
 			radios[SELECTED_SERVER]["dispatcher"].end();
 			radios[SELECTED_SERVER]["dispatcher"] = null;
@@ -297,14 +297,14 @@ function playNext(radio_channel) {
 		radio_channel.leave();
 		radios[SELECTED_SERVER]["queue"] = [];
 		radios[SELECTED_SERVER]["titles"] = [];
-		radios[oldUserChannel.guild.id]["current"] = "";
+		radios[SELECTED_SERVER]["current"] = "";
 		radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		return;
 	}
 	if (radios[SELECTED_SERVER]["queue"].length == 0) {
 		radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		text_channel.send('Queue has terminated');
-		radios[oldUserChannel.guild.id]["current"] = "";
+		radios[SELECTED_SERVER]["current"] = "";
 		radios[SELECTED_SERVER]["dispatcher"] = null;
 		radio_channel.leave();
 	}
@@ -316,7 +316,7 @@ function playNext(radio_channel) {
 			radios[SELECTED_SERVER]["titles"].push(title);
 		}
 		text_channel.send('Now playing: '+title);
-		radios[SELECTED_SERVER]["current"] = info["title"];
+		radios[SELECTED_SERVER]["current"] = title;
 		stream = ytdl(url, { filter : 'audioonly' });
 		radios[SELECTED_SERVER]["dispatcher"] = radio_channel.connection.playStream(stream, streamOptions);
 		radios[SELECTED_SERVER]["dispatcher"].once("end", reason => {
