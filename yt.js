@@ -11,6 +11,8 @@ var SELECTED_VOICE = RADIO_VOICE_ID;
 
 var BANNED_CHANNELS = [];
 
+var FAV_JSON = 'https://api.myjson.com/bins/ox3pc';
+
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
 var opts_default = {
@@ -41,6 +43,7 @@ var new_radio = {
 	"loop" : false,
 	"queue" : [],
 	"titles" : [],
+	"current" : "",
 	"result_data" : null
 };
 
@@ -88,6 +91,7 @@ const voiceCallback = (oldMember, newMember) => {
 			oldUserChannel.leave();
 			radios[oldUserChannel.guild.id]["queue"] = [];
 			radios[oldUserChannel.guild.id]["titles"] = [];
+			radios[oldUserChannel.guild.id]["current"] = "";
 			oldUserChannel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 			return;
 		}
@@ -150,6 +154,7 @@ function handleMessage(msg, client) {
 	if (cmd == "disconnect" || cmd == "dc" || cmd == "stop") {
 		radios[SELECTED_SERVER]["queue"] = [];
 		radios[SELECTED_SERVER]["titles"] = [];
+		radios[oldUserChannel.guild.id]["current"] = "";
 		if (radios[SELECTED_SERVER]["dispatcher"]) {
 			radios[SELECTED_SERVER]["dispatcher"].end();
 			radios[SELECTED_SERVER]["dispatcher"] = null;
@@ -158,7 +163,7 @@ function handleMessage(msg, client) {
 		return;
 	}
 	else if (cmd == "commands") {
-		msg.channel.send("```!yt commands/queue/q/next/n/disconnect/dc/stop/loop/l/region\n!yt play/p/search/s youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
+		msg.channel.send("```!yt commands/queue/q/current/c/next/n/disconnect/dc/stop/loop/l/region\n!yt play/p/search/s youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
 		return;
 	}
 	else if (cmd == "region") {
@@ -191,6 +196,9 @@ function handleMessage(msg, client) {
 		var str = radios[SELECTED_SERVER]["loop"] ? "Loop enabled for queue" : "Loop disabled for queue";
 		msg.channel.send(str);
 	}
+	else if (cmd == "current" || cmd == "c") {
+		msg.channel.send('Currently playing: '+ radios[SELECTED_SERVER]["current"]);
+	}
 	else if (cmd == "next" || cmd == "n") {
 		if (radios[SELECTED_SERVER]["queue"].length == 0) {
 			msg.channel.send('Queue is empty');
@@ -217,6 +225,30 @@ function handleMessage(msg, client) {
 		addLink(radio_channel, msg, client, args[0]);
 		return;
 	}
+	else if (cmd == "favorite" || cmd == "fav" || cmd == "f") {
+		if (args.length == 0) {
+			msg.channel.send('Invalid parameters.');
+			return;
+		}
+		if (!ytdl.validateURL(args[0])) {
+			//firstResult(client,msg,args);
+			return;
+		}
+		//addFav(radio_channel, msg, client, args[0]);
+		return;
+	}
+	else if (cmd == "unfavorite" || cmd == "unfav" || cmd == "uf") {
+		if (args.length == 0) {
+			msg.channel.send('Invalid parameters.');
+			return;
+		}
+		if (!ytdl.validateURL(args[0])) {
+			//firstResult(client,msg,args);
+			return;
+		}
+		//removeFav(radio_channel, msg, client, args[0]);
+		return;
+	}
 	else {
 		msg.channel.send('Undefined command. Type !yt commands');
 		return;
@@ -229,6 +261,7 @@ function addLink(radio_channel, msg, client, url) {
 			if (err) msg.channel.send('Error getting video info');
 			else {
 				msg.channel.send('Video queued: '+info["title"]);
+				radios[SELECTED_SERVER]["current"] = info["title"];
 				radios[SELECTED_SERVER]["queue"].push(url);
 				radios[SELECTED_SERVER]["titles"].push(info["title"]);
 			}
@@ -242,6 +275,7 @@ function addLink(radio_channel, msg, client, url) {
 			if (err) msg.channel.send('Error getting video info');
 			else {
 				msg.channel.send('Now playing in the <#'+SELECTED_VOICE+'> voice channel: '+info["title"]);
+				radios[SELECTED_SERVER]["current"] = info["title"];
 				}
 			});
 			client.on('voiceStateUpdate', voiceCallback);
@@ -263,12 +297,14 @@ function playNext(radio_channel) {
 		radio_channel.leave();
 		radios[SELECTED_SERVER]["queue"] = [];
 		radios[SELECTED_SERVER]["titles"] = [];
+		radios[oldUserChannel.guild.id]["current"] = "";
 		radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		return;
 	}
 	if (radios[SELECTED_SERVER]["queue"].length == 0) {
 		radio_channel.guild.client.removeListener('voiceStateUpdate',voiceCallback);
 		text_channel.send('Queue has terminated');
+		radios[oldUserChannel.guild.id]["current"] = "";
 		radios[SELECTED_SERVER]["dispatcher"] = null;
 		radio_channel.leave();
 	}
@@ -280,6 +316,7 @@ function playNext(radio_channel) {
 			radios[SELECTED_SERVER]["titles"].push(title);
 		}
 		text_channel.send('Now playing: '+title);
+		radios[SELECTED_SERVER]["current"] = info["title"];
 		stream = ytdl(url, { filter : 'audioonly' });
 		radios[SELECTED_SERVER]["dispatcher"] = radio_channel.connection.playStream(stream, streamOptions);
 		radios[SELECTED_SERVER]["dispatcher"].once("end", reason => {
@@ -373,5 +410,11 @@ function selectChannel(msg) {
 function isBannedChannel(id) {
 	return BANNED_CHANNELS.find(val => val.id == id);
 }
+
+function objToWeb(obj,url) {
+	request({url: url, method: 'PUT', json: obj}, function (error, response, body) {
+		if (error) console.log("Error has occurred: "+error);
+	});     
+}	
 
 module.exports = {handleMessage};
