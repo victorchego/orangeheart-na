@@ -371,7 +371,7 @@ function selectChannel(msg) {
 }
 
 function isBannedChannel(id) {
-	return BANNED_CHANNELS.find(val => val.id == id)
+	return BANNED_CHANNELS.find(val => val.id == id);
 }
 
 module.exports = {handleMessage};
