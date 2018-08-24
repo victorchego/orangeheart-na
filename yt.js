@@ -345,6 +345,10 @@ function removeResult(msg,args) {
 }
 
 function selectChannel(msg) {
+	if (msg.channel.type != "text") {
+		msg.channel.send("You can only use this in text channels");
+		return false;
+	}
 	SELECTED_CHANNEL = msg.channel.id;
 	SELECTED_SERVER = msg.guild.id;
 	switch (SELECTED_SERVER) {
