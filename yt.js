@@ -13,7 +13,7 @@ var SELECTED_VOICE = RADIO_VOICE_ID;
 
 var BANNED_CHANNELS = [];
 
-var FAV_JSON = 'https://api.myjson.com/bins/te2gg'; //{user:[0,1,2,3,4,5,6,7,8,9]}
+var FAV_JSON = 'https://api.myjson.com/bins/dbku8'; //{user:[0,1,2,3,4,5,6,7,8,9]}
 
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
@@ -165,7 +165,7 @@ function handleMessage(msg, client) {
 		return;
 	}
 	else if (cmd == "commands") {
-		msg.channel.send("```!yt commands/queue/q/current/c/next/n/disconnect/dc/stop/loop/l/region\n!yt play/p/search/s/favorite/fav/f youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
+		msg.channel.send("```!yt commands/queue/q/current/c/next/n/disconnect/dc/stop/loop/l/region/clearfavorites/clearfav/cf\n!yt play/p/search/s/favorite/fav/f youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
 		return;
 	}
 	else if (cmd == "region") {
