@@ -504,7 +504,7 @@ function removeFav(msg, args) {
 					return;
 				}
 				else {
-					if (args[0]+1>fav["link"].length) {
+					if (parseInt(args[0])+1>fav["link"].length) {
 						msg.channel.send("There is an error with the number you selected");
 						return;
 					}
@@ -569,7 +569,7 @@ function playFav(radio_channel,msg, client, args) {
 				msg.channel.send("There is an error with the number you selected");
 				return;
 			}
-			if (args[0]+1>fav["link"].length) {
+			if (parseInt(args[0])+1>fav["link"].length) {
 				msg.channel.send("There is an error with the number you selected");
 				return;
 			}
