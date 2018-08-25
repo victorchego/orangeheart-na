@@ -403,7 +403,7 @@ function addFav(msg, args) {
 			return;
 		}
 		if (ytdl.validateURL(args[0])) {
-			if (!elem["list"].find(function(item){return item==args[0]) {
+			if (!elem["list"].find(function(item){return item==args[0]}) {
 				elem["list"].push(args[0]);
 				obj.push(elem);
 				objToWeb(obj, FAV_JSON);
@@ -417,7 +417,7 @@ function addFav(msg, args) {
 			var str = args.join(' ');
 			search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
 				if (results[0]) {
-					if (!elem["list"].find(function(item){return item==args[0]) {
+					if (!elem["list"].find(function(item){return item==args[0]}) {
 						elem["list"].push(results[0]["link"]);
 					}
 					else {
