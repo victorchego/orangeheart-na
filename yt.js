@@ -396,6 +396,7 @@ function addFav(msg, args) {
 			elem = {};
 			elem["id"] = msg.author.id;
 			elem["list"] = [];
+			obj.push(elem);
 		}
 		if (elem["list"].length>=10) {
 			msg.channel.send('You have capped at 10 favorites. Please remove one to add another');
@@ -416,7 +417,6 @@ function addFav(msg, args) {
 					msg.channel.send('Invalid search result. Please try again.');
 					return;
 				}
-				obj.push(elem);
 				objToWeb(obj, FAV_JSON);
 			});
 		}
@@ -441,6 +441,7 @@ function viewFav(msg) {
 		else {
 			var str = msg.author+"'s favorites: \n```";
 			for (i in elem["list"]) {
+				console.log(elem["list"][i]);
 				ytdl.getInfo(elem["list"][i],{ filter : 'audioonly' }, function (err, info) {
 					if (err) msg.channel.send('Error getting video info');
 					else {
