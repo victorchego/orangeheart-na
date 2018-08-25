@@ -418,6 +418,7 @@ function addFav(msg, args) {
 					else {
 						fav["title"].push(info["title"]);
 						objToWeb(obj, FAV_JSON);
+						msg.channel.send('Successfully added to your favorites');
 					}
 				});
 			}
@@ -440,6 +441,7 @@ function addFav(msg, args) {
 							else {
 								fav["title"].push(info["title"]);
 								objToWeb(obj, FAV_JSON);
+								msg.channel.send('Successfully added to your favorites');
 							}
 						});
 					}
@@ -454,8 +456,6 @@ function addFav(msg, args) {
 				}
 			});
 		}
-		msg.channel.send('Successfully added to your favorites');
-		return;
 	});
 }
 
@@ -485,7 +485,43 @@ function viewFav(msg) {
 }
 
 function removeFav(msg, args) {
-	
+	if (args[0]) {
+		if (!outOfBounds(args[0])) {
+			request(FAV_JSON, function (err, response, data) {
+				if (err) {
+					console.log('Error reading points file: '+err);
+					//msg.channel.send('An unexpected error has occurred');
+					return;
+				}	
+				var obj = JSON.parse(data);
+				var fav = obj.find(function(item){return item["id"]==msg.author.id;});
+				if (!fav) {
+					msg.channel.send("You don't have any favorites");
+					return;
+				}
+				else {
+					if (args[0]+1>fav["link"].length) {
+						msg.channel.send("There is an error with the number you selected");
+						return;
+					}
+					else {
+						fav["link"].splice(args[0],1);
+						fav["title"].splice(args[0],1);
+						msg.channel.send("Removed from favorites");
+						return;
+					}
+				}
+			});
+		}
+		else {
+			msg.channel.send("To remove a favorite, type !yt unfavorite/unfav/uf 0-9, where the number corresponds to the item on your favorite list");
+			return;
+		}
+	}
+	else {
+		msg.channel.send("To remove a favorite, type !yt unfavorite/unfav/uf 0-9, where the number corresponds to the item on your favorite list");
+		return;
+	}
 }
 
 function clearFav(msg) {
