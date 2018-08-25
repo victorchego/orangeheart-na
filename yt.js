@@ -232,11 +232,7 @@ function handleMessage(msg, client) {
 			msg.channel.send('Invalid parameters.');
 			return;
 		}
-		if (!ytdl.validateURL(args[0])) {
-			//firstResult(client,msg,args);
-			return;
-		}
-		//addFav(radio_channel, msg, client, args[0]);
+		addFav(msg, args);
 		return;
 	}
 	else if (cmd == "unfavorite" || cmd == "unfav" || cmd == "uf") {
@@ -405,18 +401,26 @@ function addFav(msg, args) {
 			msg.channel.send('You have capped at 10 favorites. Please remove one to add another');
 			return;
 		}
-		var str = args.join(' ');
-		search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
-			if (results[0]) {
-				elem["list"].push(url);
-			}
-			else {
-				msg.channel.send('Invalid search result. Please try again.');
-				return;
-			}
+		if (ytdl.validateURL(args[0])) {
+			elem["list"].push(args[0]);
 			obj.push(elem);
 			objToWeb(obj, FAV_JSON);
-		});
+		}
+		else {
+			var str = args.join(' ');
+			search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
+				if (results[0]) {
+					elem["list"].push(url);
+				}
+				else {
+					msg.channel.send('Invalid search result. Please try again.');
+					return;
+				}
+				obj.push(elem);
+				objToWeb(obj, FAV_JSON);
+			});
+		}
+		return;
 	});
 }
 
