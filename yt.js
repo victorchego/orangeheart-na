@@ -165,7 +165,7 @@ function handleMessage(msg, client) {
 		return;
 	}
 	else if (cmd == "commands") {
-		msg.channel.send("```!yt commands/queue/q/current/c/next/n/disconnect/dc/stop/loop/l/region\n!yt play/p/search/s youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
+		msg.channel.send("```!yt commands/queue/q/current/c/next/n/disconnect/dc/stop/loop/l/region\n!yt play/p/search/s/favorite/fav/f youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
 		return;
 	}
 	else if (cmd == "region") {
@@ -245,6 +245,10 @@ function handleMessage(msg, client) {
 			return;
 		}
 		//removeFav(radio_channel, msg, client, args[0]);
+		return;
+	}
+	else if (cmd == "clearfavorites" || cmd == "clearfav" || cmd == "cf") {
+		clearFav(msg);
 		return;
 	}
 	else if (cmd == "favoritelist" || cmd == "favlist" || cmd == "fl") {
@@ -391,22 +395,31 @@ function addFav(msg, args) {
 			return;
 		}	
 		var obj = JSON.parse(data);
-		var elem = obj.find(val => val.id  == msg.author.id);
-		if (!elem) {
-			elem = {};
-			elem["id"] = msg.author.id;
-			elem["list"] = [];
-			obj.push(elem);
+		var fav = obj.find(val => val.id  == msg.author.id);
+		if (!fav) {
+			fav = {};
+			fav["id"] = msg.author.id;
+			fav["link"] = [];
+			fav["title"] = [];
+			obj.push(fav);
 		}
-		if (elem["list"].length>=10) {
+		if (fav["link"].length>=10) {
 			msg.channel.send('You have capped at 10 favorites. Please remove one to add another');
 			return;
 		}
 		if (ytdl.validateURL(args[0])) {
-			if (!elem["list"].find(function(item){return item==args[0]})) {
-				elem["list"].push(args[0]);
-				obj.push(elem);
-				objToWeb(obj, FAV_JSON);
+			if (!inList(args[0], fav["link"])) {
+				fav["link"].push(args[0]);
+				ytdl.getInfo(args[0],{ filter : 'audioonly' }, function (err, info) {
+					if (err) {
+						msg.channel.send('Error getting video info');
+						return;
+					}
+					else {
+						fav["title"].push(info["title"]);
+						objToWeb(obj, FAV_JSON);
+					}
+				});
 			}
 			else {
 				msg.channel.send('You have already added this to your favorites');
@@ -417,8 +430,18 @@ function addFav(msg, args) {
 			var str = args.join(' ');
 			search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
 				if (results[0]) {
-					if (!elem["list"].find(function(item){return item==str})) {
-						elem["list"].push(results[0]["link"]);
+					if (!inList(results[0]["link"], fav["link"])) {
+						fav["link"].push(results[0]["link"]);
+						ytdl.getInfo(args[0],{ filter : 'audioonly' }, function (err, info) {
+							if (err) {
+								msg.channel.send('Error getting video info');
+								return;
+							}
+							else {
+								fav["title"].push(info["title"]);
+								objToWeb(obj, FAV_JSON);
+							}
+						});
 					}
 					else {
 						msg.channel.send('You have already added this to your favorites');
@@ -429,7 +452,6 @@ function addFav(msg, args) {
 					msg.channel.send('Invalid search result. Please try again.');
 					return;
 				}
-				objToWeb(obj, FAV_JSON);
 			});
 		}
 		msg.channel.send('Successfully added to your favorites');
@@ -445,21 +467,15 @@ function viewFav(msg) {
 			return;
 		}	
 		var obj = JSON.parse(data);
-		var elem = obj.find(function(item){return item["id"]==msg.author.id;});
-		if (!elem) {
+		var fav = obj.find(function(item){return item["id"]==msg.author.id;});
+		if (!fav) {
 			msg.channel.send("You don't have any favorites");
 			return;
 		}
 		else {
 			var str = msg.author+"'s favorites: \n```";
-			for (i in elem["list"]) {
-				console.log(elem["list"][i]);
-				ytdl.getInfo(elem["list"][i],{ filter : 'audioonly' }, function (err, info) {
-					if (err) msg.channel.send('Error getting video info');
-					else {
-						str += i + ". " + info["title"] + "\n";
-					}
-				});
+			for (i in fav["title"]) {
+				str += i + ". " + fav["title"] + "\n";
 			}
 			str += "```";
 			msg.channel.send(str);
@@ -470,6 +486,29 @@ function viewFav(msg) {
 
 function removeFav(msg, args) {
 	
+}
+
+function clearFav(msg) {
+	request(FAV_JSON, function (err, response, data) {
+		if (err) {
+			console.log('Error reading points file: '+err);
+			//msg.channel.send('An unexpected error has occurred');
+			return;
+		}	
+		var obj = JSON.parse(data);
+		var fav = obj.find(function(item){return item["id"]==msg.author.id;});
+		if (!fav) {
+			msg.channel.send("You don't have any favorites");
+			return;
+		}
+		else {
+			fav["link"] = [];
+			fav["title"] = [];
+			objToWeb(obj, FAV_JSON);
+			msg.channel.send("Cleared your favorites");
+			return;
+		}
+	});
 }
 
 function selectChannel(msg) {
@@ -507,5 +546,9 @@ function objToWeb(obj,url) {
 		if (error) console.log("Error has occurred: "+error);
 	});     
 }	
+
+function inList(item, list) {
+	return list.indexOf(item) > -1;
+};
 
 module.exports = {handleMessage};
