@@ -397,7 +397,7 @@ function addFav(msg, args) {
 			elem["id"] = msg.author.id;
 			elem["list"] = [];
 		}
-		if (elem[msg.author.id].length>=10) {
+		if (elem["list"].length>=10) {
 			msg.channel.send('You have capped at 10 favorites. Please remove one to add another');
 			return;
 		}
