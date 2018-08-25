@@ -432,7 +432,7 @@ function addFav(msg, args) {
 				if (results[0]) {
 					if (!inList(results[0]["link"], fav["link"])) {
 						fav["link"].push(results[0]["link"]);
-						ytdl.getInfo(args[0],{ filter : 'audioonly' }, function (err, info) {
+						ytdl.getInfo(results[0]["link"],{ filter : 'audioonly' }, function (err, info) {
 							if (err) {
 								msg.channel.send('Error getting video info');
 								return;
