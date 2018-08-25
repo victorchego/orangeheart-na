@@ -240,11 +240,7 @@ function handleMessage(msg, client) {
 			msg.channel.send('Invalid parameters.');
 			return;
 		}
-		if (!ytdl.validateURL(args[0])) {
-			//firstResult(client,msg,args);
-			return;
-		}
-		//removeFav(radio_channel, msg, client, args[0]);
+		removeFav(msg, args);
 		return;
 	}
 	else if (cmd == "clearfavorites" || cmd == "clearfav" || cmd == "cf") {
