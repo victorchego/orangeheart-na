@@ -410,7 +410,7 @@ function addFav(msg, args) {
 			var str = args.join(' ');
 			search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
 				if (results[0]) {
-					elem["list"].push(url);
+					elem["list"].push(results[0]["link"]);
 				}
 				else {
 					msg.channel.send('Invalid search result. Please try again.');
@@ -420,6 +420,7 @@ function addFav(msg, args) {
 				objToWeb(obj, FAV_JSON);
 			});
 		}
+		msg.channel.send('Successfully added to your favorites');
 		return;
 	});
 }
