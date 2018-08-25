@@ -479,7 +479,7 @@ function viewFav(msg) {
 		else {
 			var str = msg.author+"'s favorites: \n```";
 			for (i in fav["title"]) {
-				str += i + ". " + fav["title"] + "\n";
+				str += i + ". " + fav["title"][i] + "\n";
 			}
 			str += "```";
 			msg.channel.send(str);
@@ -560,8 +560,6 @@ function playFav(radio_channel,msg, client, args) {
 		}	
 		var obj = JSON.parse(data);
 		var fav = obj.find(function(item){return item["id"]==msg.author.id;});
-		console.log(fav);
-		console.log(obj);
 		if (!fav) {
 			msg.channel.send("You don't have any favorites");
 			return;
