@@ -13,7 +13,7 @@ var SELECTED_VOICE = RADIO_VOICE_ID;
 
 var BANNED_CHANNELS = [];
 
-var FAV_JSON = 'https://api.myjson.com/bins/ox3pc'; //{user:[0,1,2,3,4,5,6,7,8,9]}
+var FAV_JSON = 'https://api.myjson.com/bins/1gjtw0'; //{user:[0,1,2,3,4,5,6,7,8,9]}
 
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
