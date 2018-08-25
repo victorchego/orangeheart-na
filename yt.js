@@ -256,7 +256,7 @@ function handleMessage(msg, client) {
 			msg.channel.send('Invalid parameters.');
 			return;
 		}
-		playFav(msg, args);
+		playFav(radio_channel,msg, client, args);
 		return;
 	}
 	else {
@@ -560,6 +560,8 @@ function playFav(radio_channel,msg, client, args) {
 		}	
 		var obj = JSON.parse(data);
 		var fav = obj.find(function(item){return item["id"]==msg.author.id;});
+		console.log(fav);
+		console.log(obj);
 		if (!fav) {
 			msg.channel.send("You don't have any favorites");
 			return;
