@@ -102,7 +102,7 @@ const voiceCallback = (oldMember, newMember) => {
 
 const messageCallback = (msg) => {
 	selectChannel(msg);
-	if (msg.content.toLowerCase().startsWith('!sel')) {
+	if (msg.content.toLowerCase().startsWith('~sel')) {
 		var num = msg.content.substring(4).trim();
 		if (outOfBounds(num)) {
 			msg.channel.send('You must specify a number (0-9)');
@@ -251,6 +251,14 @@ function handleMessage(msg, client) {
 		viewFav(msg);
 		return;
 	}
+	else if (cmd == "my") {
+		if (args.length == 0) {
+			msg.channel.send('Invalid parameters.');
+			return;
+		}
+		playFav(msg, args);
+		return;
+	}
 	else {
 		msg.channel.send('Undefined command. Type !yt commands');
 		return;
@@ -338,7 +346,7 @@ function processSearch(client,msg,args) {
 			msg.channel.send('Search encountered error');
 			return console.log(err);
 		}
-		var titles = msg.author+" Type !sel (0-9) to select your video ex. !sel 4 (30 seconds) \n```";
+		var titles = msg.author+" Type ~sel (0-9) to select your video ex. ~sel 4 (30 seconds) \n```";
 		for (i in results) {
 			titles += i + ". " + results[i]["title"] + "\n";
 		}
@@ -538,6 +546,34 @@ function clearFav(msg) {
 			fav["title"] = [];
 			objToWeb(obj, FAV_JSON);
 			msg.channel.send("Cleared your favorites");
+			return;
+		}
+	});
+}
+
+function playFav(radio_channel,msg, client, args) {
+	request(FAV_JSON, function (err, response, data) {
+		if (err) {
+			console.log('Error reading points file: '+err);
+			//msg.channel.send('An unexpected error has occurred');
+			return;
+		}	
+		var obj = JSON.parse(data);
+		var fav = obj.find(function(item){return item["id"]==msg.author.id;});
+		if (!fav) {
+			msg.channel.send("You don't have any favorites");
+			return;
+		}
+		else {
+			if (outOfBounds(args[0])) {
+				msg.channel.send("There is an error with the number you selected");
+				return;
+			}
+			if (args[0]+1>fav["link"].length) {
+				msg.channel.send("There is an error with the number you selected");
+				return;
+			}
+			addLink(radio_channel,msg,client,fav["link"][args[0]]);
 			return;
 		}
 	});
