@@ -13,7 +13,7 @@ var SELECTED_VOICE = RADIO_VOICE_ID;
 
 var BANNED_CHANNELS = [];
 
-var FAV_JSON = 'https://api.myjson.com/bins/1gjtw0'; //{user:[0,1,2,3,4,5,6,7,8,9]}
+var FAV_JSON = 'https://api.myjson.com/bins/te2gg'; //{user:[0,1,2,3,4,5,6,7,8,9]}
 
 var YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
@@ -403,15 +403,27 @@ function addFav(msg, args) {
 			return;
 		}
 		if (ytdl.validateURL(args[0])) {
-			elem["list"].push(args[0]);
-			obj.push(elem);
-			objToWeb(obj, FAV_JSON);
+			if (!elem["list"].find(function(item){return item==args[0]) {
+				elem["list"].push(args[0]);
+				obj.push(elem);
+				objToWeb(obj, FAV_JSON);
+			}
+			else {
+				msg.channel.send('You have already added this to your favorites');
+				return;
+			}
 		}
 		else {
 			var str = args.join(' ');
 			search(str, {maxResults: 1, type: 'video', key: YOUTUBE_API_KEY}, function(err, results) {
 				if (results[0]) {
-					elem["list"].push(results[0]["link"]);
+					if (!elem["list"].find(function(item){return item==args[0]) {
+						elem["list"].push(results[0]["link"]);
+					}
+					else {
+						msg.channel.send('You have already added this to your favorites');
+						return;
+					}
 				}
 				else {
 					msg.channel.send('Invalid search result. Please try again.');
