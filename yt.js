@@ -165,7 +165,7 @@ function handleMessage(msg, client) {
 		return;
 	}
 	else if (cmd == "commands") {
-		msg.channel.send("```!yt commands/queue/q/current/c/next/n/disconnect/dc/stop/loop/l/region/clearfavorites/clearfav/cf\n!yt play/p/search/s/favorite/fav/f youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
+		msg.channel.send("```!yt commands/queue/q/current/c/pause/unpause/resume/next/n/disconnect/dc/stop/loop/l/region/clearfavorites/clearfav/cf\n!yt play/p/search/s/favorite/fav/f youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
 		return;
 	}
 	else if (cmd == "region") {
@@ -231,9 +231,20 @@ function handleMessage(msg, client) {
 		if (radios[SELECTED_SERVER]["dispatcher"]) {
 			if (radios[SELECTED_SERVER]["dispatcher"].paused) {
 				radios[SELECTED_SERVER]["dispatcher"].resume();
+				msg.channel.send("Radio resumed");
 			}
 			else {
 				radios[SELECTED_SERVER]["dispatcher"].pause();
+				msg.channel.send("Radio paused");
+			}
+			return;
+		}
+	}
+	else if (cmd == "unpause" || cmd == "resume") {
+		if (radios[SELECTED_SERVER]["dispatcher"]) {
+			if (radios[SELECTED_SERVER]["dispatcher"].paused) {
+				radios[SELECTED_SERVER]["dispatcher"].resume();
+				msg.channel.send("Radio resumed");
 			}
 			return;
 		}
