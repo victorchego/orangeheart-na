@@ -227,6 +227,17 @@ function handleMessage(msg, client) {
 		addLink(radio_channel, msg, client, args[0]);
 		return;
 	}
+	else if (cmd == "pause" ) {
+		if (radios[SELECTED_SERVER]["dispatcher"]) {
+			if (radios[SELECTED_SERVER]["dispatcher"].paused) {
+				radios[SELECTED_SERVER]["dispatcher"].resume();
+			}
+			else {
+				radios[SELECTED_SERVER]["dispatcher"].pause();
+			}
+			return;
+		}
+	}
 	else if (cmd == "favorite" || cmd == "fav" || cmd == "f") {
 		if (args.length == 0) {
 			msg.channel.send('Invalid parameters.');
