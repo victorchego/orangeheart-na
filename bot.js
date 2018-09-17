@@ -68,7 +68,7 @@ client.on('guildMemberAdd', (guildmember) => {
 	//	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
 	//	var role = guild.roles.find("name", "Ninja Apprentice");
 	//	guildmember.addRole(role).then(console.log(guildmember.user+' modded')).catch(console.error);
-	}
+	//}
 });
 
 client.on('guildMemberRemove', (guildmember) => {
@@ -450,6 +450,9 @@ function assignNep(client, msg, args) {
 		break;
 		case 'veru':
 			role = msg.guild.roles.find("name", 'Veru Fan');	
+		break;
+		case 'reset':
+			return;
 		break;
 		default:
 			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Blanny, and Veru');
