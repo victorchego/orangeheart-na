@@ -434,7 +434,7 @@ function assignRole(client, msg, args) {
 function assignNep(client, msg, args) {
 	var role = null;
 	if (args.length == 0) {
-		msg.channel.send('To join a role, use !role [Nep/Nowa/Blanny/Veru/Ploot], without the brackets');
+		msg.channel.send('To join a role, use !role [Nep/Nowa/Blanny/Veru/Ploot], without the brackets. To reset roles, use !role reset');
 		return;
 	}
 	var str = args[0].toLowerCase();
@@ -460,14 +460,21 @@ function assignNep(client, msg, args) {
 			role = msg.guild.roles.find("name", 'Ploot Plushie');	
 		break;
 		case 'reset':
+			msg.member.setRoles([]).then(msg.channel.send('Roles have been reset')).catch(console.error);
 			return;
 		break;
 		default:
-			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Blanny, Veru, Ploot');
+			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Blanny, Veru, Ploot. To reset, use !role reset');
 			return;
 		break;
 	}
-	msg.member.addRole(role).then(msg.channel.send(msg.author+' has joined ' + role.name)).catch(console.error);
+	var hasRole = msg.member.roles.find(role);
+	if (!hasRole) {
+		msg.member.addRole(role).then(msg.channel.send(msg.author+' has joined ' + role.name)).catch(console.error);
+	}
+	else {
+		msg.member.removeRole(role).then(msg.channel.send(msg.author+' has left ' + role.name)).catch(console.error);
+	}
 }
 
 function toTitleCase(str)
