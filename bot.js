@@ -60,7 +60,7 @@ client.on('reconnecting', () => {
 
 
 client.on('guildMemberAdd', (guildmember) => {
-	var server = client.guilds.find(val => val.id == GENERAL_ID);
+	var server = client.guilds.find(val => val.id == OWNER_SERVER);
 	if (server == null || server.id != OWNER_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
@@ -72,7 +72,7 @@ client.on('guildMemberAdd', (guildmember) => {
 });
 
 client.on('guildMemberRemove', (guildmember) => {
-	var server = client.guilds.find(val => val.id == GENERAL_ID);
+	var server = client.guilds.find(val => val.id == OWNER_SERVER);
 	if (server == null || server.id != OWNER_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has left the server at '+time.format('LLL')+' Pacific');
