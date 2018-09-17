@@ -434,7 +434,7 @@ function assignRole(client, msg, args) {
 function assignNep(client, msg, args) {
 	var role = null;
 	if (args.length == 0) {
-		msg.channel.send('To join a role, use !role [Nep/Nowa/Blanny/Veru], without the brackets');
+		msg.channel.send('To join a role, use !role [Nep/Nowa/Blanny/Veru/Ploot], without the brackets');
 		return;
 	}
 	var str = args[0].toLowerCase();
@@ -463,7 +463,7 @@ function assignNep(client, msg, args) {
 			return;
 		break;
 		default:
-			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Blanny, and Veru');
+			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Blanny, Veru, Ploot');
 			return;
 		break;
 	}
