@@ -14,6 +14,8 @@ var TIMER_JSON = 'https://api.myjson.com/bins/z65jl'; // [{"id":"X", "time":"X",
 var TIMER_TIMEOUT = null;
 
 var OWNER_ID = '235263356397813762';
+var BOT_LOG_ID = '491040470181478422';
+var OWNER_SERVER = '491019873082671114';
 /* LIST OF SERVERS
 264145505452425227 - MNG 
 */
@@ -56,26 +58,26 @@ client.on('reconnecting', () => {
 	console.log('Attempting to reconnect at '+time);
 });
 
-/*
+
 client.on('guildMemberAdd', (guildmember) => {
 	var server = client.guilds.find(val => val.id == GENERAL_ID);
-	if (server == null || server.id != '264145505452425227') return;
+	if (server == null || server.id != OWNER_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
-	if (guildmember.id == OWNER_ID) {
-		var guild = client.guilds.find(val => val.id  == GENERAL_ID);
-		var role = guild.roles.find("name", "Ninja Apprentice");
-		guildmember.addRole(role).then(console.log(guildmember.user+' modded')).catch(console.error);
+	//if (guildmember.id == OWNER_ID) {
+	//	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
+	//	var role = guild.roles.find("name", "Ninja Apprentice");
+	//	guildmember.addRole(role).then(console.log(guildmember.user+' modded')).catch(console.error);
 	}
 });
 
 client.on('guildMemberRemove', (guildmember) => {
 	var server = client.guilds.find(val => val.id == GENERAL_ID);
-	if (server == null || server.id != '264145505452425227') return;
+	if (server == null || server.id != OWNER_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has left the server at '+time.format('LLL')+' Pacific');
 });
-*/
+
 
 client.on('message', (msg) => {
 	
@@ -95,6 +97,23 @@ client.on('message', (msg) => {
 	
 	else if (msg.author.id == OWNER_ID && msg.content.toLowerCase().startsWith('!del')) {
 		msg.channel.fetchMessage(msg.content.substring(5)).then(message => message.delete().catch(console.error)).catch(console.error);
+	}
+	
+	else if (msg.guild.id == OWNER_SERVER) {
+		var args = msg.content.substring(1).split(' ');
+        var cmd = args[0];
+       
+        args = args.splice(1);
+		
+        switch(cmd.toLowerCase()) {
+			case 'role':
+				assignNep(client, msg, args);
+			break;
+			default:
+				return;
+			break;
+		}
+		
 	}
 	
     else if (msg.content.startsWith('!') && !msg.content.toLowerCase().startsWith('!yt')) {
@@ -142,7 +161,7 @@ client.on('message', (msg) => {
 			break;
 			case 'talk':
 				try {
-					talkCy(client, msg, args);
+					talkBot(client, msg, args);
 				}
 				catch (err) {
 					console.log(msg.author+"'s message failed: "+err.message);
@@ -199,7 +218,7 @@ function timeout(msg) {
 	msg.channel.send(msg.author+', please wait 3 seconds before issuing another command').then(message=>message.delete(3000)).catch(console.error);
 };
 
-function talkCy(client, msg, args) {
+function talkBot(client, msg, args) {
 	if (msg.author.id!=OWNER_ID) throw 'Not owner';
 	if (args[0]!=null) {
 		var channel = client.channels.find(val => val.id === args[0]);
@@ -401,6 +420,43 @@ function unmuteUser(msg, client, args) {
 		return;
 	}
 	user.removeRole(role).then(msg.channel.send('<@'+user.id+'> has been unmuted')).catch(console.error);
+}
+
+function assignRole(client, msg, args) {
+	var role = msg.guild.roles.find("name", args);
+	if (!role) {
+		msg.channel.send('Invalid role');
+		return;
+	}
+	msg.author.addRole(role).then(msg.channel.send(msg.author+' has joined ' + role.name)).catch(console.error);
+}
+
+function assignNep(client, msg, args) {
+	var role = null;
+	if (args.length == 0) {
+		msg.channel.send('To join a role, use !role [Nep/Nowa/Blanny/Veru], without the brackets');
+		return;
+	}
+	var str = args[0].toLowerCase();
+	switch (str) {
+		case 'nep':
+			role = msg.guild.roles.find("name", 'Nep Follower');
+		break;
+		case 'nowa':
+			role = msg.guild.roles.find("name", 'Nowa Soldier');
+		break;
+		case 'blanny':
+			role = msg.guild.roles.find("name", 'Blanny Reader');
+		break;
+		case 'veru':
+			role = msg.guild.roles.find("name", 'Veru Fan');	
+		break;
+		default:
+			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Blanny, and Veru');
+			return;
+		break;
+	}
+	msg.author.addRole(role).then(msg.channel.send(msg.author+' has joined ' + role.name)).catch(console.error);
 }
 
 function toTitleCase(str)
