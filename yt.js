@@ -609,6 +609,9 @@ function selectChannel(msg) {
 	SELECTED_CHANNEL = msg.channel.id;
 	SELECTED_SERVER = msg.guild.id;
 	switch (SELECTED_SERVER) {
+		case '491019873082671114': // plut server
+			SELECTED_VOICE = '491021536984039425';
+			return true;
 		case '382741253353242624': //test server
 			SELECTED_VOICE = '382741253353242628';
 			return true;

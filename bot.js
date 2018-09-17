@@ -440,15 +440,19 @@ function assignNep(client, msg, args) {
 	var str = args[0].toLowerCase();
 	switch (str) {
 		case 'nep':
+		case 'neptune':
 			role = msg.guild.roles.find("name", 'Nep Follower');
 		break;
 		case 'nowa':
+		case 'noire':
 			role = msg.guild.roles.find("name", 'Nowa Soldier');
 		break;
 		case 'blanny':
+		case 'blanc':
 			role = msg.guild.roles.find("name", 'Blanny Reader');
 		break;
 		case 'veru':
+		case 'vert':
 			role = msg.guild.roles.find("name", 'Veru Fan');	
 		break;
 		case 'reset':
