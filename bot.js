@@ -428,7 +428,7 @@ function assignRole(client, msg, args) {
 		msg.channel.send('Invalid role');
 		return;
 	}
-	msg.author.addRole(role).then(msg.channel.send(msg.author+' has joined ' + role.name)).catch(console.error);
+	msg.member.addRole(role).then(msg.channel.send(msg.author+' has joined ' + role.name)).catch(console.error);
 }
 
 function assignNep(client, msg, args) {
@@ -459,7 +459,7 @@ function assignNep(client, msg, args) {
 			return;
 		break;
 	}
-	msg.author.addRole(role).then(msg.channel.send(msg.author+' has joined ' + role.name)).catch(console.error);
+	msg.member.addRole(role).then(msg.channel.send(msg.author+' has joined ' + role.name)).catch(console.error);
 }
 
 function toTitleCase(str)
