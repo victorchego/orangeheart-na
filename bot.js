@@ -468,7 +468,7 @@ function assignNep(client, msg, args) {
 			return;
 		break;
 	}
-	var hasRole = msg.member.roles.find(role);
+	var hasRole = msg.member.roles.find(val => val.id = role.id);
 	if (!hasRole) {
 		msg.member.addRole(role).then(msg.channel.send(msg.author+' has joined ' + role.name)).catch(console.error);
 	}
