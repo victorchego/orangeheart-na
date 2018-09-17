@@ -455,6 +455,10 @@ function assignNep(client, msg, args) {
 		case 'vert':
 			role = msg.guild.roles.find("name", 'Veru Fan');	
 		break;
+		case 'ploot':
+		case 'plutia':
+			role = msg.guild.roles.find("name", 'Ploot Plushie');	
+		break;
 		case 'reset':
 			return;
 		break;
