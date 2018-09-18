@@ -165,7 +165,7 @@ function handleMessage(msg, client) {
 		return;
 	}
 	else if (cmd == "commands") {
-		msg.channel.send("```!yt commands/queue/q/current/c/pause/unpause/resume/next/n/disconnect/dc/stop/loop/l/region/clearfavorites/clearfav/cf\n!yt play/p/search/s/favorite/fav/f youtube_url/search_words\n!yt remove/r keywords_in_queue_title```");
+		msg.channel.send("```!yt commands/queue/q/current/c/pause/unpause/resume/next/n/disconnect/dc/stop/loop/l/region/clearfavorites/clearfav/cf\n!yt play/p/search/s/favorite/fav/f youtube_url/search_words\n!yt remove/r keywords_in_queue_title\n!yt unfavorite/unfav/uf [0-9]```");
 		return;
 	}
 	else if (cmd == "region") {
@@ -533,6 +533,7 @@ function removeFav(msg, args) {
 					else {
 						fav["link"].splice(args[0],1);
 						fav["title"].splice(args[0],1);
+						objToWeb(obj, FAV_JSON);
 						msg.channel.send("Removed from favorites");
 						return;
 					}

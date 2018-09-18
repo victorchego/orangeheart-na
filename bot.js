@@ -423,7 +423,8 @@ function unmuteUser(msg, client, args) {
 }
 
 function assignRole(client, msg, args) {
-	var role = msg.guild.roles.find("name", args);
+	var str = args.join(' ');
+	var role = msg.guild.roles.find("name", str);
 	if (!role) {
 		msg.channel.send('Invalid role');
 		return;
