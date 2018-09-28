@@ -61,7 +61,7 @@ client.on('reconnecting', () => {
 
 client.on('guildMemberAdd', (guildmember) => {
 	var server = client.guilds.find(val => val.id == OWNER_SERVER);
-	if (server == null || server.id != OWNER_SERVER) return;
+	if (server == null || server.id != OWNER_SERVER || guildmember.guild.available && guildmember.guild.id != OWNER_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
 	//if (guildmember.id == OWNER_ID) {
@@ -73,7 +73,7 @@ client.on('guildMemberAdd', (guildmember) => {
 
 client.on('guildMemberRemove', (guildmember) => {
 	var server = client.guilds.find(val => val.id == OWNER_SERVER);
-	if (server == null || server.id != OWNER_SERVER) return;
+	if (server == null || server.id != OWNER_SERVER || guildmember.guild.available && guildmember.guild.id != OWNER_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has left the server at '+time.format('LLL')+' Pacific');
 });
@@ -435,7 +435,7 @@ function assignRole(client, msg, args) {
 function assignNep(client, msg, args) {
 	var role = null;
 	if (args.length == 0) {
-		msg.channel.send('To join a role, use !role [Nep/Nowa/Blanny/Veru/Ploot], without the brackets. To reset roles, use !role reset');
+		msg.channel.send('To join a role, use !role [Nep/Nowa/Buran/Beru/Ploot], without the brackets. To reset roles, use !role reset');
 		return;
 	}
 	var str = args[0].toLowerCase();
@@ -448,13 +448,13 @@ function assignNep(client, msg, args) {
 		case 'noire':
 			role = msg.guild.roles.find("name", 'Nowa Soldier');
 		break;
-		case 'blanny':
+		case 'buran':
 		case 'blanc':
-			role = msg.guild.roles.find("name", 'Blanny Reader');
+			role = msg.guild.roles.find("name", 'Buran Reader');
 		break;
-		case 'veru':
+		case 'Beru':
 		case 'vert':
-			role = msg.guild.roles.find("name", 'Veru Fan');	
+			role = msg.guild.roles.find("name", 'Beru Fan');	
 		break;
 		case 'ploot':
 		case 'plutia':
@@ -465,7 +465,7 @@ function assignNep(client, msg, args) {
 			return;
 		break;
 		default:
-			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Blanny, Veru, Ploot. To reset, use !role reset');
+			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Buran, Beru, Ploot. To reset, use !role reset');
 			return;
 		break;
 	}
