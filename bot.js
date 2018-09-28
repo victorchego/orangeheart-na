@@ -109,9 +109,52 @@ client.on('message', (msg) => {
 			case 'role':
 				assignNep(client, msg, args);
 			break;
-			default:
-				return;
+			case 'commands':
+                msg.author.send('```!commands \n!help \n!yt```').then(function(){
+								msg.channel.send("Details have been sent "+msg.author);
+								}).catch(function(){
+									console.log('Cannot send to '+msg.author.username);
+									msg.channel.send("Your DM has been disabled. Please enable DMs so I can send details "+msg.author);
+									});
+            break;
+			case 'help':
+				msg.author.send('Type !commands to see a list of commands').then(function(){
+								msg.channel.send("Details have been sent "+msg.author);
+								}).catch(function(){
+									console.log('Cannot send to '+msg.author.username);
+									msg.channel.send("Your DM has been disabled. Please enable DMs so I can send details "+msg.author);
+									});
 			break;
+			case 'talk':
+				try {
+					talkBot(client, msg, args);
+				}
+				catch (err) {
+					console.log(msg.author+"'s message failed: "+err.message);
+				}
+			break;
+			case 'purge':
+				if (msg.author.id==OWNER_ID) {
+					purgeDelete(client, msg, args);
+				}
+				else msg.channel.send('Cannot obey command');
+			break;
+			
+			case 'mute':
+				if (msg.author.id==OWNER_ID) {
+					muteUser(msg, client, args);
+				}
+				else msg.channel.send('Cannot obey command');				
+			break;
+			case 'unmute':
+				if (msg.author.id==OWNER_ID) {
+					unmuteUser(msg, client, args);
+				}
+				else msg.channel.send('Cannot obey command');				
+			break;
+			default:
+				msg.channel.send('Refer to `!commands`');
+            break;
 		}
 		
 	}
