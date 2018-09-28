@@ -99,7 +99,7 @@ client.on('message', (msg) => {
 		msg.channel.fetchMessage(msg.content.substring(5)).then(message => message.delete().catch(console.error)).catch(console.error);
 	}
 	
-	else if (msg.guild && msg.guild.id == OWNER_SERVER) {
+	else if (msg.content.startsWith('!') && msg.guild && msg.guild.id == OWNER_SERVER) {
 		var args = msg.content.substring(1).split(' ');
         var cmd = args[0];
        
