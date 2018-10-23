@@ -616,8 +616,8 @@ function selectChannel(msg) {
 		case '382741253353242624': //test server
 			SELECTED_VOICE = '382741253353242628';
 			return true;
-		case '443328437642461184': //izo server
-			SELECTED_VOICE = '443328437642461188';
+		case '503862251191795713': //izo server
+			SELECTED_VOICE = '503862251971805201';
 			return true;
 		case '264145505452425227': //main
 			SELECTED_VOICE = '348328771797123073';
