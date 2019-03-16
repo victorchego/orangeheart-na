@@ -3,7 +3,7 @@ function msgHistoryPings(channel, userID, ratio = 0.5) {
 	channel.fetchMessages()
 	.then(messages => {
 		user_msg = messages.filter(m => m.author.id === userID);
-		return spamPings(user_msg, ratio);})
+		console.log(spamPings(user_msg, ratio));})
 	.catch(console.error);
 }
 
@@ -22,7 +22,6 @@ function spamPings(messages, ratio = 0.5) {
 		}
 		total++;
 	}
-	console.log(ping/total > ratio);
 	return ping/total > ratio;
 }
 
