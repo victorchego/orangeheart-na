@@ -1,7 +1,9 @@
-function msgHistoryPings(userID, ratio = 0.5) {
+function msgHistoryPings(channelID, userID, ratio = 0.5) {
 	// Get messages and filter by user ID
 	channel.fetchMessages()
-	.then(messages => {return spamPings(messages, ratio);})
+	.then(messages => {
+		user_msg = messages.filter(m => m.author.id === userID);
+		return spamPings(user_msg, ratio);})
 	.catch(console.error);
 }
 
