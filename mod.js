@@ -22,6 +22,7 @@ function spamPings(messages, ratio = 0.5) {
 		}
 		total++;
 	}
+	console.log(ping/total > ratio);
 	return ping/total > ratio;
 }
 
