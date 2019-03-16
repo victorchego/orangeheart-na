@@ -1,4 +1,4 @@
-function msgHistoryPings(channelID, userID, ratio = 0.5) {
+function msgHistoryPings(channel, userID, ratio = 0.5) {
 	// Get messages and filter by user ID
 	channel.fetchMessages()
 	.then(messages => {
