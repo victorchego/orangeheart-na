@@ -8,6 +8,7 @@ var moment = require('moment');
 var Quickstart = require('./quickstart.js');
 var CALL_REQUEST = Quickstart.callRequestFromServer; //function (callback,args,msg) {Quickstart.callRequestFromServer(callback,args,msg);}; // .callRequestFromServer or .callRequestFromClient
 var YT = require('./yt.js');
+var mod = require('./mod.js');
 
 var URL_JSON = 'https://api.myjson.com/bins/663th';
 var TIMER_JSON = 'https://api.myjson.com/bins/z65jl'; // [{"id":"X", "time":"X", "type":"steal/donate"}]
@@ -245,6 +246,8 @@ client.on('message', (msg) => {
 	else {
 		filterMessage(msg);
 	}
+	
+	console.log(mod.msgHistoryPings(msg.author.id));
 });
 
 function inList(item, list) {
