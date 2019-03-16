@@ -22,3 +22,5 @@ function spamPings(messages, ratio = 0.5) {
 	}
 	return ping/total > ratio;
 }
+
+module.exports = {msgHistoryPings};
