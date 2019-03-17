@@ -297,7 +297,8 @@ function purgeDelete(client, msg, args) {
 	var mention = msg.mentions.users.keyArray();
 	msg.channel.fetchMessages({limit: args[0]})
 	.then(messages => {
-		user_msg = messages.filter(m => mention.includes(m.author.id));
+		var user_msg = messages;
+		if (mention.length > 0) user_msg = messages.filter(m => mention.includes(m.author.id));
 		msg.channel.bulkDelete(user_msg);
 	});
 }
