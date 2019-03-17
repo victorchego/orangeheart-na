@@ -18,7 +18,7 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 		spam = false;
 		reason = "";
 		if (flags & SPAM_PING) {
-			result = spamPings(user_msg);
+			result = spamPings(user_msg) && messages.keyArray().length >= 10;
 			spam = result || spam;
 			if (result) reason += "Ping spam. ";
 		}
@@ -36,7 +36,7 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 			console.log(`${msg.author} has been flagged. Reason(s): ${reason}`);
 			msg.channel.send(`${msg.author} has been flagged. Reason(s): ${reason}`);
 			role = msg.guild.roles.find(val => val.name === 'Flagged');
-			msg.member.addRole(role);
+			if (role) msg.member.addRole(role);
 		}
 		//console.log(spamPings(user_msg));
 		//console.log(spamPaste(user_msg));

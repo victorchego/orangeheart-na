@@ -294,24 +294,20 @@ function clearAllTimeouts(args) {
 
 function purgeDelete(client, msg, args) {
 	if (!args || isNaN(args[0])) args = [50];
-	msg.channel.fetchMessages({limit: args[0]}).then(messages => msg.channel.bulkDelete(messages));
+	var mention = msg.mentions.users.keyArray();
+	msg.channel.fetchMessages({limit: args[0]})
+	.then(messages => {
+		user_msg = messages.filter(m => mention.includes(m.author.id));
+		msg.channel.bulkDelete(user_msg);
+	});
 }
 
 function filterMessage(msg) {
 	var str = msg.content.toLowerCase().split(" ").join("");
-	if (str.includes('muddaasshoe') ||
-	str.includes('knuckleswey') ||
-	str.includes('knucklesway') || str.includes('knuckleswei') ||
-	str.includes('knuckleswae') || str.includes('deway') ||
-	str.includes('daway') || str.includes('dewei') ||
-	str.includes('dawei') || str.includes('deway') ||
-	str.includes('dawae') || str.includes('dewae') ||
-	str.includes('dawey') || str.includes('dewey') ||
-	str.includes('dawhei') || str.includes('dewhei') ||
-	str.includes('dawhey') || str.includes('dewhey')
+	if (str.includes('muddaasshoe')
 	) {
 		msg.delete().catch(console.error);
-		msg.channel.send('A poor lost soul has been ~~censored~~ guided to heaven');
+		//msg.channel.send('A poor lost soul has been ~~censored~~ guided to heaven');
 	}
 }
 
