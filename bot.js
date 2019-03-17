@@ -302,16 +302,14 @@ function purgeDelete(client, msg, args) {
 			msg.channel.bulkDelete(messages);
 			return;
 		}
-		console.log(mention_role);
-		console.log(mention_user);
 		if (mention_role.length > 0 && mention_user.length > 0) {
-			filter_msg = messages.filter(m => {mention_role.some(rid => m.member.roles.keyArray().includes(rid)) || mention_user.includes(m.author.id)});
+			filter_msg = messages.filter(m => mention_role.some(rid => m.member.roles.keyArray().includes(rid)) || mention_user.includes(m.author.id));
 		}
 		else if (mention_user.length > 0) {
-			filter_msg = messages.filter(m => {mention_user.includes(m.author.id)});
+			filter_msg = messages.filter(m => mention_user.includes(m.author.id));
 		}
 		else if (mention_role.length > 0) {
-			filter_msg = messages.filter(m => {mention_role.some(rid => m.member.roles.keyArray().includes(rid))});
+			filter_msg = messages.filter(m => mention_role.some(rid => m.member.roles.keyArray().includes(rid)));
 		}
 		msg.channel.bulkDelete(filter_msg);
 		return;
