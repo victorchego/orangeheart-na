@@ -294,11 +294,15 @@ function clearAllTimeouts(args) {
 
 function purgeDelete(client, msg, args) {
 	if (!args || isNaN(args[0])) args = [50];
-	var mention = msg.mentions.users.keyArray().concat(msg.mentions.roles);
+	var mention_user = msg.mentions.users.keyArray();
+	var mention_role = msg.mentions.roles.keyArray();
 	msg.channel.fetchMessages({limit: args[0]})
 	.then(messages => {
 		var user_msg = messages;
-		if (mention.length > 0) user_msg = messages.filter(m => mention.includes(m.author.id) || mention.some(val => m.member.roles.includes(val)));
+		user_msg = messages.filter(m => {
+			if (mention_user.length > 0) mention_user.includes(m.author.id) || 
+			if (mention_role.length > 0) mention_role.some(rid => m.member.roles.keyArray().includes(rid))
+		});
 		msg.channel.bulkDelete(user_msg);
 	});
 }
