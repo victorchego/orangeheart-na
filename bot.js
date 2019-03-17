@@ -247,7 +247,7 @@ client.on('message', (msg) => {
 		filterMessage(msg);
 	}
 	
-	mod.msgHistoryPings(msg.channel, msg.author.id);
+	mod.msgHistoryPings(msg);
 });
 
 function inList(item, list) {
