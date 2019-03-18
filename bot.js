@@ -309,10 +309,12 @@ function purgeDelete(client, msg, args) {
 	msg.channel.fetchMessages({limit: args[0]})
 	.then(messages => {
 		if (mention_user.length == 0 && mention_role.length == 0) {
-			messages.keyArray().forEach((m) => {
-				client.channels.find(val => val.id == MSG_LOG_ID).send(messages.get(m).cleanContent);
-			});
 			msg.channel.bulkDelete(messages);
+			var str = "";
+			messages.keyArray().forEach((m) => {
+				str += `${m.author.username}(ID:${m.author.id}) [${m.createdAt.toUTCString()}] in ${m.channel}: ` + "```" + m.cleanContent + "```";
+			});
+			client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + str);
 			return;
 		}
 		if (mention_role.length > 0 && mention_user.length > 0) {
@@ -325,9 +327,11 @@ function purgeDelete(client, msg, args) {
 			filter_msg = messages.filter(m => mention_role.some(rid => m.member.roles.keyArray().includes(rid)));
 		}
 		msg.channel.bulkDelete(filter_msg);
+		var str = "";
 		filter_msg.keyArray().forEach((m) => {
-			client.channels.find(val => val.id == MSG_LOG_ID).send(filter_msg.get(m).cleanContent);
+			str += `${m.author.username}(ID:${m.author.id}) [${m.createdAt.toUTCString()}] in ${m.channel}: ` + "```" + m.cleanContent + "```"
 		});
+		client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + str);
 		return;
 	});
 }
