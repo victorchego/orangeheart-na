@@ -94,7 +94,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	UPDATE_EMBED.setTimestamp();
 	UPDATE_EMBED.addField("Before", oldMessage);
 	UPDATE_EMBED.addField("After", newMessage);
-	client.channels.find(val => val.id == BOT_LOG_ID).send(UPDATE_EMBED).catch(console.error);
+	client.channels.find(val => val.id == BOT_LOG_ID).send({UPDATE_EMBED}).catch(console.error);
 });
 
 
