@@ -314,10 +314,8 @@ function purgeDelete(client, msg, args) {
 			    message = messages.get(m);
 				str += String(`${message.author.username}(ID:${message.author.id}) [${message.createdAt.toUTCString()}] in ${message.channel.name}: ` + message.cleanContent + "\n");
 			});
-			msg.channel.bulkDelete(messages)
-			.then( function() {
+			msg.channel.bulkDelete(messages);
 			if (args[1]) client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str.substring(0,1800) + "\nCannot display anymore due to lack of space```");
-			});
 			return;
 		}
 		if (mention_role.length > 0 && mention_user.length > 0) {
@@ -335,9 +333,7 @@ function purgeDelete(client, msg, args) {
 			str += String(`${message.author.username}(ID:${message.author.id}) [${message.createdAt.toUTCString()}] in ${message.channel.name}: ` + message.cleanContent + "\n");
 		});
 		msg.channel.bulkDelete(filter_msg)
-		.then( function() {
-		if (args[1]) client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str.substring(0,1800) + "\nCannot display anymore due to lack of space```")
-		});
+		if (args[1]) client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str.substring(0,1800) + "\nCannot display anymore due to lack of space```");
 		return;
 	});
 }
