@@ -24,47 +24,44 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 		}
 		var obj = JSON.parse(data);
 		var user = obj.find(function(item){return item["id"]==userID;});
-		if (!user) {
+		if (user == undefined) {
 			user = {};
 			user["id"] = userID;
 			user["monitor"] = true;
 			obj.push(user);
 			objToWeb(obj, USER_JSON);
-			return;
 		}
+		if (!user["monitor"]) return; // return if monitor is false
 		else {
-			if (!user["monitor"]) return; // return if monitor is false
-			else {
-				channel.fetchMessages({limit: limit})
-				.then(messages => {
-					user_msg = messages.filter(m => m.author.id === userID);
-					flags = 0 | SPAM_PING | SPAM_PASTE | SPAM_MINUTE;
-					spam = false;
-					reason = "";
-					if (flags & SPAM_PING) {
-						result = spamPings(user_msg) && messages.keyArray().length >= 10;
-						spam = result || spam;
-						if (result) reason += "Ping spam. ";
-					}
-					if (flags & SPAM_PASTE) {
-						result = spamPaste(user_msg);
-						spam = result || spam;
-						if (result) reason += "Paste spam. ";
-					}
-					if (flags & SPAM_MINUTE) {
-						result = spamMinute(user_msg);
-						spam = result || spam;
-						if (result) reason += "Minute spam. ";
-					}
-					if (spam) {
-						console.log(`${msg.author} has been flagged. Reason(s): ${reason}`);
-						msg.channel.send(`${msg.author} has been flagged. Reason(s): ${reason}`);
-						role = msg.guild.roles.find(val => val.name === 'Flagged');
-						if (role) msg.member.addRole(role);
-					}
-					})
-				.catch(console.error);
-			}
+			channel.fetchMessages({limit: limit})
+			.then(messages => {
+				user_msg = messages.filter(m => m.author.id === userID);
+				flags = 0 | SPAM_PING | SPAM_PASTE | SPAM_MINUTE;
+				spam = false;
+				reason = "";
+				if (flags & SPAM_PING) {
+					result = spamPings(user_msg) && messages.keyArray().length >= 10;
+					spam = result || spam;
+					if (result) reason += "Ping spam. ";
+				}
+				if (flags & SPAM_PASTE) {
+					result = spamPaste(user_msg);
+					spam = result || spam;
+					if (result) reason += "Paste spam. ";
+				}
+				if (flags & SPAM_MINUTE) {
+					result = spamMinute(user_msg);
+					spam = result || spam;
+					if (result) reason += "Minute spam. ";
+				}
+				if (spam) {
+					console.log(`${msg.author} has been flagged. Reason(s): ${reason}`);
+					msg.channel.send(`${msg.author} has been flagged. Reason(s): ${reason}`);
+					role = msg.guild.roles.find(val => val.name === 'Flagged');
+					if (role) msg.member.addRole(role);
+				}
+				})
+			.catch(console.error);
 		}
 	});
 }
@@ -164,6 +161,7 @@ function monitorOn(msg, uidList) {
 			}
 		});
 		objToWeb(obj, USER_JSON);
+		msg.channel.send("User(s) are being monitored");
 	});		
 }
 
@@ -192,6 +190,7 @@ function monitorOff(msg, uidList) {
 			}
 		});
 		objToWeb(obj, USER_JSON);
+		msg.channel.send("User(s) are NOT being monitored");
 	});	
 }
 
