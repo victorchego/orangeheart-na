@@ -309,11 +309,11 @@ function purgeDelete(client, msg, args) {
 	msg.channel.fetchMessages({limit: args[0]})
 	.then(messages => {
 		if (mention_user.length == 0 && mention_role.length == 0) {
-			msg.channel.bulkDelete(messages);
 			var str = "";
 			messages.keyArray().forEach((m) => {
 				str += `${m.author.username}(ID:${m.author.id}) [${m.createdAt.toUTCString()}] in ${m.channel}: ` + "```" + m.cleanContent + "```";
 			});
+			msg.channel.bulkDelete(messages);
 			client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + str);
 			return;
 		}
@@ -326,11 +326,11 @@ function purgeDelete(client, msg, args) {
 		else if (mention_role.length > 0) {
 			filter_msg = messages.filter(m => mention_role.some(rid => m.member.roles.keyArray().includes(rid)));
 		}
-		msg.channel.bulkDelete(filter_msg);
 		var str = "";
 		filter_msg.keyArray().forEach((m) => {
 			str += `${m.author.username}(ID:${m.author.id}) [${m.createdAt.toUTCString()}] in ${m.channel}: ` + "```" + m.cleanContent + "```"
 		});
+		msg.channel.bulkDelete(filter_msg);
 		client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + str);
 		return;
 	});
