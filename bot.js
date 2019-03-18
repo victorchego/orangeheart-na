@@ -314,8 +314,10 @@ function purgeDelete(client, msg, args) {
 			    message = messages.get(m);
 				str += String(`${message.author.username}(ID:${message.author.id}) [${message.createdAt.toUTCString()}] in ${message.channel.name}: ` + message.cleanContent + "\n");
 			});
-			msg.channel.bulkDelete(messages);
-			client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str + "```");
+			msg.channel.bulkDelete(messages)
+			.then(
+			client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str + "```")
+			);
 			return;
 		}
 		if (mention_role.length > 0 && mention_user.length > 0) {
@@ -332,8 +334,10 @@ function purgeDelete(client, msg, args) {
 			message = filter_msg.get(m);
 			str += String(`${message.author.username}(ID:${message.author.id}) [${message.createdAt.toUTCString()}] in ${message.channel.name}: ` + message.cleanContent + "\n");
 		});
-		msg.channel.bulkDelete(filter_msg);
-		client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str + "```");
+		msg.channel.bulkDelete(filter_msg)
+		.then(
+		client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str + "```")
+		);
 		return;
 	});
 }
