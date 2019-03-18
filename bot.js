@@ -194,8 +194,11 @@ client.on('message', (msg) => {
 					else if (args[0] == "off") {
 						mod.monitorOff(msg,msg.mentions.users.keyArray());
 					}
+					else if (args[0] == "cache") {
+						mod.monitorCache(msg);
+					}
 					else {
-						msg.channel.send("Usage is !monitor on/off");
+						msg.channel.send("Usage is !monitor on/off/cache");
 					}
 				}
 				else msg.channel.send('Cannot obey command');				
