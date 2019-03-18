@@ -317,6 +317,8 @@ function purgeDelete(client, msg, args) {
 			msg.channel.bulkDelete(messages)
 			.then(
 			client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str + "```")
+			).catch(
+				client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str.substring(1800) + "```")
 			);
 			return;
 		}
@@ -337,6 +339,8 @@ function purgeDelete(client, msg, args) {
 		msg.channel.bulkDelete(filter_msg)
 		.then(
 		client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str + "```")
+		).catch(
+			client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str.substring(1800) + "```")
 		);
 		return;
 	});
