@@ -88,13 +88,24 @@ client.on('guildMemberRemove', (guildmember) => {
 });
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
+	if (oldMessage.author.bot || newMessage.author.bot) return;
 	var UPDATE_EMBED = new Discord.RichEmbed();
 	UPDATE_EMBED.setAuthor(`${newMessage.author.username} (ID: ${newMessage.author.id})`, newMessage.author.displayAvatarURL);
 	UPDATE_EMBED.setDescription("A message has been updated.");
 	UPDATE_EMBED.setTimestamp();
-	UPDATE_EMBED.addField("Before", oldMessage || "N/A");
-	UPDATE_EMBED.addField("After", newMessage  || "N/A");
+	UPDATE_EMBED.addField("Before", oldMessage);
+	UPDATE_EMBED.addField("After", newMessage);
 	client.channels.find(val => val.id == BOT_LOG_ID).send(UPDATE_EMBED).catch(console.error);
+});
+
+client.on('messageDelete', (Message) => {
+	if (Message.author.bot) return;
+	var DELETE_EMBED = new Discord.RichEmbed();
+	UPDATE_EMBED.setAuthor(`${newMessage.author.username} (ID: ${newMessage.author.id})`, newMessage.author.displayAvatarURL);
+	UPDATE_EMBED.setDescription("A message has been deleted.");
+	UPDATE_EMBED.setTimestamp();
+	UPDATE_EMBED.addField("Message", newMessage);
+	client.channels.find(val => val.id == BOT_LOG_ID).send(DELETE_EMBED).catch(console.error);
 });
 
 
