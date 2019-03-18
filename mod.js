@@ -246,4 +246,4 @@ function clearObj(obj) {
 	obj = [];
 }	
 
-module.exports = {msgHistoryPings, monitorOff, monitorOn};
+module.exports = {msgHistoryPings, monitorOff, monitorOn, monitorCache};
