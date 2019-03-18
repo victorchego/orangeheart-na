@@ -15,8 +15,14 @@ var TIMER_JSON = 'https://api.myjson.com/bins/z65jl'; // [{"id":"X", "time":"X",
 var TIMER_TIMEOUT = null;
 
 var OWNER_ID = '235263356397813762';
-var BOT_LOG_ID = '491040470181478422';
 var OWNER_SERVER = '491019873082671114';
+
+var BOT_LOG_ID = '491040470181478422';
+var MSG_LOG_ID = '491040470181478422';
+
+var MUTED_ROLE = 'Muted';
+var MOD_ROLES = ["Mod"];
+
 /* LIST OF SERVERS
 264145505452425227 - MNG 
 */
@@ -82,6 +88,8 @@ client.on('guildMemberRemove', (guildmember) => {
 
 client.on('message', (msg) => {
 	
+	logMessage(msg);
+	
 	if (msg.content.toLowerCase().startsWith('!eval') && msg.author.id == OWNER_ID) {
 		try {
 			eval(msg.content.substring(6));
@@ -107,9 +115,11 @@ client.on('message', (msg) => {
         args = args.splice(1);
 		
         switch(cmd.toLowerCase()) {
+			/*
 			case 'role':
 				assignNep(client, msg, args);
 			break;
+			*/
 			case 'commands':
                 msg.author.send('```!commands \n!help \n!yt```').then(function(){
 								msg.channel.send("Details have been sent "+msg.author);
@@ -135,7 +145,7 @@ client.on('message', (msg) => {
 				}
 			break;
 			case 'purge':
-				if (msg.author.id==OWNER_ID) {
+				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					purgeDelete(client, msg, args);
 				}
 				else msg.channel.send('Cannot obey command');
@@ -212,7 +222,7 @@ client.on('message', (msg) => {
 				}
 			break;
 			case 'purge':
-				if (msg.author.id==OWNER_ID) {
+				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					purgeDelete(client, msg, args);
 				}
 				else msg.channel.send('Cannot obey command');
@@ -299,6 +309,9 @@ function purgeDelete(client, msg, args) {
 	msg.channel.fetchMessages({limit: args[0]})
 	.then(messages => {
 		if (mention_user.length == 0 && mention_role.length == 0) {
+			messages.keyArray().forEach((m) => {
+				client.channels.find(val => val.id == MSG_LOG_ID).send(messages.get(m).cleanContent);
+			});
 			msg.channel.bulkDelete(messages);
 			return;
 		}
@@ -312,6 +325,9 @@ function purgeDelete(client, msg, args) {
 			filter_msg = messages.filter(m => mention_role.some(rid => m.member.roles.keyArray().includes(rid)));
 		}
 		msg.channel.bulkDelete(filter_msg);
+		filter_msg.keyArray().forEach((m) => {
+			client.channels.find(val => val.id == MSG_LOG_ID).send(filter_msg.get(m).cleanContent);
+		});
 		return;
 	});
 }
@@ -537,4 +553,21 @@ function assignNep(client, msg, args) {
 function toTitleCase(str)
 {
 	if (str != null) return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+function hasModRole(message) {
+	// Check if they have one of many roles
+	if (message.member.roles.some(r=>MOD_ROLES.includes(r.name))) {
+	// has one of the roles
+		return true;
+	}	 	
+	else {
+	// has none of the roles
+		return false;
+	}
+}
+
+function logMessage(message) {
+	if (message.author.bot) return;
+	client.channels.find(val => val.id == MSG_LOG_ID).send(`${message.author.username}(ID:${message.author.id}) [${message.createdAt.toUTCString()}] in ${message.channel}: ` + "```" + message.cleanContent + "```");
 }
