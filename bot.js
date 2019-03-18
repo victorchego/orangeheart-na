@@ -314,7 +314,7 @@ function purgeDelete(client, msg, args) {
 			    message = messages.get(m);
 				str += String(`${message.author.username}(ID:${message.author.id}) [${message.createdAt.toUTCString()}] in ${message.channel.name}: ` + message.cleanContent + "\n");
 			});
-			msg.channel.bulkDelete(messages);
+			msg.channel.bulkDelete(messages).catch();
 			if (args[1]) client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str.substring(0,1800) + "\nCannot display anymore due to lack of space```");
 			return;
 		}
@@ -332,7 +332,7 @@ function purgeDelete(client, msg, args) {
 			message = filter_msg.get(m);
 			str += String(`${message.author.username}(ID:${message.author.id}) [${message.createdAt.toUTCString()}] in ${message.channel.name}: ` + message.cleanContent + "\n");
 		});
-		msg.channel.bulkDelete(filter_msg)
+		msg.channel.bulkDelete(filter_msg).catch();
 		if (args[1]) client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str.substring(0,1800) + "\nCannot display anymore due to lack of space```");
 		return;
 	});
