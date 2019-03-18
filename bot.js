@@ -311,7 +311,7 @@ function purgeDelete(client, msg, args) {
 		if (mention_user.length == 0 && mention_role.length == 0) {
 			var str = "";
 			messages.keyArray().forEach((m) => {
-				str += `${m.author.username}(ID:${m.author.id}) [${m.createdAt.toUTCString()}] in ${m.channel}: ` + "```" + m.cleanContent + "```";
+				str += String(`${m.author.username}(ID:${m.author.id}) [${m.createdAt.toUTCString()}] in ${m.channel}: ` + "```" + m.cleanContent + "```");
 			});
 			msg.channel.bulkDelete(messages);
 			client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + str);
