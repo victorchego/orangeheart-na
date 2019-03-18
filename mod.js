@@ -56,7 +56,7 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 				}
 				if (spam) {
 					console.log(`${msg.author} has been flagged. Reason(s): ${reason}`);
-					msg.channel.send(`${msg.author} has been flagged. Reason(s): ${reason}`);
+					channel.send(`${msg.author} has been flagged. Reason(s): ${reason}`);
 					role = msg.guild.roles.find(val => val.name === 'Flagged');
 					if (role) msg.member.addRole(role);
 				}
