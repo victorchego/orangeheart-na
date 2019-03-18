@@ -89,7 +89,7 @@ client.on('guildMemberRemove', (guildmember) => {
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
 	var UPDATE_EMBED = new Discord.RichEmbed();
-	UPDATE_EMBED.setAuthor(newMessage.author, newMessage.author.displayAvatarURL);
+	UPDATE_EMBED.setAuthor(`${newMessage.author.username} (ID: ${newMessage.author.id})`, newMessage.author.displayAvatarURL);
 	UPDATE_EMBED.setDescription("A message has been updated.");
 	UPDATE_EMBED.setTimestamp();
 	UPDATE_EMBED.addField("Before", oldMessage);
