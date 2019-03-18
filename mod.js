@@ -232,7 +232,7 @@ function monitorCache(msg) {
 			}
 		});
 		objToWeb(obj, USER_JSON);
-		msg.channel.send("User(s) are NOT being monitored");
+		msg.channel.send("User(s) have been cached");
 	});	
 }
 
