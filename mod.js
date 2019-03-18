@@ -7,15 +7,23 @@ SPAM_MINUTE = 100;
 
 var USER_JSON = 'https://api.myjson.com/bins/hrybi'; // {id:1234, monitor:true}
 
+var MOD_ROLES = ["Mod"]; //nepu
+var WATCH_ROLES = ["Tourist"]; //nepu
+var IGNORED_ROLES = ["Mod"]; //nepu
+var IGNORED_CID = []; //nepu
+
 function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 	// Get messages and filter by user ID
 	guild = msg.guild;
 	channel = msg.channel;
 	userID = msg.author.id;
+	member = msg.member;
 	
 	if (msg.author.bot) return;
+	if (IGNORED_CID.includes(channel)) return;
+	if (member.roles.some(r=>IGNORED_ROLES.includes(r.name))) return;
 	
-	// add to database if doesn't exist.  Next message will run the filter
+	// add to database if doesn't exist
 	request(USER_JSON, function (err, response, data) {
 		if (err) {
 			console.log('Error reading user file: '+err);
@@ -27,7 +35,12 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 		if (user == undefined) {
 			user = {};
 			user["id"] = userID;
-			user["monitor"] = true;
+			if (member.roles.some(r=>WATCH_ROLES.includes(r.name))) {
+				user["monitor"] = true;
+			}
+			else {
+				user["monitor"] = false;
+			}
 			obj.push(user);
 			objToWeb(obj, USER_JSON);
 		}
@@ -187,6 +200,35 @@ function monitorOff(msg, uidList) {
 			}
 			else {
 				user["monitor"] = false;
+			}
+		});
+		objToWeb(obj, USER_JSON);
+		msg.channel.send("User(s) are NOT being monitored");
+	});	
+}
+
+function monitorCache(msg) {
+	request(USER_JSON, function (err, response, data) {
+		if (err) {
+			console.log('Error reading user file: '+err);
+			//msg.channel.send('An unexpected error has occurred');
+			return;
+		}
+		var obj = JSON.parse(data);
+		uidList = msg.guild.members.keyArray();
+		uidList.forEach((uid) => {
+			member = msg.guild.members.get(uid);
+			var user = obj.find(function(item){return item["id"]==uid;});
+			if (user == undefined) {
+				user = {};
+				user["id"] = uid;
+				if (member.roles.some(r=>WATCH_ROLES.includes(r.name))) {
+					user["monitor"] = true;
+				}
+				else {
+					user["monitor"] = false;
+				}
+				obj.push(user);
 			}
 		});
 		objToWeb(obj, USER_JSON);
