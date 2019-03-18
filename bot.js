@@ -92,9 +92,9 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	UPDATE_EMBED.setAuthor(`${newMessage.author.username} (ID: ${newMessage.author.id})`, newMessage.author.displayAvatarURL);
 	UPDATE_EMBED.setDescription("A message has been updated.");
 	UPDATE_EMBED.setTimestamp();
-	UPDATE_EMBED.addField("Before", oldMessage);
-	UPDATE_EMBED.addField("After", newMessage);
-	client.channels.find(val => val.id == BOT_LOG_ID).send({UPDATE_EMBED}).catch(console.error);
+	UPDATE_EMBED.addField("Before", oldMessage || "N/A");
+	UPDATE_EMBED.addField("After", newMessage  || "N/A");
+	client.channels.find(val => val.id == BOT_LOG_ID).send(UPDATE_EMBED).catch(console.error);
 });
 
 
