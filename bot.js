@@ -14,14 +14,15 @@ var URL_JSON = 'https://api.myjson.com/bins/663th';
 var TIMER_JSON = 'https://api.myjson.com/bins/z65jl'; // [{"id":"X", "time":"X", "type":"steal/donate"}]
 var TIMER_TIMEOUT = null;
 
-var OWNER_ID = '235263356397813762';
-var OWNER_SERVER = '491019873082671114';
+var OWNER_ID = '235263356397813762'; //mine
+var OWNER_SERVER = '491019873082671114'; //mine
+var NEPU_SERVER = '358693530283016196'; //nepu
 
-var BOT_LOG_ID = '491040470181478422';
-var MSG_LOG_ID = '491040470181478422';
+var BOT_LOG_ID = '491040470181478422'; //mine
+var MSG_LOG_ID = '465616817679761409'; //nepu
 
-var MUTED_ROLE = 'Muted';
-var MOD_ROLES = ["Mod"];
+var MUTED_ROLE = 'Muted'; //nepu
+var MOD_ROLES = ["Mod"]; //nepu
 
 /* LIST OF SERVERS
 264145505452425227 - MNG 
@@ -53,7 +54,6 @@ client.on('ready', () => {
     console.log(client.user.username + ' - ' + client.user.id);
 	client.user.setGame('!help');
 	//executeScript(client);
-	//client.channels.find(val => val.id === CY_CHANNEL_ID).send('I AM ALIVEEEEE!');
 });
 
 client.on('error', (err) => {
@@ -67,10 +67,11 @@ client.on('reconnecting', () => {
 
 
 client.on('guildMemberAdd', (guildmember) => {
-	var server = client.guilds.find(val => val.id == OWNER_SERVER);
-	if (server == null || server.id != OWNER_SERVER || guildmember.guild.available && guildmember.guild.id != OWNER_SERVER) return;
+	var server = client.guilds.find(val => val.id == NEPU_SERVER);
+	if (server == null || server.id != NEPU_SERVER || guildmember.guild.available && guildmember.guild.id != NEPU_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
-	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
+	client.channels.find(val => val.id == MSG_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
+	mod.monitorOn([guildmember.id]);
 	//if (guildmember.id == OWNER_ID) {
 	//	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
 	//	var role = guild.roles.find("name", "Ninja Apprentice");
@@ -79,10 +80,10 @@ client.on('guildMemberAdd', (guildmember) => {
 });
 
 client.on('guildMemberRemove', (guildmember) => {
-	var server = client.guilds.find(val => val.id == OWNER_SERVER);
-	if (server == null || server.id != OWNER_SERVER || guildmember.guild.available && guildmember.guild.id != OWNER_SERVER) return;
+	var server = client.guilds.find(val => val.id == NEPU_SERVER);
+	if (server == null || server.id != NEPU_SERVER || guildmember.guild.available && guildmember.guild.id != NEPU_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
-	client.channels.find(val => val.id == BOT_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has left the server at '+time.format('LLL')+' Pacific');
+	client.channels.find(val => val.id == MSG_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has left the server at '+time.format('LLL')+' Pacific');
 });
 
 
@@ -152,14 +153,28 @@ client.on('message', (msg) => {
 			break;
 			
 			case 'mute':
-				if (msg.author.id==OWNER_ID) {
+				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					muteUser(msg, client, args);
 				}
 				else msg.channel.send('Cannot obey command');				
 			break;
 			case 'unmute':
-				if (msg.author.id==OWNER_ID) {
+				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					unmuteUser(msg, client, args);
+				}
+				else msg.channel.send('Cannot obey command');				
+			break;
+			case 'monitor':
+				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
+					if (args[0] == "on") {
+						mod.monitorOn(msg,msg.mentions.users.keyArray());
+					}
+					else if (args[0] == "off") {
+						mod.monitorOff(msg,msg.mentions.users.keyArray());
+					}
+					else {
+						msg.channel.send("Usage is !monitor on/off");
+					}
 				}
 				else msg.channel.send('Cannot obey command');				
 			break;
@@ -237,6 +252,20 @@ client.on('message', (msg) => {
 			case 'unmute':
 				if (msg.author.id==OWNER_ID) {
 					unmuteUser(msg, client, args);
+				}
+				else msg.channel.send('Cannot obey command');				
+			break;
+			case 'monitor':
+				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
+					if (args[0] == "on") {
+						mod.monitorOn(msg.mentions.users.keyArray());
+					}
+					else if (args[0] == "off") {
+						mod.monitorOff(msg.mentions.users.keyArray());
+					}
+					else {
+						msg.channel.send("Usage is !monitor on/off");
+					}
 				}
 				else msg.channel.send('Cannot obey command');				
 			break;
@@ -575,5 +604,5 @@ function hasModRole(message) {
 
 function logMessage(message) {
 	if (message.author.bot) return;
-	client.channels.find(val => val.id == MSG_LOG_ID).send(`${message.author.username}(ID:${message.author.id}) [${message.createdAt.toUTCString()}] in ${message.channel}: ` + "```" + message.cleanContent + "```");
+	client.channels.find(val => val.id == BOT_LOG_ID).send(`${message.author.username}(ID:${message.author.id}) [${message.createdAt.toUTCString()}] in ${message.channel}: ` + "```" + message.cleanContent + "```");
 }
