@@ -101,10 +101,10 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 client.on('messageDelete', (Message) => {
 	if (Message.author.bot) return;
 	var DELETE_EMBED = new Discord.RichEmbed();
-	UPDATE_EMBED.setAuthor(`${newMessage.author.username} (ID: ${newMessage.author.id})`, newMessage.author.displayAvatarURL);
-	UPDATE_EMBED.setDescription("A message has been deleted.");
-	UPDATE_EMBED.setTimestamp();
-	UPDATE_EMBED.addField("Message", newMessage);
+	DELETE_EMBED.setAuthor(`${Message.author.username} (ID: ${Message.author.id})`, Message.author.displayAvatarURL);
+	DELETE_EMBED.setDescription("A message has been deleted.");
+	DELETE_EMBED.setTimestamp();
+	DELETE_EMBED.addField("Message", Message);
 	client.channels.find(val => val.id == BOT_LOG_ID).send(DELETE_EMBED).catch(console.error);
 });
 
