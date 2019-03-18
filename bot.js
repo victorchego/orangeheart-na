@@ -104,7 +104,7 @@ client.on('messageDelete', (Message) => {
 	DELETE_EMBED.setAuthor(`${Message.author.username} (ID: ${Message.author.id})`, Message.author.displayAvatarURL);
 	DELETE_EMBED.setDescription("A message has been deleted.");
 	DELETE_EMBED.setTimestamp();
-	DELETE_EMBED.addField("Message", Message);
+	DELETE_EMBED.addField(`Message (${Message.createdAt}`, Message);
 	client.channels.find(val => val.id == BOT_LOG_ID).send(DELETE_EMBED).catch(console.error);
 });
 
