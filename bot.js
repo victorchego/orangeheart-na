@@ -44,6 +44,7 @@ var MOD_ROLES = ["Mod"]; //nepu
 264145505452425227 - general / MNG
 */
 
+
 // Initialize Discord client
 
 client.login(auth.token);
@@ -86,10 +87,20 @@ client.on('guildMemberRemove', (guildmember) => {
 	client.channels.find(val => val.id == MSG_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has left the server at '+time.format('LLL')+' Pacific');
 });
 
+client.on('messageUpdate', (oldMessage, newMessage) => {
+	var UPDATE_EMBED = new Discord.RichEmbed();
+	UPDATE_EMBED.setAuthor(newMessage.author, newMessage.author.displayAvatarURL);
+	UPDATE_EMBED.setDescription("A message has been updated.");
+	UPDATE_EMBED.setTimestamp();
+	UPDATE_EMBED.addField("Before", oldMessage);
+	UPDATE_EMBED.addField("After", newMessage);
+	client.channels.find(val => val.id == BOT_LOG_ID).send(UPDATE_EMBED).catch(console.error);
+});
+
 
 client.on('message', (msg) => {
 	
-	logMessage(msg);
+	//logMessage(msg);
 	
 	if (msg.content.toLowerCase().startsWith('!eval') && msg.author.id == OWNER_ID) {
 		try {
