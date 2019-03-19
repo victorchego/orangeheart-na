@@ -199,7 +199,7 @@ client.on('message', (msg) => {
 				}
 				else msg.channel.send('Cannot obey command');
 			break;
-			
+			/*
 			case 'mute':
 				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					muteUser(msg, client, args);
@@ -212,6 +212,7 @@ client.on('message', (msg) => {
 				}
 				else msg.channel.send('Cannot obey command');				
 			break;
+			*/
 			case 'monitor':
 				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					if (args[0] == "on") {
@@ -293,7 +294,7 @@ client.on('message', (msg) => {
 				}
 				else msg.channel.send('Cannot obey command');
 			break;
-			
+			/*
 			case 'mute':
 				if (msg.author.id==OWNER_ID) {
 					muteUser(msg, client, args);
@@ -306,6 +307,7 @@ client.on('message', (msg) => {
 				}
 				else msg.channel.send('Cannot obey command');				
 			break;
+			*/
 			case 'monitor':
 				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					if (args[0] == "on") {
