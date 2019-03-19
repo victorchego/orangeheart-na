@@ -12,6 +12,9 @@ var WATCH_ROLES = ["Tourist"]; //nepu
 var IGNORED_ROLES = ["Mod"]; //nepu
 var IGNORED_CID = []; //nepu
 
+var MUTED_ROLE = 'Muted'; //nepu
+
+
 function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 	// Get messages and filter by user ID
 	guild = msg.guild;
@@ -71,6 +74,7 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 					console.log(`${msg.author} has been flagged. Reason(s): ${reason}`);
 					channel.send(`${msg.author} has been flagged. Reason(s): ${reason}`);
 					role = msg.guild.roles.find(val => val.name === 'Flagged');
+					if (!role) role = msg.guild.roles.find(val => val.name === MUTED_ROLE);
 					if (role) msg.member.addRole(role);
 				}
 				})

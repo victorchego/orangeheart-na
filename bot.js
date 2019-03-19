@@ -53,7 +53,7 @@ client.on('ready', () => {
     console.log('Connected');
     console.log('Logged in as: ');
     console.log(client.user.username + ' - ' + client.user.id);
-	client.user.setGame('!help');
+	client.user.setGame('-help');
 	//executeScript(client);
 });
 
@@ -139,7 +139,7 @@ client.on('message', (msg) => {
 	
 	//logMessage(msg);
 	
-	if (msg.content.toLowerCase().startsWith('!eval') && msg.author.id == OWNER_ID) {
+	if (msg.content.toLowerCase().startsWith('-eval') && msg.author.id == OWNER_ID) {
 		try {
 			eval(msg.content.substring(6));
 		}
@@ -149,15 +149,15 @@ client.on('message', (msg) => {
 		};
 	}
 	
-	else if (msg.content.toLowerCase().startsWith('!yt')) {
+	else if (msg.content.toLowerCase().startsWith('-yt')) {
 		YT.handleMessage(msg, client);
 	}
 	
-	else if (msg.author.id == OWNER_ID && msg.content.toLowerCase().startsWith('!del')) {
+	else if (msg.author.id == OWNER_ID && msg.content.toLowerCase().startsWith('-del')) {
 		msg.channel.fetchMessage(msg.content.substring(5)).then(message => message.delete().catch(console.error)).catch(console.error);
 	}
 	
-	else if (msg.content.startsWith('!') && msg.guild && msg.guild.id == OWNER_SERVER) {
+	else if (msg.content.startsWith('-') && msg.guild && msg.guild.id == OWNER_SERVER) {
 		var args = msg.content.substring(1).split(' ');
         var cmd = args[0];
        
@@ -170,7 +170,7 @@ client.on('message', (msg) => {
 			break;
 			*/
 			case 'commands':
-                msg.author.send('```!commands \n!help \n!yt```').then(function(){
+                msg.author.send('```-commands \n-help \n-yt```').then(function(){
 								msg.channel.send("Details have been sent "+msg.author);
 								}).catch(function(){
 									console.log('Cannot send to '+msg.author.username);
@@ -178,7 +178,7 @@ client.on('message', (msg) => {
 									});
             break;
 			case 'help':
-				msg.author.send('Type !commands to see a list of commands').then(function(){
+				msg.author.send('Type -commands to see a list of commands').then(function(){
 								msg.channel.send("Details have been sent "+msg.author);
 								}).catch(function(){
 									console.log('Cannot send to '+msg.author.username);
@@ -224,19 +224,19 @@ client.on('message', (msg) => {
 						mod.monitorCache(msg);
 					}
 					else {
-						msg.channel.send("Usage is !monitor on/off/cache");
+						msg.channel.send("Usage is -monitor on/off/cache");
 					}
 				}
 				else msg.channel.send('Cannot obey command');				
 			break;
 			default:
-				msg.channel.send('Refer to `!commands`');
+				msg.channel.send('Refer to `-commands`');
             break;
 		}
 		
 	}
 	
-    else if (msg.content.startsWith('!') && !msg.content.toLowerCase().startsWith('!yt')) {
+    else if (msg.content.startsWith('-') && !msg.content.toLowerCase().startsWith('-yt')) {
 		// if user warned of cooldown, ignore
 		/*
 		if (inList(msg.author, cooldownMessageList) && msg.channel.type=='text') {
@@ -264,7 +264,7 @@ client.on('message', (msg) => {
 		
         switch(cmd.toLowerCase()) {
 			case 'commands':
-                msg.author.send('```!commands \n!help \n!yt```').then(function(){
+                msg.author.send('```-commands \n-help \n-yt```').then(function(){
 								msg.channel.send("Details have been sent "+msg.author);
 								}).catch(function(){
 									console.log('Cannot send to '+msg.author.username);
@@ -272,7 +272,7 @@ client.on('message', (msg) => {
 									});
             break;
 			case 'help':
-				msg.author.send('Type !commands to see a list of commands').then(function(){
+				msg.author.send('Type -commands to see a list of commands').then(function(){
 								msg.channel.send("Details have been sent "+msg.author);
 								}).catch(function(){
 									console.log('Cannot send to '+msg.author.username);
@@ -318,13 +318,13 @@ client.on('message', (msg) => {
 						mod.monitorCache(msg);
 					}
 					else {
-						msg.channel.send("Usage is !monitor on/off/cache");
+						msg.channel.send("Usage is -monitor on/off/cache");
 					}
 				}
 				else msg.channel.send('Cannot obey command');				
 			break;
 			default:
-				msg.channel.send('Refer to `!commands`');
+				msg.channel.send('Refer to `-commands`');
             break;
             // Just add any case commands if you want to..
          }
@@ -516,7 +516,7 @@ function checkTimer(client, msg, args, type_str) {
 				donateCookies(client,msg,args);
 			break;
 			default:
-				msg.channel.send('Refer to `!Cy commands`');
+				msg.channel.send('Refer to `-commands`');
 			break;
 		}
 	});
@@ -596,7 +596,7 @@ function assignRole(client, msg, args) {
 function assignNep(client, msg, args) {
 	var role = null;
 	if (args.length == 0) {
-		msg.channel.send('To join a role, use !role [Nep/Nowa/Buran/Beru/Ploot], without the brackets. To reset roles, use !role reset');
+		msg.channel.send('To join a role, use -role [Nep/Nowa/Buran/Beru/Ploot], without the brackets. To reset roles, use -role reset');
 		return;
 	}
 	var str = args[0].toLowerCase();
@@ -626,7 +626,7 @@ function assignNep(client, msg, args) {
 			return;
 		break;
 		default:
-			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Buran, Beru, Ploot. To reset, use !role reset');
+			msg.channel.send('Invalid role. Please select from: Nep, Nowa, Buran, Beru, Ploot. To reset, use -role reset');
 			return;
 		break;
 	}
