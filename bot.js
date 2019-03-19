@@ -89,7 +89,7 @@ client.on('guildMemberRemove', (guildmember) => {
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
 	var server = client.guilds.find(val => val.id == NEPU_SERVER);
-	if (server == null || server.id != NEPU_SERVER || guildmember.guild.available && guildmember.guild.id != NEPU_SERVER) return;
+	if (server == null || server.id != NEPU_SERVER || Message.guild.available && Message.guild.id != NEPU_SERVER) return;
 	if (oldMessage.author.bot || newMessage.author.bot) return;
 	var UPDATE_EMBED = new Discord.RichEmbed();
 	UPDATE_EMBED.setAuthor(`${newMessage.author.username} (ID: ${newMessage.author.id})`, newMessage.author.displayAvatarURL);
@@ -102,7 +102,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 
 client.on('messageDelete', (Message) => {
 	var server = client.guilds.find(val => val.id == NEPU_SERVER);
-	if (server == null || server.id != NEPU_SERVER || guildmember.guild.available && guildmember.guild.id != NEPU_SERVER) return;
+	if (server == null || server.id != NEPU_SERVER || Message.guild.available && Message.guild.id != NEPU_SERVER) return;
 	if (Message.author.bot) return;
 	var DELETE_EMBED = new Discord.RichEmbed();
 	DELETE_EMBED.setAuthor(`${Message.author.username} (ID: ${Message.author.id})`, Message.author.displayAvatarURL);
