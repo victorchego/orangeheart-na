@@ -108,6 +108,32 @@ client.on('messageDelete', (Message) => {
 	client.channels.find(val => val.id == BOT_LOG_ID).send(DELETE_EMBED).catch(console.error);
 });
 
+client.on('messageDeleteBulk', (messages) => {
+	var channel = client.channels.find(val => val.id == BOT_LOG_ID);
+	if (channel == undefined) {
+		console.log("Undefined channel");
+		return;
+	}
+	var BEGIN_EMBED = new Discord.RichEmbed();
+	BEGIN_EMBED.setDescription("The following messages have been deleted.");
+	BEGIN_EMBED.setTimestamp();
+	BEGIN_EMBED.setColor("GREEN");
+	channel.send(BEGIN_EMBED).catch(console.error);
+	messages.keyArray().forEach((m) => {
+		message = messages.get(m);
+		if (message.author.bot) return;
+		var DELETE_EMBED = new Discord.RichEmbed();
+		DELETE_EMBED.setAuthor(`${message.author.username} (ID: ${message.author.id})`, message.author.displayAvatarURL);
+		DELETE_EMBED.addField(`Message (${message.createdAt}`, message);
+		channel.send(DELETE_EMBED).catch(console.error);
+	});
+	var END_EMBED = new Discord.RichEmbed();
+	END_EMBED.setDescription("This marks the end.");
+	END_EMBED.setColor("RED");
+	channel.send(END_EMBED).catch(console.error);
+});
+
+
 
 client.on('message', (msg) => {
 	
