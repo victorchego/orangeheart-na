@@ -95,7 +95,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	UPDATE_EMBED.setTimestamp();
 	UPDATE_EMBED.addField("Before", oldMessage);
 	UPDATE_EMBED.addField("After", newMessage);
-	client.channels.find(val => val.id == BOT_LOG_ID).send(UPDATE_EMBED).catch(console.error);
+	client.channels.find(val => val.id == MSG_LOG_ID).send(UPDATE_EMBED).catch(console.error);
 });
 
 client.on('messageDelete', (Message) => {
@@ -105,11 +105,11 @@ client.on('messageDelete', (Message) => {
 	DELETE_EMBED.setDescription("A message has been deleted.");
 	DELETE_EMBED.setTimestamp();
 	DELETE_EMBED.addField(`Message (${Message.createdAt}`, Message);
-	client.channels.find(val => val.id == BOT_LOG_ID).send(DELETE_EMBED).catch(console.error);
+	client.channels.find(val => val.id == MSG_LOG_ID).send(DELETE_EMBED).catch(console.error);
 });
 
 client.on('messageDeleteBulk', (messages) => {
-	var channel = client.channels.find(val => val.id == BOT_LOG_ID);
+	var channel = client.channels.find(val => val.id == MSG_LOG_ID);
 	if (channel == undefined) {
 		console.log("Undefined channel");
 		return;
