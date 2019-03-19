@@ -47,6 +47,8 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 			obj.push(user);
 			objToWeb(obj, USER_JSON);
 		}
+		console.log(user["monitor"]);
+		console.log(user["monitor"] == false);
 		if (user["monitor"] == false) return; // return if monitor is false
 		else {
 			channel.fetchMessages({limit: limit})
