@@ -11,6 +11,8 @@ var MOD_ROLES = ["Mod"]; //nepu
 var WATCH_ROLES = ["Tourist"]; //nepu
 var IGNORED_ROLES = ["Mod"]; //nepu
 var IGNORED_CID = []; //nepu
+var MSG_LOG_ID = '465616817679761409'; //nepu
+
 
 var MUTED_ROLE = 'Muted'; //nepu
 
@@ -73,6 +75,7 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 				if (spam) {
 					console.log(`${msg.author} has been flagged. Reason(s): ${reason}`);
 					channel.send(`${msg.author} has been flagged. Reason(s): ${reason}`);
+					msg.client.channels.find(val => val.id == MSG_LOG_ID).send(`${msg.author} has been flagged. Reason(s): ${reason}`);
 					role = msg.guild.roles.find(val => val.name === 'Flagged');
 					if (!role) role = msg.guild.roles.find(val => val.name === MUTED_ROLE);
 					if (role) msg.member.addRole(role);
