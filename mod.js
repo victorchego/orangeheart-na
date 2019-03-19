@@ -183,6 +183,7 @@ function monitorOn(msg, uidList) {
 }
 
 function monitorOff(msg, uidList) {
+	console.log(uidList);
 	if (uidList.length == 0) {
 		msg.channel.send("Command must contain user mentions");
 		return;

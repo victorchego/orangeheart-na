@@ -216,10 +216,10 @@ client.on('message', (msg) => {
 			case 'monitor':
 				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					if (args[0] == "on") {
-						mod.monitorOn(msg,msg.mentions.users.keyArray());
+						mod.monitorOn(msg, msg.mentions.users.keyArray());
 					}
 					else if (args[0] == "off") {
-						mod.monitorOff(msg,msg.mentions.users.keyArray());
+						mod.monitorOff(msg, msg.mentions.users.keyArray());
 					}
 					else if (args[0] == "cache") {
 						mod.monitorCache(msg);
@@ -311,10 +311,10 @@ client.on('message', (msg) => {
 			case 'monitor':
 				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					if (args[0] == "on") {
-						mod.monitorOn(msg.mentions.users.keyArray());
+						mod.monitorOn(msg, msg.mentions.users.keyArray());
 					}
 					else if (args[0] == "off") {
-						mod.monitorOff(msg.mentions.users.keyArray());
+						mod.monitorOff(msg, msg.mentions.users.keyArray());
 					}
 					else if (args[0] == "cache") {
 						mod.monitorCache(msg);
