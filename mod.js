@@ -17,10 +17,10 @@ var MUTED_ROLE = 'Muted'; //nepu
 
 function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 	// Get messages and filter by user ID
-	guild = msg.guild;
-	channel = msg.channel;
-	userID = msg.author.id;
-	member = msg.member;
+	var guild = msg.guild;
+	var channel = msg.channel;
+	var userID = msg.author.id;
+	var member = guild.members.find(val => val.id === userID);
 	
 	if (msg.author.bot) return;
 	if (IGNORED_CID.includes(channel)) return;
