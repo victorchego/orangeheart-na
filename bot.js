@@ -89,7 +89,7 @@ client.on('guildMemberRemove', (guildmember) => {
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
 	var server = client.guilds.find(val => val.id == NEPU_SERVER);
-	if (server == null || server.id != NEPU_SERVER || Message.guild.available && Message.guild.id != NEPU_SERVER) return;
+	if (server == null || server.id != NEPU_SERVER || newMessage.guild.available && newMessage.guild.id != NEPU_SERVER) return;
 	if (oldMessage.author.bot || newMessage.author.bot) return;
 	var UPDATE_EMBED = new Discord.RichEmbed();
 	UPDATE_EMBED.setAuthor(`${newMessage.author.username} (ID: ${newMessage.author.id})`, newMessage.author.displayAvatarURL);
