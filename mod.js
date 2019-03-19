@@ -108,6 +108,7 @@ function spamPaste(messages, repeat = 5) {
 	total = 0;
 	spam = 0;
 	phrase = "";
+	time = 0;
 	mids = messages.keyArray();
 	if (mids.length == 0) {
 		return false;
@@ -117,9 +118,16 @@ function spamPaste(messages, repeat = 5) {
 		if (m.content != phrase) {
 			phrase = m.content;
 			spam = 0;
+			time = m.createdTimestamp;
 		}
 		else {
-			spam++;
+			if (Math.abs(m.createdTimestamp-time) <= 600000) {
+				spam++;
+			}
+			else {
+				spam = 0;
+				time = m.createdTimestamp;
+			}
 			if (spam >= repeat) {
 				return true;
 			}
