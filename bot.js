@@ -72,7 +72,7 @@ client.on('guildMemberAdd', (guildmember) => {
 	if (server == null || server.id != NEPU_SERVER || guildmember.guild.available && guildmember.guild.id != NEPU_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == MSG_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
-	mod.monitorOn([guildmember.id]);
+	mod.monitorUsersOn([guildmember.id]);
 	//if (guildmember.id == OWNER_ID) {
 	//	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
 	//	var role = guild.roles.find("name", "Ninja Apprentice");
@@ -215,11 +215,19 @@ client.on('message', (msg) => {
 			*/
 			case 'monitor':
 				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
+					var uidList = msg.mentions.users.keyArray();
+					var ridList = msg.mentions.roles.keyArray();
+					if (uidList.length + ridList.length == 0) {
+						msg.channel.send("Command must include user or role mention(s)");
+						return;
+					}
 					if (args[0] == "on") {
-						mod.monitorOn(msg, msg.mentions.users.keyArray());
+						mod.monitorUsersOn(msg, uidList);
+						mod.monitorRolesOn(msg, ridList);
 					}
 					else if (args[0] == "off") {
-						mod.monitorOff(msg, msg.mentions.users.keyArray());
+						mod.monitorUsersOff(msg, uidList);
+						mod.monitorRolesOff(msg, ridList);
 					}
 					else if (args[0] == "cache") {
 						mod.monitorCache(msg);
@@ -311,10 +319,10 @@ client.on('message', (msg) => {
 			case 'monitor':
 				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
 					if (args[0] == "on") {
-						mod.monitorOn(msg, msg.mentions.users.keyArray());
+						mod.monitorUsersOn(msg, msg.mentions.users.keyArray());
 					}
 					else if (args[0] == "off") {
-						mod.monitorOff(msg, msg.mentions.users.keyArray());
+						mod.monitorUsersOff(msg, msg.mentions.users.keyArray());
 					}
 					else if (args[0] == "cache") {
 						mod.monitorCache(msg);

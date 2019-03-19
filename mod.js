@@ -155,7 +155,7 @@ function spamMinute(messages, count = 20) {
 	return total >= count;
 }
 
-function monitorOn(msg, uidList) {
+function monitorUsersOn(msg, uidList) {
 	if (uidList.length == 0) {
 		msg.channel.send("Command must contain user mentions");
 		return;
@@ -184,7 +184,7 @@ function monitorOn(msg, uidList) {
 	});		
 }
 
-function monitorOff(msg, uidList) {
+function monitorUsersOff(msg, uidList) {
 	if (uidList.length == 0) {
 		msg.channel.send("Command must contain user mentions");
 		return;
@@ -210,6 +210,67 @@ function monitorOff(msg, uidList) {
 		});
 		objToWeb(obj, USER_JSON);
 		msg.channel.send("User(s) are NOT being monitored");
+	});	
+}
+
+function monitorRolesOn(msg, ridList) {
+	if (ridList.length == 0) {
+		return;
+	}
+	request(USER_JSON, function (err, response, data) {
+		if (err) {
+			console.log('Error reading user file: '+err);
+			//msg.channel.send('An unexpected error has occurred');
+			return;
+		}
+		var obj = JSON.parse(data);
+		ridList.forEach((rid) => {
+			var uidList = guild.roles.get(rid).members.keyArray();
+			uidList.forEach((uid) => {
+				var user = obj.find(function(item){return item["id"]==uid;});
+				if (user == undefined) {
+					user = {};
+					user["id"] = uid;
+					user["monitor"] = true;
+					obj.push(user);
+				}
+				else {
+					user["monitor"] = true;
+				}
+			});
+		});
+		objToWeb(obj, USER_JSON);
+		msg.channel.send("Role(s) are being monitored");
+	});		
+}
+
+function monitorRolesOff(msg, ridList) {
+	if (ridList.length == 0) {
+		return;
+	}
+	request(USER_JSON, function (err, response, data) {
+		if (err) {
+			console.log('Error reading user file: '+err);
+			//msg.channel.send('An unexpected error has occurred');
+			return;
+		}
+		ridList.forEach((rid) => {
+		var uidList = guild.roles.get(rid).members.keyArray();
+			uidList.forEach((uid) => {
+				var user = obj.find(function(item){return item["id"]==uid;});
+				if (user == undefined) {
+					user = {};
+					user["id"] = uid;
+					user["monitor"] = false;
+					obj.push(user);
+				}
+				else {
+					user["monitor"] = false;
+				}
+			});
+		});
+		objToWeb(obj, USER_JSON);
+		msg.channel.send("Role(s) are NOT being monitored");
 	});	
 }
 
@@ -252,4 +313,4 @@ function clearObj(obj) {
 	obj = [];
 }	
 
-module.exports = {msgHistoryPings, monitorOff, monitorOn, monitorCache};
+module.exports = {msgHistoryPings, monitorUsersOff, monitorUsersOn, monitorRolesOff, monitorRolesOn, monitorCache};
