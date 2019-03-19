@@ -88,10 +88,12 @@ client.on('guildMemberRemove', (guildmember) => {
 });
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
+	var server = client.guilds.find(val => val.id == NEPU_SERVER);
+	if (server == null || server.id != NEPU_SERVER || guildmember.guild.available && guildmember.guild.id != NEPU_SERVER) return;
 	if (oldMessage.author.bot || newMessage.author.bot) return;
 	var UPDATE_EMBED = new Discord.RichEmbed();
 	UPDATE_EMBED.setAuthor(`${newMessage.author.username} (ID: ${newMessage.author.id})`, newMessage.author.displayAvatarURL);
-	UPDATE_EMBED.setDescription("A message has been updated.");
+	UPDATE_EMBED.setDescription(`A message has been updated in ${newMessage.channel}.`);
 	UPDATE_EMBED.setTimestamp();
 	UPDATE_EMBED.addField("Before", oldMessage);
 	UPDATE_EMBED.addField("After", newMessage);
@@ -99,10 +101,12 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 });
 
 client.on('messageDelete', (Message) => {
+	var server = client.guilds.find(val => val.id == NEPU_SERVER);
+	if (server == null || server.id != NEPU_SERVER || guildmember.guild.available && guildmember.guild.id != NEPU_SERVER) return;
 	if (Message.author.bot) return;
 	var DELETE_EMBED = new Discord.RichEmbed();
 	DELETE_EMBED.setAuthor(`${Message.author.username} (ID: ${Message.author.id})`, Message.author.displayAvatarURL);
-	DELETE_EMBED.setDescription("A message has been deleted.");
+	DELETE_EMBED.setDescription(`A message has been deleted from ${Message.channel}.`);
 	DELETE_EMBED.setTimestamp();
 	DELETE_EMBED.addField(`Message (${Message.createdAt}`, Message);
 	client.channels.find(val => val.id == MSG_LOG_ID).send(DELETE_EMBED).catch(console.error);
@@ -124,7 +128,8 @@ client.on('messageDeleteBulk', (messages) => {
 		if (message.author.bot) return;
 		var DELETE_EMBED = new Discord.RichEmbed();
 		DELETE_EMBED.setAuthor(`${message.author.username} (ID: ${message.author.id})`, message.author.displayAvatarURL);
-		DELETE_EMBED.addField(`Message (${message.createdAt}`, message);
+		DELETE_EMBED.addField(`Message (${message.channel})`, message);
+		DELETE_EMBED.setTimestamp(message.createdAt);
 		channel.send(DELETE_EMBED).catch(console.error);
 	});
 	var END_EMBED = new Discord.RichEmbed();
