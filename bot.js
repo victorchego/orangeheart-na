@@ -198,9 +198,15 @@ client.on('message', (msg) => {
 					console.log(msg.author+"'s message failed: "+err.message);
 				}
 			break;
-			case 'purge':
+			case 'purgechannel':
 				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
-					purgeDelete(client, msg, args);
+					purgeDeleteChannel(client, msg, args);
+				}
+				else msg.channel.send('Cannot obey command');
+			break;
+			case 'purgeserver':
+				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
+					purgeDeleteServer(client, msg, args);
 				}
 				else msg.channel.send('Cannot obey command');
 			break;
@@ -301,9 +307,15 @@ client.on('message', (msg) => {
 					console.log(msg.author+"'s message failed: "+err.message);
 				}
 			break;
-			case 'purge':
+			case 'purgechannel':
 				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
-					purgeDelete(client, msg, args);
+					purgeDeleteChannel(client, msg, args);
+				}
+				else msg.channel.send('Cannot obey command');
+			break;
+			case 'purgeserver':
+				if (msg.author.id==OWNER_ID || hasModRole(msg)) {
+					purgeDeleteServer(client, msg, args);
 				}
 				else msg.channel.send('Cannot obey command');
 			break;
@@ -400,7 +412,7 @@ function clearAllTimeouts(args) {
 	}
 }
 
-function purgeDelete(client, msg, args) {
+function purgeDeleteChannel(client, msg, args) {
 	if (!args || isNaN(args[0])) args = [50, false];
 	var mention_user = msg.mentions.users.keyArray();
 	var mention_role = msg.mentions.roles.keyArray();
@@ -434,6 +446,12 @@ function purgeDelete(client, msg, args) {
 		if (args[1]) client.channels.find(val => val.id == MSG_LOG_ID).send("Purged:\n" + "```" + str.substring(0,1800) + "\nCannot display anymore due to lack of space```");
 		return;
 	});
+}
+
+function purgeDeleteServer(client, msg, args){
+	var uidList = msg.mentions.users.keyArray();
+	console.log(uidList);
+	msg.channel.send(uidList);
 }
 
 function filterMessage(msg) {
