@@ -91,8 +91,6 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	var server = client.guilds.find(val => val.id == NEPU_SERVER);
 	if (server == null || server.id != NEPU_SERVER || newMessage.guild.available && newMessage.guild.id != NEPU_SERVER) return;
 	if (oldMessage.author.bot || newMessage.author.bot) return;
-	console.log(oldMessage.editedTimestamp);
-	console.log(oldMessage.editedAt);
 	if (oldMessage.embeds.length == 0) {
 		if (newMessage.embeds.length > 0) {
 			return;
