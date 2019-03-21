@@ -91,6 +91,11 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	var server = client.guilds.find(val => val.id == NEPU_SERVER);
 	if (server == null || server.id != NEPU_SERVER || newMessage.guild.available && newMessage.guild.id != NEPU_SERVER) return;
 	if (oldMessage.author.bot || newMessage.author.bot) return;
+	if (oldMessage.embeds.length == 0) {
+		if (newMessage.embeds.length > 0) {
+			return;
+		}
+	}
 	var UPDATE_EMBED = new Discord.RichEmbed();
 	UPDATE_EMBED.setAuthor(`${newMessage.author.username} (ID: ${newMessage.author.id})`, newMessage.author.displayAvatarURL);
 	UPDATE_EMBED.setDescription(`A message has been updated in ${newMessage.channel}.`);
@@ -449,9 +454,28 @@ function purgeDeleteChannel(client, msg, args) {
 }
 
 function purgeDeleteServer(client, msg, args){
+	if (args.length == 0) {
+		msg.channel.send("The arguments must be a max number of messages to delete for a user, followed by strictly either a user ping or raw ID number. Including a mix will prioritize pings over ID.");
+		return;
+	}
+	var counter = 0;
+	var max = args[0];
+	if (isNaN(max)) max = 50;
+	args = args.splice(1);
 	var uidList = msg.mentions.users.keyArray();
-	console.log(uidList);
-	msg.channel.send(uidList);
+	if (uidList.length == 0) uidList = args;
+	var uid = uidList[0];
+	msg.channel.fetchMessages({limit: 100})
+	.then((messages) => {
+		var mArray = messages.keyArray();
+		if (mArray.length == 0) {
+			msg.channel.send("There are no messages.");
+			return;
+		}
+		var bookmark = mArray[mArray.length-1];
+		var filter_msg = messages.filter((m) => {m.author.id === uid});
+		
+	});
 }
 
 function filterMessage(msg) {
