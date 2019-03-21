@@ -72,7 +72,7 @@ client.on('guildMemberAdd', (guildmember) => {
 	if (server == null || server.id != NEPU_SERVER || guildmember.guild.available && guildmember.guild.id != NEPU_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == MSG_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
-	mod.monitorUsersOn([guildmember.id]);
+	mod.monitorUsersOn(msg,[guildmember.id]);
 	//if (guildmember.id == OWNER_ID) {
 	//	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
 	//	var role = guild.roles.find("name", "Ninja Apprentice");
@@ -91,6 +91,8 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 	var server = client.guilds.find(val => val.id == NEPU_SERVER);
 	if (server == null || server.id != NEPU_SERVER || newMessage.guild.available && newMessage.guild.id != NEPU_SERVER) return;
 	if (oldMessage.author.bot || newMessage.author.bot) return;
+	console.log(oldMessage.editedTimestamp);
+	console.log(oldMessage.editedAt);
 	if (oldMessage.embeds.length == 0) {
 		if (newMessage.embeds.length > 0) {
 			return;
