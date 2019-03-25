@@ -115,7 +115,7 @@ function spamPaste(messages, repeat = 5) {
 	}
 	for (var mix in mids) {
 		m = messages.get(mids[mix]);
-		if (m.content != phrase) {
+		if (m.content != phrase || m.content == "" || m.content == undefined) {
 			phrase = m.content;
 			spam = 0;
 			time = m.createdTimestamp;
