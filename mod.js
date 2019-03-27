@@ -8,7 +8,7 @@ SPAM_MINUTE = 100;
 var USER_JSON = 'https://api.myjson.com/bins/hrybi'; // {id:1234, monitor:true}
 
 var MOD_ROLES = ["Mod"]; //nepu
-var WATCH_ROLES = ["Tourist"]; //nepu
+var WATCH_ROLES = ["Tourist", "Newcomer"]; //nepu
 var IGNORED_ROLES = ["Mod"]; //nepu
 var IGNORED_CID = []; //nepu
 var MSG_LOG_ID = '465616817679761409'; //nepu
