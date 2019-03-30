@@ -59,17 +59,17 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 				reason = "";
 				if (flags & SPAM_PING) {
 					result = spamPings(user_msg) && messages.keyArray().length >= 10;
-					spam = result || spam;
+					spam = true;
 					if (result) reason += "Ping spam. ";
 				}
 				if (flags & SPAM_PASTE) {
 					result = spamPaste(user_msg);
-					spam = result || spam;
+					spam = true;
 					if (result) reason += "Paste spam. ";
 				}
 				if (flags & SPAM_MINUTE) {
 					result = spamMinute(user_msg);
-					spam = result || spam;
+					spam = true;
 					if (result) reason += "Minute spam. ";
 				}
 				if (spam) {
