@@ -10,7 +10,7 @@ var USER_JSON = 'https://api.myjson.com/bins/hrybi'; // {id:1234, monitor:true}
 var MOD_ROLES = ["Mod"]; //nepu
 var WATCH_ROLES = ["Tourist", "Newcomer"]; //nepu
 var IGNORED_ROLES = ["Mod"]; //nepu
-var IGNORED_CID = ['408470727113703434']; //nepu
+var IGNORED_CID = ['408470727113703434', '456963780480335893']; //nepu
 var MSG_LOG_ID = '465616817679761409'; //nepu
 
 
