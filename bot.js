@@ -371,7 +371,7 @@ client.on('message', (msg) => {
 		*/
      }
 	else {
-		filterMessage(msg);
+		excludeMessage(msg);
 	}
 	
 	mod.msgHistoryPings(msg);
@@ -480,12 +480,21 @@ function purgeDeleteServer(client, msg, args){
 	});
 }
 
-function filterMessage(msg) {
+function excludeMessage(msg) {
 	var str = msg.content.toLowerCase().split(" ").join("");
 	if (str.includes('muddaasshoe')
 	) {
 		msg.delete().catch(console.error);
 		//msg.channel.send('A poor lost soul has been ~~censored~~ guided to heaven');
+	}
+}
+
+function includeMessage(msg) {
+	var str = msg.content.toLowerCase().split(" ").join("");
+	if (!str.includes('nep')
+	) {
+		msg.delete().catch(console.error);
+		msg.channel.send("Text containing 'nep' only allowed.");
 	}
 }
 
