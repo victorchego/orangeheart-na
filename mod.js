@@ -116,7 +116,7 @@ function spamPings(messages, limit = 50, ratio = 0.5) {
 
 function spamPaste(messages, repeat = 5) {
 	total = 0;
-	spam = 0;
+	count = 0;
 	phrase = "";
 	time = 0;
 	mids = messages.keyArray();
@@ -127,24 +127,24 @@ function spamPaste(messages, repeat = 5) {
 		m = messages.get(mids[mix]);
 		if (m.content != phrase || m.content == "" || m.content == undefined) {
 			phrase = m.content;
-			spam = 0;
+			count = 0;
 			time = m.createdTimestamp;
 		}
 		else {
 			if (Math.abs(m.createdTimestamp-time) <= 300000) {
-				spam++;
+				count++;
 			}
 			else {
-				spam = 0;
+				count = 0;
 				time = m.createdTimestamp;
 			}
-			if (spam >= repeat) {
+			if (count >= repeat) {
 				return true;
 			}
 		}
 		total++;
 	}
-	return spam >= repeat;
+	return count >= repeat;
 }
 
 function spamMinute(messages, count = 20) {
