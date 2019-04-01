@@ -10,7 +10,7 @@ var USER_JSON = 'https://api.myjson.com/bins/hrybi'; // {id:1234, monitor:true}
 var MOD_ROLES = ["Mod"]; //nepu
 var WATCH_ROLES = ["Tourist", "Newcomer"]; //nepu
 var IGNORED_ROLES = ["Mod"]; //nepu
-var IGNORED_CID = ['408470727113703434', '456963780480335893']; //nepu
+var IGNORED_CID = ['408470727113703434', '456963780480335893']; //nepu bot, nep
 var MSG_LOG_ID = '465616817679761409'; //nepu
 
 
@@ -58,7 +58,7 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 				spam = false;
 				reason = "";
 				if (flags & SPAM_PING) {
-					result = spamPings(user_msg) && messages.keyArray().length >= 10;
+					result = spamPings(user_msg) && user_msg.keyArray().length >= 20;
 					if (result) {
 						spam = true;
 						reason += "Ping spam. ";
@@ -79,6 +79,10 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 					}
 				}
 				if (spam) {
+					if (reason == "") {
+						console.log("Unknown flag reason");
+						return;
+					}
 					console.log(`${msg.author} has been flagged. Reason(s): ${reason}`);
 					msg.client.channels.find(val => val.id == MSG_LOG_ID).send(`${msg.author} has been flagged. Reason(s): ${reason}`);
 					role = msg.guild.roles.find(val => val.name === 'Flagged');
