@@ -25,7 +25,7 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 	var member = guild.members.find(val => val.id === userID);
 	
 	if (msg.author.bot) return;
-	if (IGNORED_CID.includes(channel)) return;
+	if (IGNORED_CID.includes(channel.id)) return;
 	if (member.roles.some(r=>IGNORED_ROLES.includes(r.name))) return;
 	
 	// add to database if doesn't exist
@@ -83,8 +83,8 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 						console.log("Unknown flag reason");
 						return;
 					}
-					console.log(`${msg.author} has been flagged. Reason(s): ${reason}`);
-					msg.client.channels.find(val => val.id == MSG_LOG_ID).send(`${msg.author} has been flagged. Reason(s): ${reason}`);
+					console.log(`${msg.author} has been flagged in #${channel.name}. Reason(s): ${reason}`);
+					msg.client.channels.find(val => val.id == MSG_LOG_ID).send(`${msg.author} has been flagged in #${channel.name}. Reason(s): ${reason}`);
 					role = msg.guild.roles.find(val => val.name === 'Flagged');
 					if (!role) role = msg.guild.roles.find(val => val.name === MUTED_ROLE);
 					if (role) msg.member.addRole(role);
