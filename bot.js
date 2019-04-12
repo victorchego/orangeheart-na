@@ -15,11 +15,14 @@ var TIMER_JSON = 'https://api.myjson.com/bins/z65jl'; // [{"id":"X", "time":"X",
 var TIMER_TIMEOUT = null;
 
 var OWNER_ID = '235263356397813762'; //mine
+var ZAP_ID = '565802469360402432'; //IF Bot zapier
+
 var OWNER_SERVER = '491019873082671114'; //mine
 var NEPU_SERVER = '358693530283016196'; //nepu
 
 var BOT_LOG_ID = '491040470181478422'; //mine
 var MSG_LOG_ID = '465616817679761409'; //nepu
+var ANNOUNCEMENT_ID = '565400954392805376'; //nepu
 
 var MUTED_ROLE = 'Muted'; //nepu
 var MOD_ROLES = ["Mod"]; //nepu
@@ -150,6 +153,11 @@ client.on('messageDeleteBulk', (messages) => {
 client.on('message', (msg) => {
 	
 	//logMessage(msg);
+	
+	if (msg.channel.id == '491020961240449024' && msg.author.id == ZAP_ID) {
+		client.channels.find(val => val.id == ANNOUNCEMENT_ID).send(msg.content).catch(console.error);
+		return;
+	}
 	
 	if (msg.content.toLowerCase().startsWith('-eval') && msg.author.id == OWNER_ID) {
 		try {
