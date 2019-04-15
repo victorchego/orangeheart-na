@@ -175,7 +175,7 @@ function spamMinute(messages, count = 20) {
 
 function monitorUsersOn(msg, uidList) {
 	if (uidList.length == 0) {
-		msg.channel.send("Command must contain user mentions");
+		if (msg) msg.channel.send("Command must contain user mentions");
 		return;
 	}
 	request(USER_JSON, function (err, response, data) {
@@ -198,7 +198,7 @@ function monitorUsersOn(msg, uidList) {
 			}
 		});
 		objToWeb(obj, USER_JSON);
-		msg.channel.send("User(s) are being monitored");
+		if (msg) msg.channel.send("User(s) are being monitored");
 	});		
 }
 

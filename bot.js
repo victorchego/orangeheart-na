@@ -75,7 +75,7 @@ client.on('guildMemberAdd', (guildmember) => {
 	if (server == null || server.id != NEPU_SERVER || guildmember.guild.available && guildmember.guild.id != NEPU_SERVER) return;
 	var time = moment().isDST() ? moment().utcOffset("-07:00") : moment().utcOffset("-08:00");
 	client.channels.find(val => val.id == MSG_LOG_ID).send(guildmember.user+' (ID '+guildmember.id+' / username '+guildmember.user.username+' / nickname '+guildmember.nickname+') has joined the server at '+time.format('LLL')+' Pacific');
-	mod.monitorUsersOn(msg,[guildmember.id]);
+	mod.monitorUsersOn(null,[guildmember.id]);
 	//if (guildmember.id == OWNER_ID) {
 	//	var guild = client.guilds.find(val => val.id  == GENERAL_ID);
 	//	var role = guild.roles.find("name", "Ninja Apprentice");
@@ -118,7 +118,7 @@ client.on('messageDelete', (Message) => {
 	DELETE_EMBED.setAuthor(`${Message.author.username} (ID: ${Message.author.id})`, Message.author.displayAvatarURL);
 	DELETE_EMBED.setDescription(`A message has been deleted from ${Message.channel}.`);
 	DELETE_EMBED.setTimestamp();
-	DELETE_EMBED.addField(`Message (${Message.createdAt}`, Message);
+	DELETE_EMBED.addField(`Message (${Message.createdAt}`, Message.content);
 	client.channels.find(val => val.id == MSG_LOG_ID).send(DELETE_EMBED).catch(console.error);
 });
 
