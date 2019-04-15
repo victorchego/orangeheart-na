@@ -114,11 +114,17 @@ client.on('messageDelete', (Message) => {
 	var server = client.guilds.find(val => val.id == NEPU_SERVER);
 	if (server == null || server.id != NEPU_SERVER || Message.guild.available && Message.guild.id != NEPU_SERVER) return;
 	if (Message.author.bot) return;
+	if (Message.content == null || Message.content == "") {
+		var content = "(Empty string)";
+	}
+	else {
+		var content = Message.content;
+	}
 	var DELETE_EMBED = new Discord.RichEmbed();
 	DELETE_EMBED.setAuthor(`${Message.author.username} (ID: ${Message.author.id})`, Message.author.displayAvatarURL);
 	DELETE_EMBED.setDescription(`A message has been deleted from ${Message.channel}.`);
 	DELETE_EMBED.setTimestamp();
-	DELETE_EMBED.addField(`Message (${Message.createdAt}`, Message.content);
+	DELETE_EMBED.addField(`Message (${Message.createdAt}`, content);
 	client.channels.find(val => val.id == MSG_LOG_ID).send(DELETE_EMBED).catch(console.error);
 });
 
