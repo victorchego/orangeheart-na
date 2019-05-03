@@ -161,8 +161,9 @@ client.on('message', (msg) => {
 	//logMessage(msg);
 	
 	if (msg.channel.id == '491020961240449024' && msg.author.id == ZAP_ID) {
-		if (msg.content.includes("Reply?:On")) {
-			client.channels.find(val => val.id == ANNOUNCEMENT_ID).send(msg.content).catch(console.error);
+		var flag = "Reply?:On";
+		if (msg.content.includes(flag)) {
+			client.channels.find(val => val.id == ANNOUNCEMENT_ID).send(msg.content.substring(flag.length)).catch(console.error);
 		}
 		return;
 	}
