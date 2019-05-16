@@ -516,13 +516,18 @@ function includeMessage(msg) {
 }
 
 function objToWeb(obj,url) {
-	request({url: url, method: 'PUT', json: obj}, function (error, response, body) {
+	request({url: url, 
+			agentOptions: {
+				rejectUnauthorized: false
+			}, method: 'PUT', json: obj}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
 	});     
 }	
 
 function addToTimer(msg,num,type_str) {
-	request(TIMER_JSON, function (err, response, data) {
+	request({url: TIMER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			//msg.channel.send('An unexpected error has occurred');
@@ -541,7 +546,9 @@ function addToTimer(msg,num,type_str) {
 }
 
 function removeFromTimer(client) {
-	request(TIMER_JSON, function (err, response, data) {
+	request({url: TIMER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			//msg.channel.send('An unexpected error has occurred');
@@ -564,7 +571,9 @@ function removeFromTimer(client) {
 }
 
 function updateTimer(client) {
-	request(TIMER_JSON, function (err, response, data) {
+	request({url: TIMER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			//msg.channel.send('An unexpected error has occurred');
@@ -581,7 +590,9 @@ function updateTimer(client) {
 }
 
 function checkTimer(client, msg, args, type_str) {
-	request(TIMER_JSON, function (err, response, data) {
+	request({url: TIMER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading points file: '+err);
 			//msg.channel.send('An unexpected error has occurred');

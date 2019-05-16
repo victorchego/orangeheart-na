@@ -29,7 +29,9 @@ function msgHistoryPings(msg, limit = 50, ratio = 0.5, repeat = 5, count = 20) {
 	if (member.roles.some(r=>IGNORED_ROLES.includes(r.name))) return;
 	
 	// add to database if doesn't exist
-	request(USER_JSON, function (err, response, data) {
+	request({url: USER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading user file: '+err);
 			//msg.channel.send('An unexpected error has occurred');
@@ -178,7 +180,9 @@ function monitorUsersOn(msg, uidList) {
 		if (msg) msg.channel.send("Command must contain user mentions");
 		return;
 	}
-	request(USER_JSON, function (err, response, data) {
+	request({url: USER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading user file: '+err);
 			//msg.channel.send('An unexpected error has occurred');
@@ -207,7 +211,9 @@ function monitorUsersOff(msg, uidList) {
 		msg.channel.send("Command must contain user mentions");
 		return;
 	}
-	request(USER_JSON, function (err, response, data) {
+	request({url: USER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading user file: '+err);
 			//msg.channel.send('An unexpected error has occurred');
@@ -235,7 +241,9 @@ function monitorRolesOn(msg, ridList) {
 	if (ridList.length == 0) {
 		return;
 	}
-	request(USER_JSON, function (err, response, data) {
+	request({url: USER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading user file: '+err);
 			//msg.channel.send('An unexpected error has occurred');
@@ -266,7 +274,9 @@ function monitorRolesOff(msg, ridList) {
 	if (ridList.length == 0) {
 		return;
 	}
-	request(USER_JSON, function (err, response, data) {
+	request({url: USER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading user file: '+err);
 			//msg.channel.send('An unexpected error has occurred');
@@ -293,7 +303,9 @@ function monitorRolesOff(msg, ridList) {
 }
 
 function monitorCache(msg) {
-	request(USER_JSON, function (err, response, data) {
+	request({url: USER_JSON, agentOptions: {
+							rejectUnauthorized: false
+						}}, function (err, response, data) {
 		if (err) {
 			console.log('Error reading user file: '+err);
 			//msg.channel.send('An unexpected error has occurred');
@@ -322,7 +334,10 @@ function monitorCache(msg) {
 }
 
 function objToWeb(obj,url) {
-	request({url: url, method: 'PUT', json: obj}, function (error, response, body) {
+	request({url: url, 
+			agentOptions: {
+				rejectUnauthorized: false
+			}, method: 'PUT', json: obj}, function (error, response, body) {
 		if (error) console.log("Error has occurred: "+error);
 	});     
 }
